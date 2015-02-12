@@ -44,6 +44,7 @@ helperFunctions = require('./impl/onm-util-functions')
 Address = require('./onm-address')
 AddressToken = require('./impl/onm-address-token')
 uuid = require('node-uuid')
+intrinsicDataModels = require('./impl/onm-intrinsic-data-models')
 
 LUID = 1
 
@@ -516,7 +517,7 @@ class ModelDetails
 module.exports = class Model
     constructor: (objectModelDeclaration_) ->
         try
-            @implementation = new ModelDetails(@, objectModelDeclaration_)
+            @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
 
             # --------------------------------------------------------------------------
             @createRootAddress = =>

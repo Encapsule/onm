@@ -90,7 +90,7 @@ module.exports = class Namespace
     # Returns a reference to namespace's associated model descriptor object.
     model: =>
         try
-            @adress().getModel()
+            @address().getModel()
         catch exception_
             throw new Error "onm.Namespace.model failed: #{exception_.message}"
 
@@ -102,23 +102,6 @@ module.exports = class Namespace
             @implementation.getResolvedToken().key
         catch exception_
             throw new Error "onm.Namespace.ckey failed: #{exception_.message}"
-
-    #
-    # ============================================================================
-    caddress: =>
-        try
-            @address().createComponentAddress()
-        catch exception_
-            throw new Error "onm.Namespace.caddress failed: #{exception_.message}"
-
-    #
-    # ============================================================================
-    # Returns onm.Address of the store's root namespace.
-    raddress: =>
-        try
-            @store.address()
-        catch exception_
-            throw new Error "onm.Namespace.raddress faled: #{exception_.message}"
 
     #
     # ============================================================================
@@ -159,6 +142,39 @@ module.exports = class Namespace
             targetAddress.createSubpathAddress rprlsAscend
         catch exception_
             throw new Error "onm.Namespace.address failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    caddress: =>
+        try
+            @address().createComponentAddress()
+        catch exception_
+            throw new Error "onm.Namespace.caddress failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # Returns onm.Address of the store's root namespace.
+    raddress: =>
+        try
+            @store.address()
+        catch exception_
+            throw new Error "onm.Namespace.raddress faled: #{exception_.message}"
+
+    #
+    # ============================================================================
+    uri: =>
+        try
+            @address().uri();
+        catch exception_
+            throw new Error "onm.Namespace.uri failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    lri: =>
+        try
+            @address().lri();
+        catch exception_
+            throw new Error "onm.Namespace.lri failed: #{exception_.message}"
 
     #
     # ============================================================================

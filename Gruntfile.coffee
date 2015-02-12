@@ -18,12 +18,10 @@ module.exports = (grunt) ->
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
 
                     # v0.3 implementation
+                    'lib/impl/onm-intrinsic-data-models.js': 'src/impl/onm-intrinsic-data-models.coffee'
                     'lib/impl/onm-address-resolver.js': 'src/impl/onm-address-resolver.coffee'
-
-
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
                     'lib/impl/onm-component-context.js': 'src/impl/onm-component-context.coffee'
-
                     'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
                     'lib/impl/onm-named-object-context.js': 'src/impl/onm-named-object-context.coffee'
                     'lib/impl/onm-named-object-property-visitor.js': 'src/impl/onm-named-object-property-visitor.coffee'
@@ -31,7 +29,10 @@ module.exports = (grunt) ->
                     'lib/impl/onm-named-object-property-policy-initialize.js': 'src/impl/onm-named-object-property-policy-initialize.coffee'
                     'lib/impl/onm-named-object-property-policy-update.js': 'src/impl/onm-named-object-property-policy-update.coffee'
 
+                    # v0.2 observer/notification subsystem (to be replaced in v0.3)
                     'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
+
+                    # Collection of common functions that don't fit elsewhere
                     'lib/impl/onm-util-functions.js': 'src/impl/onm-util-functions.coffee'
 
         jshint:

@@ -43,6 +43,7 @@ helperFunctions = require('./impl/onm-util-functions')
 StoreReifier = require('./impl/onm-store-reifier')
 AddressToken = require('./impl/onm-address-token')
 Address = require('./onm-address')
+Model = require('./onm-model')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
 addressResolver = require './impl/onm-address-resolver'
@@ -108,18 +109,11 @@ module.exports = class Store
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, data_) ->
         try
-            # Validate parameters.
-            if not (model_? and model_) then throw new Error("Missing object model parameter!");
-
-            @implementation = new StoreDetails(@, model_, data_)
-
-            # Keep a reference to this object store's associated object model.
-            @model = model_
-
-            @jsonTag = model_.jsonTag
-            @label = model_.label
-            @description = model_.description
- 
+            @model = model = model_? and model_ or new Model()
+            @implementation = new StoreDetails(@, model, data_)
+            @jsonTag = model.jsonTag
+            @label = model.label
+            @description = model.description
         catch exception_
             throw new Error "onm.Store constructor failed: #{exception_.message}"
 
