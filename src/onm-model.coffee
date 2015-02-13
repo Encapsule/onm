@@ -515,79 +515,85 @@ class ModelDetails
 #
 # ****************************************************************************
 module.exports = class Model
+
     constructor: (objectModelDeclaration_) ->
         try
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
+        catch exception
+            throw new Error "onm.Model constructor failed: #{exception.message}"
 
-            # --------------------------------------------------------------------------
-            @createRootAddress = =>
-                try
-                    return new Address(@, [ new AddressToken(@, undefined, undefined, 0) ])
-                catch exception
-                    throw new Error("createRootAddress failure: #{exception.message}")
+    #
+    # ============================================================================
+    createRootAddress: =>
+        try
+            return new Address(@, [ new AddressToken(@, undefined, undefined, 0) ])
+        catch exception
+            throw new Error("createRootAddress failure: #{exception.message}")
             
 
-            # --------------------------------------------------------------------------
-            @createPathAddress = (path_) =>
-                try
-                    pathId = @implementation.getPathIdFromPath(path_)
-                    newAddress = @implementation.createAddressFromPathId(pathId)
-                    return newAddress
-                catch exception
-                    throw new Error "onm.Model.createPathAddress failed: #{exception.message}"
-
-
-            #
-            # ============================================================================
-            @addressFromURI = (uri_) =>
-                try
-                    if not (uri_? and uri_)
-                        throw new Error("Missing URI string input parameter.");
-                    newAddress = @implementation.parseAddressHumanReadableString uri_
-                    return newAddress
-                catch exception
-                    throw new Error "onm.Model.addressFromURI failed: #{exception.message}"
-
-            # DEPRECATED in v0.3
-            @createAddressFromHumanReadableString = (humanReadableString_) =>
-                console.log "onm v0.3: onm.Model.createAddressFromHashString has been deprecated. Use v0.3 onm.Model.addressFromURI API."
-                @addressFromURI humanReadableString_
-
-
-            #
-            # ============================================================================
-            @addressFromLRI = (lri_) =>
-                try
-                    if not (lri_? and lri_)
-                        throw new Error("Missing LRI string input parameter.");
-                    newAddress = @implementation.parseAddressHashString lri_
-                    return newAddress
-                catch exception
-                    throw new Error "onm.Model.addressFromLRI failed: #{exception.message}"
-
-            # DEPRECATED in v0.3
-            @createAddressFromHashString = (hash_) =>
-                console.log "onm v0.3: onm.Model.createAddressFromHashString is deprecated. Use v0.3 onm.Model.addressFromLRI API."
-                @addressFromLRI hash_
-
-            # --------------------------------------------------------------------------
-            @getSemanticBindings = =>
-                try
-                    return @implementation.semanticBindings
-
-                catch exception
-                    throw new Error("getSemanticBindings failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @isEqual = (model_) =>
-                try
-                    if not (model_.jsonTag? and model_.jsonTag)
-                        throw new Error("Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.")
-                    @jsonTag == model_.jsonTag
-                catch exception
-                    throw new Error("isEqual failure: #{exception.message}")
-
-
+    #
+    # ============================================================================
+    createPathAddress: (path_) =>
+        try
+            pathId = @implementation.getPathIdFromPath(path_)
+            newAddress = @implementation.createAddressFromPathId(pathId)
+            return newAddress
         catch exception
-            throw new Error("Model construction fail: #{exception.message}")
+            throw new Error "onm.Model.createPathAddress failed: #{exception.message}"
+
+
+    #
+    # ============================================================================
+    addressFromURI: (uri_) =>
+        try
+            if not (uri_? and uri_)
+                throw new Error("Missing URI string input parameter.");
+            newAddress = @implementation.parseAddressHumanReadableString uri_
+            return newAddress
+        catch exception
+            throw new Error "onm.Model.addressFromURI failed: #{exception.message}"
+
+    # DEPRECATED in v0.3
+    createAddressFromHumanReadableString: (humanReadableString_) =>
+        console.log "onm v0.3: onm.Model.createAddressFromHashString has been deprecated. Use v0.3 onm.Model.addressFromURI API."
+        @addressFromURI humanReadableString_
+
+    #
+    # ============================================================================
+    addressFromLRI: (lri_) =>
+        try
+            if not (lri_? and lri_)
+                throw new Error("Missing LRI string input parameter.");
+            newAddress = @implementation.parseAddressHashString lri_
+            return newAddress
+        catch exception
+            throw new Error "onm.Model.addressFromLRI failed: #{exception.message}"
+
+    # DEPRECATED in v0.3
+    createAddressFromHashString: (hash_) =>
+        console.log "onm v0.3: onm.Model.createAddressFromHashString is deprecated. Use v0.3 onm.Model.addressFromLRI API."
+        @addressFromLRI hash_
+
+    #
+    # ============================================================================
+    getSemanticBindings: =>
+        try
+            return @implementation.semanticBindings
+        catch exception
+            throw new Error("getSemanticBindings failure: #{exception.message}");
+
+
+    #
+    # ============================================================================
+
+    isEqual: (model_, strict_) =>
+        try
+            if not (model_? and model_ and (model_ instanceof Model))
+                throw new Error "Missing or invalid onm.Model instance reference specified."
+            strict = (not (strict_? and strict_) and true) or (strict_ == true) or false
+            (not strict and (@uuid == model_.uuid)) or ((@uuid == model_.uuid) and (@uuidVersion == model_.uuidVersion))
+        catch exception
+            throw new Error("isEqual failure: #{exception.message}")
+
+
 
