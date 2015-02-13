@@ -82,8 +82,20 @@ module.exports = class Namespace
 
     #
     # ============================================================================
-    # Returns a reference to the namespace's associated data object.
-    data: => @implementation.dataReference
+    # TODO: Think about this some more...
+    # This is a good backwards-compatible improvement to allow writes
+    # to the namespace if data is specified. Specifically, I want to work with
+    # some client code with the new API's to decide how best to smooth over
+    # the round-trip of reading from onm, changing some stuff, and writing it
+    # back. Currently reads are assumed to be directly against store data reference
+    # as returned by this function (w/no argument). 
+    data: (data_) =>
+        try
+            if data_? and data_
+                @namespace { operation: 'access', rl: @address(), data: data_ }
+            @implementation.dataReference
+        catch exception_
+            throw new Error "onm.Namespace.data failed: #{exception_.message}"
 
     #
     # ============================================================================
@@ -130,15 +142,15 @@ module.exports = class Namespace
             if rprlsType != '[object String]'
                 throw new Error "Invalid type '#{rprsType}'. Expected '[object String]'."
             rprlsTokens = rprls_.split '.'
-            generations = 0
+            descendGenerations = 0
             for prlsToken in rprlsTokens
                 if prlsToken == '//'
-                    generations++
+                    descendGenerations++
                 else
                     break
-            rprlsAscend = rprlsTokens.join generations, rprplsTokens.length, '.'
-            if generations
-                targetAddress = targetAddress.createParentAddress descendCount
+            rprlsAscend = rprlsTokens.join descendGenerations, rprlsTokens.length, '.'
+            if descendGenerations
+                targetAddress = targetAddress.createParentAddress descendGenerations
             targetAddress.createSubpathAddress rprlsAscend
         catch exception_
             throw new Error "onm.Namespace.address failed: #{exception_.message}"
@@ -197,7 +209,7 @@ module.exports = class Namespace
             if not (request_.rl? and request_.rl)
                 request.address = @address()
             else
-                if request_.rl instance of Address
+                if request_.rl instanceof Address
                     request.address = request_.rl
                 else
                     try
