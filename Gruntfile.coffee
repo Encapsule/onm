@@ -16,6 +16,7 @@ module.exports = (grunt) ->
 
                     # onm implementation modules
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
+                    'lib/impl/onm-xri-parser.js': 'src/impl/onm-xri-parser.coffee'
 
                     # v0.3 implementation
                     'lib/impl/onm-intrinsic-data-models.js': 'src/impl/onm-intrinsic-data-models.coffee'
