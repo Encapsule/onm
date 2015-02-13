@@ -530,7 +530,6 @@ module.exports = class Model
         catch exception
             throw new Error("createRootAddress failure: #{exception.message}")
             
-
     #
     # ============================================================================
     createPathAddress: (path_) =>
@@ -540,7 +539,6 @@ module.exports = class Model
             return newAddress
         catch exception
             throw new Error "onm.Model.createPathAddress failed: #{exception.message}"
-
 
     #
     # ============================================================================
@@ -552,7 +550,6 @@ module.exports = class Model
             return newAddress
         catch exception
             throw new Error "onm.Model.addressFromURI failed: #{exception.message}"
-
     # DEPRECATED in v0.3
     createAddressFromHumanReadableString: (humanReadableString_) =>
         console.log "onm v0.3: onm.Model.createAddressFromHashString has been deprecated. Use v0.3 onm.Model.addressFromURI API."
@@ -568,7 +565,6 @@ module.exports = class Model
             return newAddress
         catch exception
             throw new Error "onm.Model.addressFromLRI failed: #{exception.message}"
-
     # DEPRECATED in v0.3
     createAddressFromHashString: (hash_) =>
         console.log "onm v0.3: onm.Model.createAddressFromHashString is deprecated. Use v0.3 onm.Model.addressFromLRI API."
@@ -582,10 +578,8 @@ module.exports = class Model
         catch exception
             throw new Error("getSemanticBindings failure: #{exception.message}");
 
-
     #
     # ============================================================================
-
     isEqual: (model_, strict_) =>
         try
             if not (model_? and model_ and (model_ instanceof Model))
@@ -595,5 +589,12 @@ module.exports = class Model
         catch exception
             throw new Error("isEqual failure: #{exception.message}")
 
-
+    #
+    # ============================================================================
+    toJSON: (replacer_, space_) =>
+        try
+            JSON.stringify @implementation.objectModelDeclaration, replacer_, space_
+        catch exception_
+            throw new Error "onm.Model.toJSON failed: #{exception_.message}"
+        
 

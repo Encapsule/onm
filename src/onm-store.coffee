@@ -121,11 +121,11 @@ module.exports = class Store
     #
     # ============================================================================
     # Returns true iff the specified Address and Store objects are both bound to the same Model.
-    validateAddressModel: (address_) =>
+    validateAddressModel: (address_, strict_) =>
         try
             if not (address_? and address_) then throw new Error("Missing address input parameter.");
             if not (address_.model? and address_.model) then throw new Error("Invalid address object passed as input parameter.");
-            return @model.isEqual(address_.model)
+            return @model.isEqual address_.model, strict_
         catch exception_
             throw new Error("onm.Store.validateAddressModel failed: #{exception_.message}");
 
@@ -321,6 +321,20 @@ module.exports = class Store
         catch exception_
             throw new Error "onm.Store.toJSON failed: #{exception_.message}"
 
+    #
+    # ============================================================================
+    # EXPERIMENTAL
+    # sdab = self-describing addressable blob
+    sdab: =>
+        try
+            namespaceRoot = @nsAccess()
+            sdab =
+                model: @model.implementation.objectModelDeclaration
+                store: {}
+            sdab.store[namespaceRoot.ckey()] = namespaceRoot.data()
+            sdab
+        catch exception_
+            throw new Error "onm.Store.sdab failed: #{exception_.message}"
 
     # 
     # ============================================================================
