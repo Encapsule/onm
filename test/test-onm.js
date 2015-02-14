@@ -15,6 +15,7 @@ describe("Object Namespace Manager v" + packageMeta.version + " (onm) module tes
     // Base level onm export object API test suites.
     require('./test-onm.Model');
     require('./test-onm.Address');
+    require('./test-onm-xri-parser');
     require('./test-onm.Store');
     require('./test-onm.Namespace');
 

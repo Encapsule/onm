@@ -69,7 +69,7 @@ xri.parse = (request_) ->
             errors.unshift "Invalid request object missing required property 'xri'."
             break
 
-        xriType = Object.prototype.toString.call request_.ris
+        xriType = Object.prototype.toString.call request_.xri
 
         if xriType != '[object String]'
             errors.unshift = "Invalid resource identifier type '#{xriType}'. Expected '[object String]'."
@@ -86,7 +86,7 @@ xri.parse = (request_) ->
             break
 
         xri = request_.xri
-        addressBase = request.addressBase
+        addressBase = request_.addressBase
 
         # An onm xRI is a string that abstractly represents a namespace resource.
         # There are two major types of xRI's: paths, and vectors. Paths are for
@@ -104,7 +104,7 @@ xri.parse = (request_) ->
 
         switch xriCategory
             when 'path'
-                xriTokens2 = xriTokens1[0].split '.'
+                xriTokens2 = xriTokens1[0].split "."
                 generations = 0
                 for token in xriTokens2
                     if token == '//'
@@ -121,8 +121,11 @@ xri.parse = (request_) ->
                     response.result = addressBase
                 else
                     try
-                        unresolvedPath = xriTokens2.join generations, xriTokens2.length, '.'
-                        response.result = addressBase.createSubpathAddress unresolvedPath
+                        unresolvedPath = (xriTokens2.slice generations, xriTokens2.length).join '.'
+                        if addressBase.isRoot()
+                            response.result = addressBase.model.createPathAddress unresolvedPath
+                        else
+                            response.result = addressBase.createSubpathAddress unresolvedPath
                     catch exception_
                         errors.unshift exception_.message
                 break
