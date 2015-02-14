@@ -72,17 +72,17 @@ xri.parse = (request_) ->
         xriType = Object.prototype.toString.call request_.xri
 
         if xriType != '[object String]'
-            errors.unshift = "Invalid resource identifier type '#{xriType}'. Expected '[object String]'."
+            errors.unshift "Invalid resource identifier type '#{xriType}'. Expected '[object String]'."
             break
 
         if not (request_.addressBase? and request_.addressBase)
-            errors.unshift = "Invalid request object missing required property 'addressBase'."
+            errors.unshift "Invalid request object missing required property 'addressBase'."
             break
 
         addressBaseType = Object.prototype.toString.call request_.addressBase
 
         if not (request_.addressBase instanceof Address)
-            errors.unshift = "Invalid base address object type '#{baseAddressType}'. Expected onm.Address reference."
+            errors.unshift "Invalid base address object type '#{baseAddressType}'. Expected onm.Address reference."
             break
 
         xri = request_.xri
