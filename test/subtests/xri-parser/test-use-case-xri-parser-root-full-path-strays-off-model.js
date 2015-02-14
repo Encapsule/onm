@@ -1,4 +1,4 @@
-// test-use-case-xri-parser-root-full-path-strays-off-model.
+ // test-use-case-xri-parser-root-full-path-strays-off-model.
 
 var testData = require('../../fixture/address-book-data-model');
 var testDataModel = testData.createModel();
