@@ -106,11 +106,18 @@ xri.parse = (request_) ->
             when 'path'
                 xriTokens2 = xriTokens1[0].split "."
                 generations = 0
+                ascending = false
                 for token in xriTokens2
                     if token == '//'
-                        generations++
+                        if ascending
+                            errors.unshift "Invalid path xRI. You cannot descend the namespace hierarchy after beginning an ascent."
+                            break
+                        else
+                            generations++
                     else
-                        break
+                        ascending = true
+                if errors.length
+                    break
                 if generations
                     try
                         addressBase = addressBase.createParentAddress generations

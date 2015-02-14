@@ -85,6 +85,26 @@ xriParserUseCase({
     }
 });
 
+xriParserUseCase({
+    testName: "Bad xRI path relative to store: relative path vectors below store",
+    validConfig: false,
+    xri: "//.//.foo",
+    addressBase: rootAddress,
+    expectedResults: {
+        error: 'onm.xRIParser failed: Invalid relative path xRI. Cannot descend below root namespace.'
+    }
+});
+
+xriParserUseCase({
+    testName: "Bad xRI path relative to store: starts okay, but then attempts to descend.",
+    validConfig: false,
+    xri: "addressBook.//",
+    addressBase: rootAddress,
+    expectedResults: {
+        error: 'onm.xRIParser failed: Invalid path xRI. You cannot descend the namespace hierarchy after beginning an ascent.'
+    }
+});
+
 
 
 
