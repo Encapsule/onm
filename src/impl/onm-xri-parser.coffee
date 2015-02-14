@@ -114,6 +114,9 @@ xri.parse = (request_) ->
                 if generations
                     try
                         addressBase = addressBase.createParentAddress generations
+                        if not (addressBase? and baseAddress)
+                            errors.unshift "Invalid relative path xRI. Cannot descend below root namespace."
+                            break
                     catch exception_
                         errors.unshift exception_.message
                         break
