@@ -107,8 +107,8 @@ var runXRIParserTest = module.exports = function (testVector_) {
                 });
 
                 it("xriParseResponse.error is expected to be a non-null string.", function() {
-                    assert.isNotNull(xriParseResponse.result);
-                    assert.isString(xriParseResponse.result);
+                    assert.isNotNull(xriParseResponse.error);
+                    assert.isString(xriParseResponse.error);
                 });
 
                 it("xriParseResponse.error string is expected to match the exepcted result.", function() {
