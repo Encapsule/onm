@@ -379,7 +379,7 @@ class ModelDetails
                         when 'newToken'
                             addressTokenVector.push currentAddressToken
                             currentAddressToken = new AddressToken @model,
-                                currentNamespaceDescriptor.id, ((stringToken != '-') and stringToken or undefined), 
+                                currentNamespaceDescriptor.id, (((stringToken != '-') and (stringToken != currentNamespaceDescriptor.jsonTag)) and stringToken or undefined), 
                                 currentNamespaceDescriptor.archetypePathId
                             currentNamespaceDescriptor = currentAddressToken.namespaceDescriptor
                             action = 'frameToken'

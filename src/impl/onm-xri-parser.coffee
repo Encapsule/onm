@@ -45,7 +45,7 @@ xri = module.exports = {}
 
 # If !response.error, then response.result is a newly-constructed onm.Address instance.
 # If response.error, then response.error is a string message explaining why response.result is null.
-# request = { baseAddress: onm.Address, ris: onm-format fully-qualified or relative path, URI or LRI string }
+# request = { baseAddress: onm.Address, xri: onm-format fully-qualified or relative dot-delimited path, URI or LRI string }
 
 xri.parse = (request_) ->
 
@@ -100,7 +100,7 @@ xri.parse = (request_) ->
 
         # xRI vectors are colon-delimited sequences of two, or three string tokens.
         # By convention, paths cannot contain colon characters.
-        xriCategory = ((xriTokens1.length >= 2) and (xriTokens1.length <= 3)) and 'vector' or 'path'
+        xriCategory = (xriTokens1.length > 1) and 'vector' or 'path'
 
         switch xriCategory
             when 'path'
@@ -110,7 +110,7 @@ xri.parse = (request_) ->
                 for token in xriTokens2
                     if token == '//'
                         if ascending
-                            errors.unshift "Invalid path xRI. You cannot descend the namespace hierarchy after beginning an ascent."
+                            errors.unshift "path contains illegal namespace descent after ascent."
                             break
                         else
                             generations++
@@ -122,10 +122,10 @@ xri.parse = (request_) ->
                     try
                         addressBase = addressBase.createParentAddress generations
                         if not (addressBase? and baseAddress)
-                            errors.unshift "Invalid relative path xRI. Cannot descend below root namespace."
+                            errors.unshift "path contains illegal descent into the anonymous namespace."
                             break
                     catch exception_
-                        errors.unshift exception_.message
+                        errors.unshift "path contains unparsable namespace descent."
                         break
                 if not (xriTokens2.length - generations)
                     response.result = addressBase
@@ -138,6 +138,7 @@ xri.parse = (request_) ->
                             response.result = addressBase.createSubpathAddress unresolvedPath
                     catch exception_
                         errors.unshift exception_.message
+                        errors.unshift "path identifies a resource outside the model's address space."
                 break
             when 'vector'
                 # CATEGORIZE the xRI vector as either an onm-format URI, or LRI
@@ -147,15 +148,17 @@ xri.parse = (request_) ->
                             response.result = addressBase.model.addressFromURI xri
                         catch exception_
                             errors.unshift exception_.message
+                            errors.unshift "URI identifies a resource outside the model's address space."
                         break
                     when 'onm-lri'
                         try
                             response.result = addressBase.model.addressFromLRI xri
                         catch exception_
                             errors.unshift exception_.message
+                            errors.unshift "LRI identifies a resource outside the model's address space."
                         break
                     else
-                        errors.unshift "Invalid xRI vector type '#{xriTokens1[0]}'. Expected either 'onm-uri', or 'onm-lri'."
+                        errors.unshift "invalid vector xRI type '#{xriTokens1[0]}'. Expected either 'onm-uri', or 'onm-lri'."
                         break
 
     if errors.length
