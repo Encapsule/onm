@@ -39,5 +39,30 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xriPathParser = module.exports = {}
+###
+    request = {
+        addressBase: reference to an onm.Address
+        xriTokens: array of top-level xRI string tokens
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: reference to an onm.Address or null
+    }
+###
+xRIP_PathParser = module.exports = (request_) ->
+
+    errors = []
+
+    response =
+        error: null
+        result: null
+
+    inBreakScope = false
+
+    while not inBreakScope
+
+        inBreakScope = true # better than a break at the bottom. And, clearer.
+
+
+
 

@@ -39,5 +39,5 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xriVectorParser = module.exports = {}
 
+xRIP_VectorParser = module.exports = (context_) ->

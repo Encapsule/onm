@@ -39,15 +39,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-Address = require '../onm-address'
 
-xri = module.exports = {}
+Address = require '../onm-address' # TODO: remove this.
+
+xRIPathParser = require './onm-xri-parse-path'
+xRIVectorParser = require './onm-xri-parse-vector'
 
 # If !response.error, then response.result is a newly-constructed onm.Address instance.
 # If response.error, then response.error is a string message explaining why response.result is null.
 # request = { baseAddress: onm.Address, xri: onm-format fully-qualified or relative dot-delimited path, URI or LRI string }
 
-xri.parse = (request_) ->
+
+xRIP_Parser = module.exports = (request_) ->
 
     errors = []
 
