@@ -16,9 +16,32 @@ module.exports = (grunt) ->
 
                     # onm implementation modules
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
-                    'lib/impl/onm-xri-parser.js': 'src/impl/onm-xri-parser.coffee'
 
                     # v0.3 implementation
+
+                    'lib/impl/onm-xri.js': 'src/impl/onm-xri.coffee'
+
+                    'lib/impl/onm-xri-generate.js': 'src/impl/onm-xri-generate.coffee'
+
+                    'lib/impl/onm-xri-generate-path.js': 'src/impl/onm-xri-generate-path.coffee'
+                    'lib/impl/onm-xri-generate-path-readable.js': 'src/impl/onm-xri-generate-path-readable.coffee'
+                    'lib/impl/onm-xri-generate-path-hash.js': 'src/impl/onm-xri-generate-path-hash.coffee'
+
+                    'lib/impl/onm-xri-generate-vector.js': 'src/impl/onm-xri-generate-vector.coffee'
+                    'lib/impl/onm-xri-generate-vector-uri.js': 'src/impl/onm-xri-generate-vector-uri.coffee'
+                    'lib/impl/onm-xri-generate-vector-lri.js': 'src/impl/onm-xri-generate-vector-lri.coffee'
+
+                    'lib/impl/onm-xri-parse.js': 'src/impl/onm-xri-parse.coffee'
+
+                    'lib/impl/onm-xri-parse-path.js': 'src/impl/onm-xri-parse-path.coffee'
+                    'lib/impl/onm-xri-parse-path-readable.js': 'src/impl/onm-xri-parse-path-readable.coffee'
+                    'lib/impl/onm-xri-parse-path-hash.js': 'src/impl/onm-xri-parse-path-hash.coffee'
+
+                    'lib/impl/onm-xri-parse-vector.js': 'src/impl/onm-xri-parse-vector.coffee'
+                    'lib/impl/onm-xri-parse-vector-uri.js': 'src/impl/onm-xri-parse-vector-uri.coffee'
+                    'lib/impl/onm-xri-parse-vector-lri.js': 'src/impl/onm-xri-parse-vector-lri.coffee'
+
+
                     'lib/impl/onm-intrinsic-data-models.js': 'src/impl/onm-intrinsic-data-models.coffee'
                     'lib/impl/onm-address-resolver.js': 'src/impl/onm-address-resolver.coffee'
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
