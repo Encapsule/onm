@@ -40,21 +40,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-xRIP = module.exports =
+xRIProcessor = module.exports =
+
     generate: require './onm-xri-generate'
 
-
     ###
-        var request = {
+        request = {
             addressBase: reference to onm.Address
             xri: onm-format xRI string (path, relative path, LRI, or URI)
-        };
-        var response = XRIProcessor.parse(request);
-        ... where response = {
+        }
+        > response = xRIP.parse(request);
+        response = {
             error: null or string explaining why result === null
             result: reference to onm.Address or null
         }
     ###
+
     parse: require './onm-xri-parse'
 
 

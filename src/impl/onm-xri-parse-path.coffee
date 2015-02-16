@@ -42,14 +42,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 ###
     request = {
         addressBase: reference to an onm.Address
-        xriTokens: array of top-level xRI string tokens
+        xri: a string that the caller asserts is an onm-format path string.
     }
     response = {
         error: null or string explaining why result === null
         result: reference to an onm.Address or null
     }
 ###
+
 xRIP_PathParser = module.exports = (request_) ->
+
+    # Abrogate validation of request_ in-parameter to assumed caller, xRIP.parse.
+    # Consequently, never export this function at onm module scope.
 
     errors = []
 
@@ -57,12 +61,60 @@ xRIP_PathParser = module.exports = (request_) ->
         error: null
         result: null
 
+    addressResult = request_.addressBase
+
     inBreakScope = false
 
     while not inBreakScope
 
         inBreakScope = true # better than a break at the bottom. And, clearer.
 
+        xriTokens2 = request_.xri.split '.'
+        generations = 0
+        ascending = false
+        for token in xriTokens2
+            if token == '//'
+                if ascending
+                    errors.unshift "path contains illegal namespace descent after ascent."
+                    break
+                else
+                    generations++
+            else
+                ascending = true
 
+        # If the path started with a descent request, adjust the addressBase accordingly.
+        if generations
+            try
+                addressResult = addressResult.createParentAddress generations
+                if not (addressResult? and baseAddress)
+                    errors.unshift "path contains illegal descent below the model's root namespace."
+                    break
+            catch exception_
+                errors.unshift "path contains unparsable namespace descent."
+                break
 
+        # If the path was just a descent, we're done.
+        if not (xriTokens2.length - generations)
+            response.result = addressResult
+            break
+
+        # With whatever addressResult we have, parse the remaining path tokens and affect
+        # updates to addressResult to bind its context tuple chain up to the target namespace.
+
+        try
+            unresolvedPath = (xriTokens2.slice generations, xriTokens2.length).join '.'
+            if addressResult.isRoot()
+                response.result = addressResult.model.createPathAddress unresolvedPath
+            else
+                response.result = addressResult.createSubpathAddress unresolvedPath
+
+        catch exception_
+            errors.unshift "( " + exception_.message + " )"
+            errors.unshift "path identifies a resource outside the model's address space."
+            break
+
+    if errors.length
+        response.error = errors.join " "
+
+    return response
 

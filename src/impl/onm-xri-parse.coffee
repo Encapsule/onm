@@ -42,8 +42,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 Address = require '../onm-address' # TODO: remove this.
 
-xRIPathParser = require './onm-xri-parse-path'
-xRIVectorParser = require './onm-xri-parse-vector'
+xRIP_parsePath = require './onm-xri-parse-path'
+xRIP_parseVector = require './onm-xri-parse-vector'
 
 # If !response.error, then response.result is a newly-constructed onm.Address instance.
 # If response.error, then response.error is a string message explaining why response.result is null.
@@ -82,10 +82,8 @@ xRIP_Parser = module.exports = (request_) ->
             errors.unshift "Invalid request object missing required property 'addressBase'."
             break
 
-        addressBaseType = Object.prototype.toString.call request_.addressBase
-
         if not (request_.addressBase instanceof Address)
-            errors.unshift "Invalid base address object type '#{baseAddressType}'. Expected onm.Address reference."
+            errors.unshift "Invalid base address object type '#{typeof baseAddressType}'. Expected onm.Address reference."
             break
 
         xri = request_.xri
@@ -98,71 +96,23 @@ xRIP_Parser = module.exports = (request_) ->
         # invariants).
 
         # CATEGORIZE xRI as PATH or VECTOR
-
-        xriTokens1 = xri.split ':'
-
-        # xRI vectors are colon-delimited sequences of two, or three string tokens.
-        # By convention, paths cannot contain colon characters.
-        xriCategory = (xriTokens1.length > 1) and 'vector' or 'path'
-
+        xriTokens = xri.split ':'
+        xriCategory = (xriTokens.length > 1) and 'vector' or 'path'
         switch xriCategory
             when 'path'
-                xriTokens2 = xriTokens1[0].split "."
-                generations = 0
-                ascending = false
-                for token in xriTokens2
-                    if token == '//'
-                        if ascending
-                            errors.unshift "path contains illegal namespace descent after ascent."
-                            break
-                        else
-                            generations++
-                    else
-                        ascending = true
-                if errors.length
-                    break
-                if generations
-                    try
-                        addressBase = addressBase.createParentAddress generations
-                        if not (addressBase? and baseAddress)
-                            errors.unshift "path contains illegal descent into the anonymous namespace."
-                            break
-                    catch exception_
-                        errors.unshift "path contains unparsable namespace descent."
-                        break
-                if not (xriTokens2.length - generations)
-                    response.result = addressBase
+                parsePathResponse = xRIP_parsePath { addressBase: request_.addressBase, xri: xriTokens[0] }
+                if not parsePathResponse.error
+                    response.result = parsePathResponse.result
                 else
-                    try
-                        unresolvedPath = (xriTokens2.slice generations, xriTokens2.length).join '.'
-                        if addressBase.isRoot()
-                            response.result = addressBase.model.createPathAddress unresolvedPath
-                        else
-                            response.result = addressBase.createSubpathAddress unresolvedPath
-                    catch exception_
-                        errors.unshift exception_.message
-                        errors.unshift "path identifies a resource outside the model's address space."
+                    errors.unshift parsePathResponse.error
                 break
             when 'vector'
-                # CATEGORIZE the xRI vector as either an onm-format URI, or LRI
-                switch xriTokens1[0]
-                    when 'onm-uri'
-                        try
-                            response.result = addressBase.model.addressFromURI xri
-                        catch exception_
-                            errors.unshift exception_.message
-                            errors.unshift "URI identifies a resource outside the model's address space."
-                        break
-                    when 'onm-lri'
-                        try
-                            response.result = addressBase.model.addressFromLRI xri
-                        catch exception_
-                            errors.unshift exception_.message
-                            errors.unshift "LRI identifies a resource outside the model's address space."
-                        break
-                    else
-                        errors.unshift "invalid vector xRI type '#{xriTokens1[0]}'. Expected either 'onm-uri', or 'onm-lri'."
-                        break
+                parseVectorResponse = xRIP_parseVector { addressBase: request_.addressBase, xriTokens: xriTokens }
+                if not parseVectorResponse.error
+                    response.result = parseVectorResponse.result
+                else
+                    errors.unshift parseVectorResponse.error
+                break
 
     if errors.length
         errors.unshift "onm.xRIParser failed:"

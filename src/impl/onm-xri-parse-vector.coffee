@@ -40,4 +40,55 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-xRIP_VectorParser = module.exports = (context_) ->
+###
+    request = {
+        addressBase: reference to an onm.Address
+        xriTokens: array of top-level xRI string tokens
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: reference to an onm.Address or null
+    }
+###
+xRIP_VectorParser = module.exports = (request_) ->
+
+    # Abrogate validation of request_ in-parameter to caller, xRIP.parse.
+    # Consequently, never export this function at onm module scope.
+
+    errors = []
+
+    response =
+        error: null
+        result: null
+
+    inBreakScope = false
+
+    while not inBreakScope
+
+        inBreakScope = true
+
+        # CATEGORIZE the xRI vector as either an onm-format URI, or LRI
+        switch xriTokens1[0]
+            when 'onm-uri'
+                try
+                    response.result = addressBase.model.addressFromURI xri
+                catch exception_
+                    errors.unshift exception_.message
+                    errors.unshift "URI identifies a resource outside the model's address space."
+                    break
+            when 'onm-lri'
+                try
+                    response.result = addressBase.model.addressFromLRI xri
+                catch exception_
+                    errors.unshift exception_.message
+                    errors.unshift "LRI identifies a resource outside the model's address space."
+                    break
+            else
+                errors.unshift "invalid vector xRI type '#{xriTokens1[0]}'. Expected either 'onm-uri', or 'onm-lri'."
+                break
+
+    if errors.length
+        errors.unshift "onm.xRIParser failed:"
+        response.error = errors.join " "
+
+    return response    
