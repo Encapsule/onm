@@ -10,6 +10,7 @@ var assert = require('chai').assert;
       testName: "test name"
       validConfig: true/false
       xri: "//.//.v.x"
+      model: onm.Model
       addressBase: onm.Address
       expectedResults: {
           uri:
@@ -28,6 +29,7 @@ var runXRIParserTest = module.exports = function (testVector_) {
         before(function() {
             var runFunctionUnderTest = function() {
                 xriParseResponse = xriParser.parse({
+                    model: testVector_.model,
                     addressBase: testVector_.addressBase,
                     xri: testVector_.xri
                 });

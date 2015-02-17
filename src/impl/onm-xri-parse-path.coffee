@@ -41,7 +41,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ###
     request = {
-        addressBase: reference to an onm.Address
+        model: required reference to an onm.Model
+        addressBase: optional reference to an onm.Address
         xri: a string that the caller asserts is an onm-format path string.
     }
     response = {

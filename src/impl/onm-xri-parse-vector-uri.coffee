@@ -39,5 +39,42 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-URIVectorParser = module.exports = {}
+###
+    request = {
+        addressBase: reference to an onm.Address
+        xriTokens: array of top-level xRI string tokens (minus vector prefix token)
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: reference to an onm.Address or null
+    }
+###
+xRIP_URIVectorParser = module.exports = (request_) ->
+    # Abrogate validation of request_ in-parameter to assumed caller, xRIP_VectorParser.
+    # Consequently, never export this function at onm module scope.
+    errors = []
+    response = error: null, result: null
+    xriTokens = request_.xriTokens
+    addressBase = request_.addressBase
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        uriEncodedModelId = xriTokens.shift()
+        if uriEncodedModelId != addressBase.model.uuid
+            errors.unshift "URI in model space #{#{uriEncodedModelId}} cannot be decoded in space {#{addressBase.model.uuid}}."
+            break
+        if not xriTokens.length
+            response.result = addressBase.model.createRootAddress() # Don
 
+
+
+
+        # The current implementation.
+        try
+            response.result = addressBase.model.addressFromURI xri
+        catch exception_
+            errors.unshift exception_.message
+        break
+    if errors.length
+        response.error = errors.join ' '
+    response

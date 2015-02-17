@@ -39,5 +39,37 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-LRIVectorParser = module.exports = {}
+###
+    request = {
+        addressBase: reference to an onm.Address
+        xriTokens: array of top-level xRI string tokens (minus vector prefix token)
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: reference to an onm.Address or null
+    }
+###
+xRIP_LRIVectorParser = module.exports = (request_) ->
+    # Abrogate validation of request_ in-parameter to assumed caller, xRIP_VectorParser.
+    # Consequently, never export this function at onm module scope.
+    errors = []
+    response = error: null, result: null
+    xriTokens = request_.xriTokens
+    addressBase = request_.addressBase
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        lriEncodedModelVersionId = xriTokens.shift()
+        if lriEncodedModelVersionId != addressBase.model.uuidVersion
+            errors.unshift "LRI in model space {#{lriEncodedModelVersionId}} cannot be decoded in space {#{addressBase.model.uuidVersion}}."
+            break
 
+        # The current implementation
+        try
+            response.result = addressBase.model.addressFromLRI xri
+        catch exception_
+            errors.unshift exception_.message
+        break
+    if errors.length
+        response.error = errors.join ' '
+    response

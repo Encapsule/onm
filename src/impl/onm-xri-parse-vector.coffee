@@ -39,10 +39,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+xRIP_LRIVectorParser = require './onm-xri-parse-vector-lri'
+xRIP_URIVectorParser = require './onm-xri-parse-vector-uri'
 
 ###
     request = {
-        addressBase: reference to an onm.Address
+        model: reference to the onm.Model to use as the decoding reference
         xriTokens: array of top-level xRI string tokens
     }
     response = {
@@ -51,44 +53,42 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
 ###
 xRIP_VectorParser = module.exports = (request_) ->
-
-    # Abrogate validation of request_ in-parameter to caller, xRIP.parse.
+    # Abrogate validation of request_ in-parameter to assumed caller, xRIP.parse.
     # Consequently, never export this function at onm module scope.
-
     errors = []
-
-    response =
-        error: null
-        result: null
-
+    response = error: null, result: null
+    xriTokens = request_.xriTokens
+    addressBase = request_.addressBase
     inBreakScope = false
-
     while not inBreakScope
-
         inBreakScope = true
 
-        # CATEGORIZE the xRI vector as either an onm-format URI, or LRI
-        switch xriTokens1[0]
+        # Vectors are always evaluated relative to the store's anonymous namespace
+        # and are much more restrictive than paths insofar as they explicitly encode
+        # information that is used to verify the decoding strategy (i.e. model)
+        # of the vector's path segment (a hash or readable path variant for LRI/URI respectively).
+
+
+        # CATEGORIZE the xRI vector as either an onm-format URI, or LRI and delegate accordingly.
+        vectorPrefixToken = xriTokens.shift()
+        vectorParseRequest = addressBase: addressBase, xriTokens: xriTokens
+        switch vectorPrefixToken
             when 'onm-uri'
-                try
-                    response.result = addressBase.model.addressFromURI xri
-                catch exception_
-                    errors.unshift exception_.message
-                    errors.unshift "URI identifies a resource outside the model's address space."
-                    break
-            when 'onm-lri'
-                try
-                    response.result = addressBase.model.addressFromLRI xri
-                catch exception_
-                    errors.unshift exception_.message
-                    errors.unshift "LRI identifies a resource outside the model's address space."
-                    break
-            else
-                errors.unshift "invalid vector xRI type '#{xriTokens1[0]}'. Expected either 'onm-uri', or 'onm-lri'."
+                vectorParseResponse = xRIP_URIVectorParser vectorParseRequest
                 break
-
+            when 'onm-lri'
+                vectorParseResponse = xRIP_LRIVectorParser vectorParseRequest
+                break
+            else
+                errors.unshift "invalid vector xRI type '#{vectorPrefixToken}'. Expected either 'onm-uri', or 'onm-lri'."
+                break
+        if errors.length
+            break
+        if not vectorParseResponse.error
+            response.result = vectorParseResponse.result
+        else
+            errors.unshift vectorParseResponse.error
     if errors.length
-        errors.unshift "onm.xRIParser failed:"
-        response.error = errors.join " "
+        response.error = errors.join ' '
+    response
 
-    return response    

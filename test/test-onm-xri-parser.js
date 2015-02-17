@@ -1,5 +1,7 @@
 // test-impl-onm-xri-parser.js
 
+require('./subtests/xri-parser/test-use-case-xri-parser-bad-input-variants.js');
+
 require('./subtests/xri-parser/test-use-case-xri-parser-root-bad-paths.js');
 require('./subtests/xri-parser/test-use-case-xri-parser-root-bad-vectors.js');
 

@@ -39,55 +39,59 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-
-Address = require '../onm-address' # TODO: remove this.
+Model = require '../onm-model'
+Address = require '../onm-address'
 
 xRIP_parsePath = require './onm-xri-parse-path'
 xRIP_parseVector = require './onm-xri-parse-vector'
 
-# If !response.error, then response.result is a newly-constructed onm.Address instance.
-# If response.error, then response.error is a string message explaining why response.result is null.
-# request = { baseAddress: onm.Address, xri: onm-format fully-qualified or relative dot-delimited path, URI or LRI string }
+###
+    request = {
+        model: required reference to an onm.Model object to use to decode the xRI string
+        addressBase: reference to an onm.Address, undefined, or null
+                     if xri specifies a path, addressBase is optional
+                     if xri specifies a vector, addressBase must be undefined, or null
+        xri: onm-format string. Supports path, relative path, URI, and LRI variants.
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: onm.Address reference or null to indicate error
+    }
 
+    Notes:
+    - An error is re
+###
 
 xRIP_Parser = module.exports = (request_) ->
-
     errors = []
-
     response = 
         error: null
         result: null
-
     inBreakScope = false
-
     while not inBreakScope
 
-        inBreakScope = true # better than a break at the bottom. And, clearer.
+        inBreakScope = true
 
         if not (request_? and request_)
             errors.unshift "Missing required request object in-parameter."
             break
-
+        if not (request_.model? and request_.model)
+            errors.unshift "Invalid request object missing required property 'model'."
+            break
+        if not (request_.model instanceof Model)
+            errors.unshift "Invalid request object 'model' value type '#{Object.prototype.toString.call request_.model}'. Expected onm.Model reference."
+            break
         if not (request_.xri? and request_.xri)
             errors.unshift "Invalid request object missing required property 'xri'."
             break
-
         xriType = Object.prototype.toString.call request_.xri
-
         if xriType != '[object String]'
-            errors.unshift "Invalid resource identifier type '#{xriType}'. Expected '[object String]'."
+            errors.unshift "Invalid request object 'xri' value type '#{xriType}'. Expected string reference."
             break
 
-        if not (request_.addressBase? and request_.addressBase)
-            errors.unshift "Invalid request object missing required property 'addressBase'."
-            break
-
-        if not (request_.addressBase instanceof Address)
-            errors.unshift "Invalid base address object type '#{typeof baseAddressType}'. Expected onm.Address reference."
-            break
-
+        model = request_.model
         xri = request_.xri
-        addressBase = request_.addressBase
+        addressBase = request_.addressBase? and request_.addressBase or undefined
 
         # An onm xRI is a string that abstractly represents a namespace resource.
         # There are two major types of xRI's: paths, and vectors. Paths are for
@@ -97,25 +101,37 @@ xRIP_Parser = module.exports = (request_) ->
 
         # CATEGORIZE xRI as PATH or VECTOR
         xriTokens = xri.split ':'
-        xriCategory = (xriTokens.length > 1) and 'vector' or 'path'
+        xriCategory = ((xriTokens.length == 1) and "path") or ((xriTokens.length > 1) and "vector") or "wat"
         switch xriCategory
             when 'path'
-                parsePathResponse = xRIP_parsePath { addressBase: request_.addressBase, xri: xriTokens[0] }
+                # Evaluate additional constraints on the possible values of addressBase
+                if addressBase? and addressBase
+                    if not (addressBase instanceof Address)
+                        errors.unshift "Invalid request object 'addressBase' value type '#{Object.prototype.toString.call addressBase}'. Expected onm.Address reference."
+                        break
+                parsePathResponse = xRIP_parsePath model: model, addressBase: addressBase, xri: xriTokens[0]
                 if not parsePathResponse.error
                     response.result = parsePathResponse.result
                 else
                     errors.unshift parsePathResponse.error
                 break
             when 'vector'
-                parseVectorResponse = xRIP_parseVector { addressBase: request_.addressBase, xriTokens: xriTokens }
+                # Evaluate additional constraints on the possible values of addressBase
+                if addressBase? and addressBase
+                    errors.unshift "Invalid request object sets 'addressBase' value in the context of a vector xRI parse."
+                    break
+                parseVectorResponse = xRIP_parseVector model: model, xriTokens: xriTokens
                 if not parseVectorResponse.error
                     response.result = parseVectorResponse.result
                 else
                     errors.unshift parseVectorResponse.error
                 break
+            else
+                errors.unshift "xRI string '#{xri}' is not even wrong."
+                break
 
     if errors.length
-        errors.unshift "onm.xRIParser failed:"
+        errors.unshift "xRIP.parse failed:"
         response.error = errors.join " "
 
     return response
