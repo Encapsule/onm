@@ -97,7 +97,7 @@ xriParserUseCase({
     addressBase: [],
     xri: 'shouldNotEvenBeEvaluated',
     expectedResults: {
-        error: 'xRIP.parse failed: Invalid request object \'addressBase\' value type \'[object Array]\'. Expected onm.Address reference.'
+        error: 'xRIP.parse \'shouldNotEvenBeEvaluated\' failed: Invalid request object \'addressBase\' value type \'[object Array]\'. Expected onm.Address reference.'
     }
 });
 
@@ -108,7 +108,7 @@ xriParserUseCase({
     addressBase: [],
     xri: 'random1:',
     expectedResults: {
-        error: 'xRIP.parse failed: Invalid request object sets \'addressBase\' value in the context of a vector xRI parse.'
+        error: 'xRIP.parse \'random1:\' failed: Invalid request object sets \'addressBase\' value in the context of a vector xRI parse.'
     }
 });
 
@@ -118,7 +118,7 @@ xriParserUseCase({
     model: testDataModel,
     xri: 'bogus:',
     expectedResults: {
-        error: 'xRIP.parse failed: invalid vector xRI type \'bogus\'. Expected either \'onm-uri\', or \'onm-lri\'.'
+        error: 'xRIP.parse \'bogus:\' failed: Unrecognized xRI type prefix \'bogus\'. Expected either \'onm-lri\', or \'onm-uri\'.'
     }
 });
 

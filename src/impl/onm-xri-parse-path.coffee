@@ -86,12 +86,13 @@ xRIP_PathParser = module.exports = (request_) ->
         if errors.length
             break
 
-        if generations and ((not (addressBase? and addressBase)) or ((addressBase.getDescriptor().parentPathIdVector.length - generations) < 0))
+        if generations and ((not (addressBase? and addressBase)) or ((addressBase.implementation.getDescriptor().parentPathIdVector.length - generations) < 0))
             errors.unshift "Path contains illegal descent below the model's root namespace."
             break
 
         if generations and addressBase? and addressBase
             try
+                # TODO REMOVE EXCEPTION INTERFACE onm.Address.createParentAddress
                 addressBase = addressBase.createParentAddress generations
                 if not (addressBase? and baseAddress)
                     errors.unshift "Internal error evaluating requested #{generations}-level namespace descent."
@@ -121,7 +122,7 @@ xRIP_PathParser = module.exports = (request_) ->
 
             token = xriTokens2.shift()
 
-            rootNamespaceName = addressBase.getDescriptor().jsonTag
+            rootNamespaceName = addressBase.implementation.getDescriptor().jsonTag
 
             if token != rootNamespaceName
                 errors.unshift "'#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."

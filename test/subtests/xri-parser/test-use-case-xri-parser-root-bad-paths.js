@@ -46,7 +46,7 @@ xriParserUseCase({
     xri: "//.//.foo",
     addressBase: rootAddress,
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'//.//.foo\' failed: Path contains illegal descent below the model\'s root namespace.'
     }
 });
 
@@ -58,7 +58,7 @@ xriParserUseCase({
     xri: "addressBook.//",
     addressBase: rootAddress,
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'addressBook.//\' failed: Path contains illegal namespace descent after ascent.'
     }
 });
 

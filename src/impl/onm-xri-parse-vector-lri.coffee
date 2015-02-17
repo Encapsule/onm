@@ -41,7 +41,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ###
     request = {
-        addressBase: reference to an onm.Address
+        model: reference to onm.Model
         xriTokens: array of top-level xRI string tokens (minus vector prefix token)
     }
     response = {
@@ -55,7 +55,6 @@ xRIP_LRIVectorParser = module.exports = (request_) ->
     errors = []
     response = error: null, result: null
     xriTokens = request_.xriTokens
-    addressBase = request_.addressBase
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
@@ -63,6 +62,15 @@ xRIP_LRIVectorParser = module.exports = (request_) ->
         if lriEncodedModelVersionId != addressBase.model.uuidVersion
             errors.unshift "LRI in address space '#{lriEncodedModelVersionId}' cannot be decoded using model '#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
             break
+        # We're in create the model's root address.
+        addressBase = request_.model.createRootAddress()
+        if not xriTokens.length
+            response.result = addressBase
+            break
+
+        # The 3rd token in an onm LRI (currently xriTokens[0]) is an onm hash path xRI specified
+        # relative to the model's root namespace.
+
 
         # The current implementation
         try

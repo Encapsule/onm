@@ -81,7 +81,7 @@ xRIP_VectorParser = module.exports = (request_) ->
             errors.unshift "Unrecognized xRI type prefix '#{vectorPrefixToken}'. Expected either 'onm-lri', or 'onm-uri'."
             break
 
-        vectorParseResponse = selectedVectorParser addressBase: request_.model.createRootAddress(), xriTokens: xriTokens
+        vectorParseResponse = selectedVectorParser model: request_.model, xriTokens: xriTokens
 
         if not vectorParseResponse.error
             response.result = vectorParseResponse.result
