@@ -51,6 +51,13 @@ xRIP_URIVectorParser = require './onm-xri-parse-vector-uri'
         error: null or string explaining why result === null
         result: reference to an onm.Address or null
     }
+
+
+    Vectors are always evaluated relative to the store's anonymous namespace
+    and are much more restrictive than paths insofar as they explicitly encode
+    information that is used to verify the decoding strategy (i.e. model)
+    of the vector's path segment (a hash or readable path variant for LRI/URI respectively).
+
 ###
 xRIP_VectorParser = module.exports = (request_) ->
     # Abrogate validation of request_ in-parameter to assumed caller, xRIP.parse.
@@ -58,37 +65,31 @@ xRIP_VectorParser = module.exports = (request_) ->
     errors = []
     response = error: null, result: null
     xriTokens = request_.xriTokens
-    addressBase = request_.addressBase
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
 
-        # Vectors are always evaluated relative to the store's anonymous namespace
-        # and are much more restrictive than paths insofar as they explicitly encode
-        # information that is used to verify the decoding strategy (i.e. model)
-        # of the vector's path segment (a hash or readable path variant for LRI/URI respectively).
-
-
         # CATEGORIZE the xRI vector as either an onm-format URI, or LRI and delegate accordingly.
+
         vectorPrefixToken = xriTokens.shift()
-        vectorParseRequest = addressBase: addressBase, xriTokens: xriTokens
-        switch vectorPrefixToken
-            when 'onm-uri'
-                vectorParseResponse = xRIP_URIVectorParser vectorParseRequest
-                break
-            when 'onm-lri'
-                vectorParseResponse = xRIP_LRIVectorParser vectorParseRequest
-                break
-            else
-                errors.unshift "invalid vector xRI type '#{vectorPrefixToken}'. Expected either 'onm-uri', or 'onm-lri'."
-                break
-        if errors.length
+
+        selectedVectorParser = 
+            ((vectorPrefixToken == 'onm-lri') and xRIP_LRIVectorParser) or
+            ((vectorPrefixToken == 'onm-uri') and xRIP_URIVectorParser) or
+            null
+        if not selectedVectorParser
+            errors.unshift "Unrecognized xRI type prefix '#{vectorPrefixToken}'. Expected either 'onm-lri', or 'onm-uri'."
             break
+
+        vectorParseResponse = selectedVectorParser addressBase: request_.model.createRootAddress(), xriTokens: xriTokens
+
         if not vectorParseResponse.error
             response.result = vectorParseResponse.result
         else
             errors.unshift vectorParseResponse.error
+
     if errors.length
         response.error = errors.join ' '
+
     response
 

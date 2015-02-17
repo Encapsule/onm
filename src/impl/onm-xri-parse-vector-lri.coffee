@@ -61,7 +61,7 @@ xRIP_LRIVectorParser = module.exports = (request_) ->
         inBreakScope = true
         lriEncodedModelVersionId = xriTokens.shift()
         if lriEncodedModelVersionId != addressBase.model.uuidVersion
-            errors.unshift "LRI in model space {#{lriEncodedModelVersionId}} cannot be decoded in space {#{addressBase.model.uuidVersion}}."
+            errors.unshift "LRI in address space '#{lriEncodedModelVersionId}' cannot be decoded using model '#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
             break
 
         # The current implementation

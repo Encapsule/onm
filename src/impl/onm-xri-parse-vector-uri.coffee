@@ -61,13 +61,11 @@ xRIP_URIVectorParser = module.exports = (request_) ->
         inBreakScope = true
         uriEncodedModelId = xriTokens.shift()
         if uriEncodedModelId != addressBase.model.uuid
-            errors.unshift "URI in model space #{#{uriEncodedModelId}} cannot be decoded in space {#{addressBase.model.uuid}}."
+            errors.unshift "URI in address space '#{uriEncodedModelId}' cannot be decoded using model '#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
             break
         if not xriTokens.length
-            response.result = addressBase.model.createRootAddress() # Don
-
-
-
+            response.result = addressBase
+            break
 
         # The current implementation.
         try

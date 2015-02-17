@@ -62,7 +62,7 @@ xRIP_PathParser = module.exports = (request_) ->
         error: null
         result: null
 
-    addressResult = request_.addressBase
+    addressBase = request_.addressBase
 
     inBreakScope = false
 
@@ -76,42 +76,67 @@ xRIP_PathParser = module.exports = (request_) ->
         for token in xriTokens2
             if token == '//'
                 if ascending
-                    errors.unshift "path contains illegal namespace descent after ascent."
+                    errors.unshift "Path contains illegal namespace descent after ascent."
                     break
                 else
                     generations++
             else
                 ascending = true
 
-        # If the path started with a descent request, adjust the addressBase accordingly.
-        if generations
-            try
-                addressResult = addressResult.createParentAddress generations
-                if not (addressResult? and baseAddress)
-                    errors.unshift "path contains illegal descent below the model's root namespace."
-                    break
-            catch exception_
-                errors.unshift "path contains unparsable namespace descent."
-                break
-
-        # If the path was just a descent, we're done.
-        if not (xriTokens2.length - generations)
-            response.result = addressResult
+        if errors.length
             break
 
-        # With whatever addressResult we have, parse the remaining path tokens and affect
-        # updates to addressResult to bind its context tuple chain up to the target namespace.
+        if generations and ((not (addressBase? and addressBase)) or ((addressBase.getDescriptor().parentPathIdVector.length - generations) < 0))
+            errors.unshift "Path contains illegal descent below the model's root namespace."
+            break
+
+        if generations and addressBase? and addressBase
+            try
+                addressBase = addressBase.createParentAddress generations
+                if not (addressBase? and baseAddress)
+                    errors.unshift "Internal error evaluating requested #{generations}-level namespace descent."
+                    break
+            catch exception_
+                errors.unshift "Internal error evaluating requested #{generations}-level namespace descent."
+                break
+
+            # If the path was just a descent, we're done.
+            if not (xriTokens2.length - generations)
+                response.result = addressBase
+                break
+
+        # addressBase is undefined indicating that the remaining unparsed tokens are to be
+        # resolved relative to the anonymous store namespace. Or, addressBase is defined
+        # and the remaining tokens are to be resolved relative to the namespace it identitifes.
+
+        # Case 1: addressBase undefined -> remaining tokens relative to anonymous store namespace.
+        if not (addressBase? and addressBase)
+
+            if not xriTokens2.length
+                errors.unshift "Null path cannot be resolved against the model's anonymous."
+                break
+
+            # Generate the root address of the model.
+            addressBase = request_.model.createRootAddress()
+
+            token = xriTokens2.shift()
+
+            rootNamespaceName = addressBase.getDescriptor().jsonTag
+
+            if token != rootNamespaceName
+                errors.unshift "'#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
+                errors.unshift "Expected name '#{rootNamespaceName}' to enter address space "
+                errors.unshift "Invalid root namespace name '#{token}'."
+                break
+
+        # Case 2: addressBase defined -> remaining tokens relative to addressBase namespace.
 
         try
             unresolvedPath = (xriTokens2.slice generations, xriTokens2.length).join '.'
-            if addressResult.isRoot()
-                response.result = addressResult.model.createPathAddress unresolvedPath
-            else
-                response.result = addressResult.createSubpathAddress unresolvedPath
-
+            response.result = addressBase.createSubpathAddress unresolvedPath
         catch exception_
-            errors.unshift "( " + exception_.message + " )"
-            errors.unshift "path identifies a resource outside the model's address space."
+            errors.unshift exception_.message
+            errors.unshift "Path identifies a resource outside the model's address space."
             break
 
     if errors.length

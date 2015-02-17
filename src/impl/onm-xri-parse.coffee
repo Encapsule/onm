@@ -127,11 +127,14 @@ xRIP_Parser = module.exports = (request_) ->
                     errors.unshift parseVectorResponse.error
                 break
             else
-                errors.unshift "xRI string '#{xri}' is not even wrong."
+                errors.unshift "xRI string value is not even wrong."
                 break
 
     if errors.length
-        errors.unshift "xRIP.parse failed:"
+        if xri? and xri
+            errors.unshift "xRIP.parse '#{xri}' failed:"
+        else
+            errors.unshift "xRIP.parse failed:"
         response.error = errors.join " "
 
     return response
