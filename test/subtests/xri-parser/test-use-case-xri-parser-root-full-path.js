@@ -8,6 +8,7 @@ var xriParserUseCase = require('./test-runner-xri-parser');
 xriParserUseCase({
     testName: "Full valid path evaluated relative to store root address",
     validConfig: true,
+    model: testDataModel,
     xri: 'addressBook.contacts',
     addressBase: rootAddress,
     expectedResults: {
