@@ -45,7 +45,7 @@ Address = require('./onm-address')
 AddressToken = require('./impl/onm-address-token')
 uuid = require('node-uuid')
 intrinsicDataModels = require('./impl/onm-intrinsic-data-models')
-
+xRIP = require './impl/onm-xri'
 LUID = 1
 
 #
@@ -281,54 +281,6 @@ class ModelDetails
             #
             # / END: @createAddressFromPathId
         
-            # --------------------------------------------------------------------------
-            @parseAddressHashString = (addressHashString_) ->
-                throw new Error "parseAddressHashString is being deprecated now."
-                try
-                    addressTokenVector = []
-                    addressToken = undefined
-                    key = undefined
-
-                    lriTokens = addressHashString_.split ':'
-
-                    if (lriTokens.length < 2) or (lriTokens.length > 3)
-                        throw new Error "Unrecognized onm LRI format. Expected two, or three colon-delimited segments."
-                    if lriTokens[0] != 'onm-lri'
-                        throw new Error "Unrecognized onm LRI format. Frist LRI segment is expected to be 'onm-lri'."
-                    if lriTokens[1] != @model.uuidVersion
-                        throw new Error "Cannot parse onm LRI bound to data model version ID '#{lriTokens[1]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
-
-                    addressToken = new AddressToken @model, undefined, undefined, 0
-                    pathSegment = lriTokens[2]? and lriTokens[2] or undefined
-                    stringTokens = pathSegment? and pathSegment and pathSegment.split(".") or []
-                    nextAddressToken = undefined
-                    index = 0
-                    for stringToken in stringTokens
-
-                        if not index++
-                            addressToken = new AddressToken @model, undefined, undefined, parseInt(stringToken)
-                            continue
-
-                        if not (nextAddressToken? and nextAddressToken)
-                            nextAddressToken = new AddressToken @model, addressToken.idExtensionPoint, ((stringToken != '-') and stringToken or undefined), addressToken.namespaceDescriptor.archetypePathId
-                            continue
-
-                        addressTokenVector.push addressToken
-                        addressToken = new AddressToken @model, nextAddressToken.idExtensionPoint, nextAddressToken.key, parseInt(stringToken)
-                        nextAddressToken = undefined
-
-                    addressTokenVector.push addressToken
-
-                    if nextAddressToken? and nextAddressToken
-                        addressTokenVector.push nextAddressToken
-
-                    newAddress = new Address @model, addressTokenVector
-
-                    return newAddress
-
-                catch exception
-                    throw new Error("parseAddressHashString failure: #{exception.message}")
-
 
 
             # --------------------------------------------------------------------------
@@ -460,6 +412,8 @@ module.exports = class Model
     constructor: (objectModelDeclaration_) ->
         try
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
+            @xRIP = xRIP
+
         catch exception
             throw new Error "onm.Model constructor failed: #{exception.message}"
 
@@ -474,23 +428,21 @@ module.exports = class Model
     #
     # ============================================================================
     createPathAddress: (path_) =>
-        try
-            pathId = @implementation.getPathIdFromPath(path_)
-            newAddress = @implementation.createAddressFromPathId(pathId)
-            return newAddress
-        catch exception
-            throw new Error "onm.Model.createPathAddress failed: #{exception.message}"
+        errors = []
+        response = xRIP.parse model: @, xri: path_
+        if response.error
+            throw new Error "onm.Model.createPathAddress failed: #{response.error}"
+        response.result
 
     #
     # ============================================================================
     addressFromURI: (uri_) =>
-        try
-            if not (uri_? and uri_)
-                throw new Error("Missing URI string input parameter.");
-            newAddress = @implementation.parseAddressHumanReadableString uri_
-            return newAddress
-        catch exception
-            throw new Error "onm.Model.addressFromURI failed: #{exception.message}"
+        errors = []
+        response = xRIP.parse model: @, xri: uri_
+        if response.error
+            throw new Error "onm.Model.addressFromURI failed: #{response.error}"
+        return response.result
+
     # DEPRECATED in v0.3
     createAddressFromHumanReadableString: (humanReadableString_) =>
         console.log "onm v0.3: onm.Model.createAddressFromHashString has been deprecated. Use v0.3 onm.Model.addressFromURI API."
@@ -499,13 +451,12 @@ module.exports = class Model
     #
     # ============================================================================
     addressFromLRI: (lri_) =>
-        try
-            if not (lri_? and lri_)
-                throw new Error("Missing LRI string input parameter.");
-            newAddress = @implementation.parseAddressHashString lri_
-            return newAddress
-        catch exception
-            throw new Error "onm.Model.addressFromLRI failed: #{exception.message}"
+        errors = []
+        response = xRIP.parse model: @, xri: lri_
+        if response.error
+            throw new Error "onm.Model.addressFromLRI failed: #{response.error}"
+        return response.result
+
     # DEPRECATED in v0.3
     createAddressFromHashString: (hash_) =>
         console.log "onm v0.3: onm.Model.createAddressFromHashString is deprecated. Use v0.3 onm.Model.addressFromLRI API."
