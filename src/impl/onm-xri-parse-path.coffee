@@ -111,7 +111,10 @@ xRIP_PathParser = module.exports = (request_) ->
                 break
 
             pathTokens.shift generations
-            xriTokens[0] = pathTokens.join '.'
+            xriTokens.shift()
+            if pathTokens.length
+               revisedPath = ((pathTokens.length > 1) and (pathTokens.join '.')) or pathTokens[0]
+               xriTokens.unshift revisedPath
 
         parseReadablePathResponse = xRIP_ReadablePathParser model: request_.model, addressBase: addressBase, xriTokens: xriTokens
         if not parseReadablePathResponse.error

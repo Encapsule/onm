@@ -89,10 +89,12 @@ xriReadablePathParser = module.exports = (request_) ->
             response.result = addressBase? and addressBase or request_.model.createRootAddress()
             break
 
+        pathTokenIndex = 0
+
         # PARSE RELATIVE TO MODEL'S ANONYMOUS NAMESPACE
 
         if not (addressBase? and addressBase)
-            pathToken = pathTokens.shift()
+            pathToken = pathTokens[pathTokenIndex++]
 
             ###
                 Reserved 1st path token values (and all component key positions in model ns walk)
@@ -117,7 +119,8 @@ xriReadablePathParser = module.exports = (request_) ->
                 break
 
             # We're in. Initialize the current address token bound to model's root namespace.
-            currentToken = new AddressToken model, undefined, undefined, 0
+            currentAddressToken = new AddressToken model, undefined, undefined, 0
+
 
         else
             index = 0
@@ -127,8 +130,9 @@ xriReadablePathParser = module.exports = (request_) ->
             currentAddressToken = sourceTokenVector[sourceTokenVector.length - 1].clone()
 
         # PARSE RELATIVE TO ESTABLISHED MODEL NAMESPACE
-        pathTokenIndex = 0
-        for pathToken in pathTokens
+        while pathTokenIndex < pathTokens.length
+
+            pathToken = pathTokens[pathTokenIndex++]
 
             if errors.length
                 break
@@ -149,9 +153,22 @@ xriReadablePathParser = module.exports = (request_) ->
                         break
 
                 if not (nsDescriptorNew? and nsDescriptorNew)
-                    validPath = pathTokenIndex and "#{(pathTokens.slice 0, pathTokenIndex).join '.'}." or ''
-                    unparsedPath = ((pathTokenIndex + 1) < pathTokens.length) and ".#{(pathTokens.slice (pathTokenIndex + 1), pathTokens.length).join '.'}" or ''
-                    errors.unshift "Check path token #{pathTokenIndex + 1} '#{validPath}>>>#{pathToken}<<<#{unparsedPath}' and data model for discrepencies."
+                    # GENERATE A VERY DETAILED ERROR REPORT
+                    # Top-level error message
+                    validPath = pathTokenIndex and "#{(pathTokens.slice 0, pathTokenIndex - 1).join '.'}." or ''
+                    unparsedPath = (pathTokenIndex < pathTokens.length) and ".#{(pathTokens.slice (pathTokenIndex), pathTokens.length).join '.'}" or ''
+                    topLevelMessage = "Path token #{pathTokenIndex}, '#{validPath}>>>#{pathToken}<<<#{unparsedPath}', vectors outside model's address space."
+                    if not nsDescriptorCurrent.children.length
+                        detailLevelMessage = "Hint: parent namespace '#{nsDescriptorCurrent.jsonTag}' is a leaf namespace with no declared children."
+                    else
+                        detailLevelMessage = "Hint: parent namespace '#{nsDescriptorCurrent.jsonTag}' declares child namespace(s):"
+                        childStrings = []
+                        for childDescriptor in nsDescriptorCurrent.children
+                            childStrings.unshift " '#{childDescriptor.jsonTag}' of type '#{childDescriptor.namespaceType}'"
+                        detailLevelMessage += "#{childStrings.join ','}."
+
+                    errors.unshift detailLevelMessage
+                    errors.unshift topLevelMessage
                     break
 
                 currentAddressToken = new AddressToken model, nsDescriptorCurrent.idExtensionPoint, nsDescriptorCurrent.key, nsDescriptorNew.id
@@ -161,7 +178,6 @@ xriReadablePathParser = module.exports = (request_) ->
                 key = (not ((pathToken == "+") or (pathToken == nsDescriptorCurrent.jsonTag))) and pathToken or undefined
                 currentAddressToken = new AddressToken model, nsDescriptorCurrent.idNamespace, key, nsDescriptorCurrent.archetypePathId
 
-            pathTokenIndex++
 
         if not errors.length
             addressTokenVector.push currentAddressToken

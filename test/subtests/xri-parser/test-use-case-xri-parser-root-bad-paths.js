@@ -6,6 +6,7 @@ var rootAddress = testDataModel.createRootAddress();
 var xriParserUseCase = require('./test-runner-xri-parser');
 
 
+
 xriParserUseCase({
     testName: "Bad xRI path relative to store: path missing string token",
     validConfig: false,
