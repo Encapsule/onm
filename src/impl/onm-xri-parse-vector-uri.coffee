@@ -39,6 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+xRIP_ReadablePathParser = require './onm-xri-parse-path-readable'
+
 ###
     request = {
         model: reference to an onm.Model
@@ -55,31 +57,28 @@ xRIP_URIVectorParser = module.exports = (request_) ->
     errors = []
     response = error: null, result: null
     xriTokens = request_.xriTokens
+    model = request_.model
+
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
+
         uriEncodedModelId = xriTokens.shift()
-        if uriEncodedModelId != addressBase.model.uuid
-            errors.unshift "URI in address space '#{uriEncodedModelId}' cannot be decoded using model '#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
+        if uriEncodedModelId != model.uuid
+            errors.unshift "URI in address space '#{uriEncodedModelId}' cannot be decoded using model '#{model.uuid}:#{model.uuidVersion}'."
             break
-        # We're in. Create the model's root address.
-        addressBase = request_.model.createRootAddress()
+
         if not xriTokens.length
-            response.result = addressBase
+            response.result = request_.model.createRootAddress()
             break
 
+        parseReadablePathResponse = xRIP_ReadablePathParser model: request_.model, xriTokens: xriTokens
+        if not parseReadablePathResponse.error
+            response.result = parseReadablePathResponse.result
+        else
+            errors.unshift parseReadablePathResponse.error
 
-        # The 3rd token in an onm URI (currently xriTokens[0]) is an onm readable path xRI specified
-        # relative to the model's root namespace.
-
-
-
-        # The current implementation.
-        try
-            response.result = addressBase.model.addressFromURI xri
-        catch exception_
-            errors.unshift exception_.message
-        break
     if errors.length
         response.error = errors.join ' '
+
     response

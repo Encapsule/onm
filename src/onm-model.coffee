@@ -283,6 +283,7 @@ class ModelDetails
         
             # --------------------------------------------------------------------------
             @parseAddressHashString = (addressHashString_) ->
+                throw new Error "parseAddressHashString is being deprecated now."
                 try
                     addressTokenVector = []
                     addressToken = undefined
@@ -328,66 +329,6 @@ class ModelDetails
                 catch exception
                     throw new Error("parseAddressHashString failure: #{exception.message}")
 
-
-            # --------------------------------------------------------------------------
-            @parseAddressHumanReadableString = (addressHumanReadableString_) ->
-
-                addressTokenVector = []
-                currentAddressToken = null
-                currentNamespaceDescriptor = null
-
-                uriTokens = addressHumanReadableString_.split ":"
-                if (uriTokens.length < 2) or (uriTokens.length > 3)
-                    throw new Error "Unrecognized onm URI format. Expected either two, or three, colon-delimited segments."
-                if uriTokens[0] != 'onm-uri'
-                    throw new Error "Unrecognized onm URI format. First URI segment is expected to be 'onm-uri'."
-                if uriTokens[1] != @model.uuid
-                    throw new Error "Cannot parse an onm URI bound to data model ID '#{uriTokens[1]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
-                pathSegment = uriTokens[2]
-                stringTokens = pathSegment? and pathSegment and pathSegment.split "." or []
-                stringTokenIndex = 0
-
-                currentAddressToken = new AddressToken @model, undefined, undefined, 0
-                currentNamespaceDescriptor = currentAddressToken.namespaceDescriptor
-                action = 'frameToken'
-
-                for stringToken in stringTokens
-
-                    switch action
-                        when 'frameToken'
-                            # Attempt to locate a namespaceDescriptor corresponding to the non-component namespace string token.
-                            newNamespaceDescriptor = null
-                            for childDescriptor in currentNamespaceDescriptor.children
-                                if childDescriptor.jsonTag == stringToken
-                                    newNamespaceDescriptor = childDescriptor
-                                    break
-
-                            if not (newNamespaceDescriptor? and newNamespaceDescriptor)
-                                validStringTokens = stringTokens.slice 0, stringTokenIndex
-                                unparsedStringTokens = stringTokens.slice (stringTokenIndex + 1), stringTokens.length
-                                message = "Invalid token '#{stringToken}' found in address string: " +
-                                    "'#{validStringTokens.join('.')}.>#{stringToken}<.#{unparsedStringTokens.join('.')}'"
-                                throw new Error message
-
-                            currentAddressToken = new AddressToken @model, 
-                                currentAddressToken.idExtensionPoint, currentAddressToken.key, newNamespaceDescriptor.id
-                            currentNamespaceDescriptor = newNamespaceDescriptor
-                            if currentNamespaceDescriptor.namespaceType == 'extensionPoint'
-                                action = 'newToken'
-                            break
-
-                        when 'newToken'
-                            addressTokenVector.push currentAddressToken
-                            currentAddressToken = new AddressToken @model,
-                                currentNamespaceDescriptor.id, (((stringToken != '-') and (stringToken != currentNamespaceDescriptor.jsonTag)) and stringToken or undefined), 
-                                currentNamespaceDescriptor.archetypePathId
-                            currentNamespaceDescriptor = currentAddressToken.namespaceDescriptor
-                            action = 'frameToken'
-                            break
-
-                addressTokenVector.push currentAddressToken
-                newAddress = new Address @model, addressTokenVector
-                return newAddress
 
 
             # --------------------------------------------------------------------------
