@@ -14,7 +14,7 @@ xriParserUseCase({
     xri: "addressBook..contact",
     addressBase: rootAddress,
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'addressBook..contact\' failed: Path token 1, \'.>>>addressBook<<<..contact\', vectors outside model\'s address space. Hint: parent namespace \'addressBook\' declares child namespace(s): \'contacts\' of type \'extensionPoint\', \'properties\' of type \'child\'.'
     }
 });
 
@@ -25,7 +25,7 @@ xriParserUseCase({
     xri: "addressBook.contacts.",
     addressBase: rootAddress,
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'addressBook.contacts.\' failed: Path token 1, \'.>>>addressBook<<<.contacts.\', vectors outside model\'s address space. Hint: parent namespace \'addressBook\' declares child namespace(s): \'contacts\' of type \'extensionPoint\', \'properties\' of type \'child\'.'
     }
 });
 
@@ -36,7 +36,7 @@ xriParserUseCase({
     xri: ".addressBook.contacts",
     addressBase: rootAddress,
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'.addressBook.contacts\' failed: Path token 1, \'.>>><<<.addressBook.contacts\', vectors outside model\'s address space. Hint: parent namespace \'addressBook\' declares child namespace(s): \'contacts\' of type \'extensionPoint\', \'properties\' of type \'child\'.'
     }
 });
 
@@ -47,7 +47,7 @@ xriParserUseCase({
     xri: "//.//.foo",
     addressBase: rootAddress,
     expectedResults: {
-        error: 'xRIP.parse \'//.//.foo\' failed: Path contains illegal descent below the model\'s root namespace.'
+        error: 'xRIP.parse \'//.//.foo\' failed: Path contains illegal descent into the model\'s anonymous namespace.'
     }
 });
 

@@ -1,4 +1,4 @@
-// test-use-case-xri-parser-root-bad-vectors.js
+// test-use-case-xri-parser-root-bad-vector-uri.js
 
 var testData = require('../../fixture/address-book-data-model');
 var testDataModel = testData.createModel();
