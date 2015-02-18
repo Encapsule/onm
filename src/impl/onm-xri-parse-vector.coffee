@@ -39,8 +39,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIP_LRIVectorParser = require './onm-xri-parse-vector-lri'
-xRIP_URIVectorParser = require './onm-xri-parse-vector-uri'
+xRIP_parseVariant =
+    'onm-lri': require './onm-xri-parse-vector-lri'
+    'onm-uri': require './onm-xri-parse-vector-uri'
 
 ###
     request = {
@@ -73,12 +74,9 @@ xRIP_VectorParser = module.exports = (request_) ->
 
         vectorPrefixToken = xriTokens.shift()
 
-        selectedVectorParser = 
-            ((vectorPrefixToken == 'onm-lri') and xRIP_LRIVectorParser) or
-            ((vectorPrefixToken == 'onm-uri') and xRIP_URIVectorParser) or
-            null
+        selectedVectorParser = xRIP_parseVariant[vectorPrefixToken]
         if not selectedVectorParser
-            errors.unshift "Unrecognized xRI type prefix '#{vectorPrefixToken}'. Expected either 'onm-lri', or 'onm-uri'."
+            errors.unshift "Unrecognized xRI type '#{vectorPrefixToken}'. Expected either 'onm-lri', or 'onm-uri'."
             break
 
         vectorParseResponse = selectedVectorParser model: request_.model, xriTokens: xriTokens

@@ -118,7 +118,7 @@ xriParserUseCase({
     model: testDataModel,
     xri: 'bogus:',
     expectedResults: {
-        error: 'xRIP.parse \'bogus:\' failed: Unrecognized xRI type prefix \'bogus\'. Expected either \'onm-lri\', or \'onm-uri\'.'
+        error: 'xRIP.parse \'bogus:\' failed: Unrecognized xRI type \'bogus\'. Expected either \'onm-lri\', or \'onm-uri\'.'
     }
 });
 

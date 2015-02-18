@@ -39,6 +39,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+AddressToken = require './onm-address-token'
+Address = require '../onm-address'
+
 ###
     request = {
         model: reference to onm.Model
@@ -50,34 +53,90 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
 ###
 xRIP_LRIVectorParser = module.exports = (request_) ->
+
     # Abrogate validation of request_ in-parameter to assumed caller, xRIP_VectorParser.
     # Consequently, never export this function at onm module scope.
+
     errors = []
+
     response = error: null, result: null
+    model = request_.model
     xriTokens = request_.xriTokens
+
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
+
         lriEncodedModelVersionId = xriTokens.shift()
-        if lriEncodedModelVersionId != addressBase.model.uuidVersion
-            errors.unshift "LRI in address space '#{lriEncodedModelVersionId}' cannot be decoded using model '#{addressBase.model.uuid}:#{addressBase.model.uuidVersion}'."
+
+        if lriEncodedModelVersionId != model.uuidVersion
+            errors.unshift "LRI in address space '#{lriEncodedModelVersionId}' cannot be decoded using model '#{model.uuid}:#{model.uuidVersion}'."
             break
-        # We're in create the model's root address.
-        addressBase = request_.model.createRootAddress()
+
         if not xriTokens.length
-            response.result = addressBase
+            response.result = model.createRootAddress()
             break
 
-        # The 3rd token in an onm LRI (currently xriTokens[0]) is an onm hash path xRI specified
-        # relative to the model's root namespace.
+        hashPath = xriTokens.shift()
+        hashPathTokens = hashPath.split '.'
 
+        addressTokenVector = []
+        addressTokenCurrent = new AddressToken model, undefined, undefined, 0
 
-        # The current implementation
-        try
-            response.result = addressBase.model.addressFromLRI xri
-        catch exception_
-            errors.unshift exception_.message
-        break
+        while hashPathTokens.length
+
+            hashToken = hashPathTokens.shift()
+            outsideAddressSpaceError = false
+
+            nsDescriptorCurrent = addressTokenCurrent.namespaceDescriptor
+            switch nsDescriptorCurrent.namespaceType
+                when 'extensionPoint'
+
+                    # Determine the 'jsonTag' value of the component declared within this extension point.
+                    nsDescriptorComponent = model.implementation.getNamespaceDescriptorFromPathId nsDescriptorCurrent.archetypePathId
+
+                    # Interpret the next hash token as a component key
+                    switch hashToken
+                        when nsDescriptorComponent.jsonTag
+                            key = undefined
+                            break
+                        when '+'
+                            key = undefined
+                            break
+                        else
+                            key = hashToken
+                            break
+
+                    # Add the current address token to the vector
+                    addressTokenVector.push addressTokenCurrent
+                    # TODO: Remove exception interface
+                    try
+                        addressTokenCurrent = new AddressToken model, addressTokenCurrent.idNamespace, key, nsDescriptorComponent.id
+                    catch exception_
+                        outsideAddressSpaceError = true
+                    break
+
+                else
+
+                    # Replace the current address token with a replica that addresses one of its declared child namespaces.
+                    # TODO: Remove exception interface
+                    try
+                        addressTokenCurrent = new AddressToken model, addressTokenCurrent.idExtensionPoint, addressTokenCurrent.key, parseInt(hashToken)
+                    catch exception_
+                        outsideAddressSpaceError = true
+                    break
+
+            if outsideAddressSpaceError
+                errors.unshift "LRI identifies a namespace resource outside the declared address space of model '#{model.uuid}:#{model.uuidVersion} address space."
+                break
+
+        if errors.length
+            break
+
+        addressTokenVector.push addressTokenCurrent
+        response.result = new Address model, addressTokenVector
+
     if errors.length
         response.error = errors.join ' '
+
     response
