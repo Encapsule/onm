@@ -74,94 +74,98 @@ xriReadablePathParser = module.exports = (request_) ->
     xriTokens = request_.xriTokens
     pathString = xriTokens.shift()
     pathTokens = pathString? and pathString and pathString.length and pathString.split '.' or []
-    pathMetaString = xriTokens.length and xriTokens.join ':' or undefined
+    pathMetaString = (xriTokens.length and xriTokens.join ':') or undefined
     
     model = request_.model
     addressBase = request_.addressBase
 
-    if not pathTokens.length
-        # By convention, if there are no path tokens return the addressBase. Or, if the request
-        # is relative to the model's anonymous namespace return the model's root address.
-        response.result = addressBase? and addressBase or request_.model.createRootAddress()
-        break
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
 
-    # PARSE RELATIVE TO MODEL'S ANONYMOUS NAMESPACE
-
-    if not (addressBase? and addressBase)
-        pathToken = pathTokens.shift()
-
-        ###
-            Reserved 1st path token values (and all component key positions in model ns walk)
-
-            There are subtle degrees of freedom exposed by these options. Use them carefully.
-
-            '*' - use an asterisk to indicate that the token should match the model's root
-                  namespace's declared 'jsonTag' value whatever it is. This is easy but
-                  completely ambiguous vs. specifying the jsonTag value literally. Or,
-                  using the strong URI or the stronger-yet LRI xRI forms onm provides.
-
-            jsonTag - specify the model's root namespace 'jsonTag' value to make a somewhat
-                  ambigous but usually safe request to enter the model's address space.
-
-            Prefer these colloquial forms for inner routines only that operate on base address
-            references passed from outer routines that leverage the stricter URI and LRI xRI forms.
-
-        ###
-
-        if not ((pathToken == '*') or (pathToken == model.jsonTag))
-            errors.unshift "Expected either '*' or '#{model.jsonTag}'."
-            errors.unshift "Path beginning with token '#{pathToken}' cannot be parsed relative to this model's anonymous namespace."
+        if not pathTokens.length
+            # By convention, if there are no path tokens return the addressBase. Or, if the request
+            # is relative to the model's anonymous namespace return the model's root address.
+            response.result = addressBase? and addressBase or request_.model.createRootAddress()
             break
 
-        # We're in. Initialize the current address token bound to model's root namespace.
-        currentToken = new AddressToken model, undefined, undefined, 0
+        # PARSE RELATIVE TO MODEL'S ANONYMOUS NAMESPACE
 
-    else
-        index = 0
-        sourceTokenVector = addressBase.implementation.tokenVector
-        while index < (sourceTokenVector.length - 1)
-            addressTokenVector.push sourceTokenVector[index++].clone()
-        currentAddressToken = sourceTokenVector[sourceTokenVector.length - 1].clone()
+        if not (addressBase? and addressBase)
+            pathToken = pathTokens.shift()
 
+            ###
+                Reserved 1st path token values (and all component key positions in model ns walk)
 
-    # PARSE RELATIVE TO ESTABLISHED MODEL NAMESPACE
-    pathTokenIndex = 0
-    for pathToken in pathTokens
+                There are subtle degrees of freedom exposed by these options. Use them carefully.
 
-        if errors.length
-            break
+                '*' - use an asterisk to indicate that the token should match the model's root
+                      namespace's declared 'jsonTag' value whatever it is. This is easy but
+                      completely ambiguous vs. specifying the jsonTag value literally. Or,
+                      using the strong URI or the stronger-yet LRI xRI forms onm provides.
 
-        nsDescriptorCurrent = currentAddressToken.namespaceDescriptor
-        generateNewToken = (nsDescriptorCurrent.namespaceType == 'extensionPoint') and true or false
+                jsonTag - specify the model's root namespace 'jsonTag' value to make a somewhat
+                      ambigous but usually safe request to enter the model's address space.
+    
+                Prefer these colloquial forms for inner routines only that operate on base address
+                references passed from outer routines that leverage the stricter URI and LRI xRI forms.
+            ###
 
-        if not generateNewToken
-
-            # We're looking for a plain-old namespace with a regular 'jsonTag' name.
-
-            nsDescriptorNew = null
-
-            # TODO: At least cache this in a map during model creation. Fix entirely when model gets jsgraph for jbus.
-            for childDescriptor in nsDescriptorCurrent.children
-                if pathToken == childDescriptor.jsonTag
-                    nsDescriptorNew = childDescriptor
-                    break
-
-            if not nsDescriptorNew? and nsDescriptorNew
-                validPath = (pathTokens.slice 0, pathTokenIndex).join '.'
-                unparsedPath = (pathTokens.slice (pathTokenIndex + 1), pathTokens.length).join '.'
-                errors.unshift "Path token #{pathTokenIndex + 1}: '#{validPath}!#{pathToken}!#{unparsedPath}' not in modeled address space."
+            if not ((pathToken == '*') or (pathToken == model.jsonTag))
+                errors.unshift "Expected either '*' or '#{model.jsonTag}'."
+                errors.unshift "Path beginning with token '#{pathToken}' cannot be parsed relative to this model's anonymous namespace."
                 break
 
-            currentAddressToken = new AddressToken model, nsDescriptorCurrent.idExtensionPoint, nsDescriptorCurrent.key, nsDescriptorNew.id
+            # We're in. Initialize the current address token bound to model's root namespace.
+            currentToken = new AddressToken model, undefined, undefined, 0
 
         else
+            index = 0
+            sourceTokenVector = addressBase.implementation.tokenVector
+            while index < (sourceTokenVector.length - 1)
+                addressTokenVector.push sourceTokenVector[index++].clone()
+            currentAddressToken = sourceTokenVector[sourceTokenVector.length - 1].clone()
+
+        # PARSE RELATIVE TO ESTABLISHED MODEL NAMESPACE
+        pathTokenIndex = 0
+        for pathToken in pathTokens
+
+            if errors.length
+                break
+
+            nsDescriptorCurrent = currentAddressToken.namespaceDescriptor
+            generateNewToken = (nsDescriptorCurrent.namespaceType == 'extensionPoint') and true or false
+
+            if not generateNewToken
+
+                # We're looking for a plain-old namespace with a regular 'jsonTag' name.
+
+                nsDescriptorNew = null
+
+                # TODO: At least cache this in a map during model creation. Fix entirely when model gets jsgraph for jbus.
+                for childDescriptor in nsDescriptorCurrent.children
+                    if pathToken == childDescriptor.jsonTag
+                        nsDescriptorNew = childDescriptor
+                        break
+
+                if not (nsDescriptorNew? and nsDescriptorNew)
+                    validPath = pathTokenIndex and "#{(pathTokens.slice 0, pathTokenIndex).join '.'}." or ''
+                    unparsedPath = ((pathTokenIndex + 1) < pathTokens.length) and ".#{(pathTokens.slice (pathTokenIndex + 1), pathTokens.length).join '.'}" or ''
+                    errors.unshift "Check path token #{pathTokenIndex + 1} '#{validPath}>>>#{pathToken}<<<#{unparsedPath}' and data model for discrepencies."
+                    break
+
+                currentAddressToken = new AddressToken model, nsDescriptorCurrent.idExtensionPoint, nsDescriptorCurrent.key, nsDescriptorNew.id
+
+            else
+                addressTokenVector.push currentAddressToken
+                key = (not ((pathToken == "+") or (pathToken == nsDescriptorCurrent.jsonTag))) and pathToken or undefined
+                currentAddressToken = new AddressToken model, nsDescriptorCurrent.idNamespace, key, nsDescriptorCurrent.archetypePathId
+
+            pathTokenIndex++
+
+        if not errors.length
             addressTokenVector.push currentAddressToken
-            key = (not ((pathToken == "+") or (pathToken == nsDescriptorCurrent.jsonTag))) and pathToken or undefined
-            currentAddressToken = new AddressToken model, nsDescriptorCurrent.idNamespace, key, nsDescriptorCurrent.archetypePathId
-
-    addressTokenVector.push currentAddressToken
-
-    response.result = new Address model, addressTokenVector
+            response.result = new Address model, addressTokenVector
 
     if errors.length
         response.error = errors.join ' '

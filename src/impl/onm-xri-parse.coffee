@@ -57,9 +57,6 @@ xRIP_parseVector = require './onm-xri-parse-vector'
         error: null or string explaining why result === null
         result: onm.Address reference or null to indicate error
     }
-
-    Notes:
-    - An error is re
 ###
 
 xRIP_Parser = module.exports = (request_) ->
@@ -109,7 +106,7 @@ xRIP_Parser = module.exports = (request_) ->
                     if not (addressBase instanceof Address)
                         errors.unshift "Invalid request object 'addressBase' value type '#{Object.prototype.toString.call addressBase}'. Expected onm.Address reference."
                         break
-                parsePathResponse = xRIP_parsePath model: model, addressBase: addressBase, xri: xriTokens[0]
+                parsePathResponse = xRIP_parsePath model: model, addressBase: addressBase, xriTokens: xriTokens
                 if not parsePathResponse.error
                     response.result = parsePathResponse.result
                 else
