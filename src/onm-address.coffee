@@ -250,9 +250,6 @@ module.exports = class Address
         catch exception
             throw new Error("Address error: #{exception.message}");
 
-
-
-
     #
     # ============================================================================
     getHumanReadableString: =>
