@@ -5,7 +5,7 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-var namedObjectResolver = require('../../../lib/impl/onm-named-object-resolver');
+var namedObjectResolver = require('../../../lib/store/xrlt/onm-named-object-resolver');
 
 module.exports = function (testOptions_) {
 

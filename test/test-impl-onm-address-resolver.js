@@ -15,7 +15,7 @@ describe("Validate the behavior of the onm address resolver.", function() {
 
     before(function() {
         var loadModule = function() {
-            addressResolver = require('../lib/impl/onm-address-resolver');
+            addressResolver = require('../lib/store/xrlt/onm-address-resolver');
         };
         assert.doesNotThrow(loadModule);
     });

@@ -20,8 +20,8 @@ module.exports = describe("Named object resolver module test suite.", function()
 
     before(function(done_) {
         var loadModuleUnderTest = function() {
-            namedObjectResolver = require('../lib/impl/onm-named-object-resolver');
-            namedObjectContext = require('../lib/impl/onm-named-object-context');
+            namedObjectResolver = require('../lib/store/xrlt/onm-named-object-resolver');
+            namedObjectContext = require('../lib/store/xrlt/onm-named-object-context');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();

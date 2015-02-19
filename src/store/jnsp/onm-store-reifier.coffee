@@ -39,8 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-helperFunctions = require('./onm-util-functions')
-Namespace = require('../onm-namespace')
+helperFunctions = require('../../common/onm-util-functions')
+Namespace = require('../../onm-namespace')
 
 #
 # ****************************************************************************

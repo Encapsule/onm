@@ -55,7 +55,7 @@ module.exports = (grunt) ->
                     'lib/store/xrlt/onm-named-object-property-policy-update.js': 'src/store/xrlt/onm-named-object-property-policy-update.coffee'
 
                     # v0.2 observer/notification subsystem (to be replaced in v0.3)
-                    'lib/store/jsnp/onm-store-reifier.js': 'src/store/jsnp/onm-store-reifier.coffee'
+                    'lib/store/jnsp/onm-store-reifier.js': 'src/store/jnsp/onm-store-reifier.coffee'
 
 
         jshint:

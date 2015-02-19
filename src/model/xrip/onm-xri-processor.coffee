@@ -42,7 +42,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 xRIProcessor = module.exports =
 
-    generate: require './onm-xri-generate'
+    generate: require './generate/onm-xri-generate'
 
     ###
         request = {
@@ -56,6 +56,6 @@ xRIProcessor = module.exports =
         }
     ###
 
-    parse: require './onm-xri-parse'
+    parse: require './parse/onm-xri-parse'
 
 

@@ -2,7 +2,7 @@
 //
 
 var onm = require('../../../index');
-var addressResolver = require('../../../lib/impl/onm-address-resolver');
+var addressResolver = require('../../../lib/store/xrlt/onm-address-resolver');
 var assert = require('chai').assert;
 
 module.exports = function (testOptions_) {

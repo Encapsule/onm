@@ -39,15 +39,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './impl/onm-class-registry'
-helperFunctions = require './impl/onm-util-functions'
-StoreReifier = require './impl/onm-store-reifier'
-AddressToken = require './impl/onm-address-token'
+classRegistry = require './common/onm-class-registry'
+helperFunctions = require './common/onm-util-functions'
+StoreReifier = require './store/jnsp/onm-store-reifier'
+AddressToken = require './address/onm-address-token'
 Address = require './onm-address'
 Model = require './onm-model'
 Namespace = require './onm-namespace'
 uuid = require 'node-uuid'
-addressResolver = require './impl/onm-address-resolver'
+addressResolver = require './store/xrlt/onm-address-resolver'
 
 class StoreDetails
 

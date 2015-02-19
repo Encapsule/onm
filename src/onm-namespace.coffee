@@ -39,10 +39,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './impl/onm-class-registry'
-AddressToken = require './impl/onm-address-token'
+classRegistry = require './common/onm-class-registry'
+AddressToken = require './address/onm-address-token'
 Address = require './onm-address'
-addressResolver = require './impl/onm-address-resolver'
+addressResolver = require './store/xrlt/onm-address-resolver'
 
 #
 #

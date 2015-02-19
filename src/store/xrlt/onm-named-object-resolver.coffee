@@ -37,7 +37,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 namedObjectContextHelpers = require('./onm-named-object-context')
-
 namedObjectPropertyVisitor = require('./onm-named-object-property-visitor')
 
 namedObjectPropertyVisitorInterfaces =

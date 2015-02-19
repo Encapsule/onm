@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./onm-address-token')
+AddressToken = require('../../address/onm-address-token')
 namedObjectResolver = require('./onm-named-object-resolver')
 componentContextHelpers = require('./onm-component-context')
 

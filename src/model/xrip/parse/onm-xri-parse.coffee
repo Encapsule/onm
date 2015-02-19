@@ -39,9 +39,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './onm-class-registry'
-Model = require '../onm-model'
-Address = require '../onm-address'
+classRegistry = require '../../../common/onm-class-registry'
+Model = require '../../../onm-model'
+Address = require '../../../onm-address'
 
 xRIP_parsePath = require './onm-xri-parse-path'
 xRIP_parseVector = require './onm-xri-parse-vector'

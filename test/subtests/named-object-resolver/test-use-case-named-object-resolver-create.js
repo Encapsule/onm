@@ -9,8 +9,8 @@ var withData = require('leche').withData;
 var uuid = require('node-uuid');
 var onm = require('../../../index');
 
-var namedObjectResolver = require('../../../lib/impl/onm-named-object-resolver');
-var namedObjectContext = require('../../../lib/impl/onm-named-object-context');
+var namedObjectResolver = require('../../../lib/store/xrlt/onm-named-object-resolver');
+var namedObjectContext = require('../../../lib/store/xrlt/onm-named-object-context');
 
 
 var namespaceDescriptorResolveCreateVectors = require('../../vectors/named-object-create-strategy-vectors')();

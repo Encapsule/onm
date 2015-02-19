@@ -39,13 +39,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-classRegistry = require './impl/onm-class-registry'
-helperFunctions = require './impl/onm-util-functions'
+classRegistry = require './common/onm-class-registry'
+helperFunctions = require './common/onm-util-functions'
+intrinsicDataModels = require './common/onm-intrinsic-data-models'
+
 Address = require './onm-address'
-AddressToken = require './impl/onm-address-token'
+AddressToken = require './address/onm-address-token'
+
+xRIP = require './model/xrip/onm-xri-processor'
+
 uuid = require 'node-uuid'
-intrinsicDataModels = require './impl/onm-intrinsic-data-models'
-xRIP = require './impl/onm-xri'
 LUID = 1
 
 #

@@ -5,7 +5,7 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-var componentResolver = require('../../../lib/impl/onm-component-resolver');
+var componentResolver = require('../../../lib/store/xrlt/onm-component-resolver');
 
 /*
   testOptions: {

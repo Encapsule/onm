@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-helperFunctions = require('./onm-util-functions')
+helperFunctions = require('../../common/onm-util-functions')
 
 module.exports = namedObjectResolverContext = {}
 

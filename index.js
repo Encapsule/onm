@@ -54,9 +54,9 @@ module.exports.Namespace = require('./lib/onm-namespace');
 
 // onm.intrinsics - onm-intrinsic data model declaration object exports.
 //
-module.exports.intrinsics = require('./lib/impl/onm-intrinsic-data-models');
+module.exports.intrinsics = require('./lib/common/onm-intrinsic-data-models');
 
 // onm.util (test/utility exports)
 //
-module.exports.util = require('./lib/impl/onm-util-functions');
+module.exports.util = require('./lib/common/onm-util-functions');
 
