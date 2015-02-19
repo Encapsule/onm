@@ -105,7 +105,7 @@ class StoreDetails
 
 
 module.exports = class Store
-
+    onmClassType: 'a5fc2cff-a105-4750-b2ed-8b7b11f73af5'
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, data_) ->
         try

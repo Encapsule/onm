@@ -408,7 +408,7 @@ class ModelDetails
 #
 # ****************************************************************************
 module.exports = class Model
-
+    onmClassType: '57347d22-cefb-4b5d-a2ed-1732a764fe6b'
     constructor: (objectModelDeclaration_) ->
         try
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)

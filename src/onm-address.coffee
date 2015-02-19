@@ -217,7 +217,7 @@ class AddressDetails
 #
 # ****************************************************************************
 module.exports = class Address
-
+    onmClassType: '075d9b07-c612-416e-a0b2-e839c8677de7'
     constructor: (model_, tokenVector_) ->
         try
             @model = model_? and model_ or throw new Error("Missing required object model input parameter.");
@@ -248,6 +248,8 @@ module.exports = class Address
 
         catch exception
             throw new Error("Address error: #{exception.message}");
+
+
 
 
     #

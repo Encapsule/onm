@@ -61,7 +61,7 @@ class NamespaceDetails
 #
 # ****************************************************************************
 module.exports = class Namespace
-
+    onmClassType: '62286994-befa-4ef5-8f39-8eaaf890fabf'
     constructor: (store_, resolvedAddressContext_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
