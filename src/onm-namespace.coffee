@@ -39,8 +39,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./impl/onm-address-token')
-Address = require('./onm-address')
+classRegistry = require './impl/onm-class-registry'
+AddressToken = require './impl/onm-address-token'
+Address = require './onm-address'
 addressResolver = require './impl/onm-address-resolver'
 
 #
@@ -61,7 +62,7 @@ class NamespaceDetails
 #
 # ****************************************************************************
 module.exports = class Namespace
-    onmClassType: '62286994-befa-4ef5-8f39-8eaaf890fabf'
+    onmClassType: classRegistry.ids.Namespace
     constructor: (store_, resolvedAddressContext_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")

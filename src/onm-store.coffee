@@ -39,13 +39,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-helperFunctions = require('./impl/onm-util-functions')
-StoreReifier = require('./impl/onm-store-reifier')
-AddressToken = require('./impl/onm-address-token')
-Address = require('./onm-address')
-Model = require('./onm-model')
-Namespace = require('./onm-namespace')
-uuid = require('node-uuid')
+classRegistry = require './impl/onm-class-registry'
+helperFunctions = require './impl/onm-util-functions'
+StoreReifier = require './impl/onm-store-reifier'
+AddressToken = require './impl/onm-address-token'
+Address = require './onm-address'
+Model = require './onm-model'
+Namespace = require './onm-namespace'
+uuid = require 'node-uuid'
 addressResolver = require './impl/onm-address-resolver'
 
 class StoreDetails
@@ -105,7 +106,7 @@ class StoreDetails
 
 
 module.exports = class Store
-    onmClassType: 'a5fc2cff-a105-4750-b2ed-8b7b11f73af5'
+    onmClassType: classRegistry.ids.Store
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, data_) ->
         try

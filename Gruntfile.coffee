@@ -15,6 +15,7 @@ module.exports = (grunt) ->
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
 
                     # onm implementation modules
+                    'lib/impl/onm-class-registry.js': 'src/impl/onm-class-registry.coffee'
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
 
                     # v0.3 implementation

@@ -39,12 +39,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-
-helperFunctions = require('./impl/onm-util-functions')
-Address = require('./onm-address')
-AddressToken = require('./impl/onm-address-token')
-uuid = require('node-uuid')
-intrinsicDataModels = require('./impl/onm-intrinsic-data-models')
+classRegistry = require './impl/onm-class-registry'
+helperFunctions = require './impl/onm-util-functions'
+Address = require './onm-address'
+AddressToken = require './impl/onm-address-token'
+uuid = require 'node-uuid'
+intrinsicDataModels = require './impl/onm-intrinsic-data-models'
 xRIP = require './impl/onm-xri'
 LUID = 1
 
@@ -408,7 +408,7 @@ class ModelDetails
 #
 # ****************************************************************************
 module.exports = class Model
-    onmClassType: '57347d22-cefb-4b5d-a2ed-1732a764fe6b'
+    onmClassType: classRegistry.ids.Model
     constructor: (objectModelDeclaration_) ->
         try
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
