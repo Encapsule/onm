@@ -47,7 +47,7 @@ registry.ids =
     Store:      'a5fc2cff-a105-4750-b2ed-8b7b11f73af5'
     Namespace:  '62286994-befa-4ef5-8f39-8eaaf890fabf'
 
-for classname in registry.ids
+for classname of registry.ids
     classid = registry.ids[classname]
     registry.lookup[classid] = classname
 

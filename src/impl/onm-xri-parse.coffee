@@ -39,6 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+classRegistry = require './onm-class-registry'
 Model = require '../onm-model'
 Address = require '../onm-address'
 
@@ -75,8 +76,8 @@ xRIP_Parser = module.exports = (request_) ->
         if not (request_.model? and request_.model)
             errors.unshift "Invalid request object missing required property 'model'."
             break
-        if not (request_.model.onmClassType? and request_.model.onmClassType and (request_.model.onmClassType == '57347d22-cefb-4b5d-a2ed-1732a764fe6b'))
-            errors.unshift "Invalid request object 'model' value type '#{Object.prototype.toString.call request_.model}'. Expected onm.Model reference."
+        if classRegistry.lookup[request_.model.onmClassType] != 'Model'
+            errors.unshift "Invalid request object 'model' value. Expected reference to onm.Model instance."
             break
         if not (request_.xri? and request_.xri)
             errors.unshift "Invalid request object missing required property 'xri'."
@@ -103,8 +104,8 @@ xRIP_Parser = module.exports = (request_) ->
             when 'path'
                 # Evaluate additional constraints on the possible values of addressBase
                 if addressBase? and addressBase
-                    if not (addressBase.onmClassType? and addressBase.onmClassType and (addressBase.onmClassType == '075d9b07-c612-416e-a0b2-e839c8677de7'))
-                        errors.unshift "Invalid request object 'addressBase' value type '#{Object.prototype.toString.call addressBase}'. Expected onm.Address reference."
+                    if classRegistry.lookup[addressBase.onmClassType] != 'Address'
+                        errors.unshift "Invalid request object 'addressBase' value. Expected onm.Address reference."
                         break
                 parsePathResponse = xRIP_parsePath model: model, addressBase: addressBase, xriTokens: xriTokens
                 if not parsePathResponse.error
