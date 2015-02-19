@@ -15,50 +15,48 @@ module.exports = (grunt) ->
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
 
                     # onm implementation modules
-                    'lib/impl/onm-class-registry.js': 'src/impl/onm-class-registry.coffee'
-                    'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
+                    'lib/common/onm-class-registry.js': 'src/common/onm-class-registry.coffee'
+                    'lib/address/onm-address-token.js': 'src/address/onm-address-token.coffee'
 
                     # v0.3 implementation
 
-                    'lib/impl/onm-xri.js': 'src/impl/onm-xri.coffee'
+                    # Common sub-modules.
+                    'lib/common/onm-util-functions.js': 'src/common/onm-util-functions.coffee'
+                    'lib/common/onm-intrinsic-data-models.js': 'src/common/onm-intrinsic-data-models.coffee'
 
-                    'lib/impl/onm-xri-generate.js': 'src/impl/onm-xri-generate.coffee'
+                    # x Resource Identifier Processor (xRIP)
+                    'lib/model/xrip/onm-xri-processor.js': 'src/model/xrip/onm-xri-processor.coffee'
+                    # generate resource locator strings
+                    'lib/model/xrip/generate/onm-xri-generate.js': 'src/model/xrip/generate/onm-xri-generate.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-path.js': 'src/model/xrip/generate/onm-xri-generate-path.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-path-readable.js': 'src/model/xrip/generate/onm-xri-generate-path-readable.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-path-hash.js': 'src/model/xrip/generate/onm-xri-generate-path-hash.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-vector.js': 'src/model/xrip/generate/onm-xri-generate-vector.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-vector-uri.js': 'src/model/xrip/generate/onm-xri-generate-vector-uri.coffee'
+                    'lib/model/xrip/generate/onm-xri-generate-vector-lri.js': 'src/model/xrip/generate/onm-xri-generate-vector-lri.coffee'
+                    # parse resource locator strings
+                    'lib/model/xrip/parse/onm-xri-parse.js': 'src/model/xrip/parse/onm-xri-parse.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-path.js': 'src/model/xrip/parse/onm-xri-parse-path.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-path-readable.js': 'src/model/xrip/parse/onm-xri-parse-path-readable.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-path-hash.js': 'src/model/xrip/parse/onm-xri-parse-path-hash.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-vector.js': 'src/model/xrip/parse/onm-xri-parse-vector.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-vector-uri.js': 'src/model/xrip/parse/onm-xri-parse-vector-uri.coffee'
+                    'lib/model/xrip/parse/onm-xri-parse-vector-lri.js': 'src/model/xrip/parse/onm-xri-parse-vector-lri.coffee'
 
-                    'lib/impl/onm-xri-generate-path.js': 'src/impl/onm-xri-generate-path.coffee'
-                    'lib/impl/onm-xri-generate-path-readable.js': 'src/impl/onm-xri-generate-path-readable.coffee'
-                    'lib/impl/onm-xri-generate-path-hash.js': 'src/impl/onm-xri-generate-path-hash.coffee'
-
-                    'lib/impl/onm-xri-generate-vector.js': 'src/impl/onm-xri-generate-vector.coffee'
-                    'lib/impl/onm-xri-generate-vector-uri.js': 'src/impl/onm-xri-generate-vector-uri.coffee'
-                    'lib/impl/onm-xri-generate-vector-lri.js': 'src/impl/onm-xri-generate-vector-lri.coffee'
-
-                    'lib/impl/onm-xri-parse.js': 'src/impl/onm-xri-parse.coffee'
-
-                    'lib/impl/onm-xri-parse-path.js': 'src/impl/onm-xri-parse-path.coffee'
-                    'lib/impl/onm-xri-parse-path-readable.js': 'src/impl/onm-xri-parse-path-readable.coffee'
-                    'lib/impl/onm-xri-parse-path-hash.js': 'src/impl/onm-xri-parse-path-hash.coffee'
-
-                    'lib/impl/onm-xri-parse-vector.js': 'src/impl/onm-xri-parse-vector.coffee'
-                    'lib/impl/onm-xri-parse-vector-uri.js': 'src/impl/onm-xri-parse-vector-uri.coffee'
-                    'lib/impl/onm-xri-parse-vector-lri.js': 'src/impl/onm-xri-parse-vector-lri.coffee'
-
-
-                    'lib/impl/onm-intrinsic-data-models.js': 'src/impl/onm-intrinsic-data-models.coffee'
-                    'lib/impl/onm-address-resolver.js': 'src/impl/onm-address-resolver.coffee'
-                    'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
-                    'lib/impl/onm-component-context.js': 'src/impl/onm-component-context.coffee'
-                    'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
-                    'lib/impl/onm-named-object-context.js': 'src/impl/onm-named-object-context.coffee'
-                    'lib/impl/onm-named-object-property-visitor.js': 'src/impl/onm-named-object-property-visitor.coffee'
-                    'lib/impl/onm-named-object-property-policy-common.js': 'src/impl/onm-named-object-property-policy-common.coffee'
-                    'lib/impl/onm-named-object-property-policy-initialize.js': 'src/impl/onm-named-object-property-policy-initialize.coffee'
-                    'lib/impl/onm-named-object-property-policy-update.js': 'src/impl/onm-named-object-property-policy-update.coffee'
+                    # x Resource Location Transformer (xRLT)
+                    'lib/store/xrlt/onm-address-resolver.js': 'src/store/xrlt/onm-address-resolver.coffee'
+                    'lib/store/xrlt/onm-component-resolver.js': 'src/store/xrlt/onm-component-resolver.coffee'
+                    'lib/store/xrlt/onm-component-context.js': 'src/store/xrlt/onm-component-context.coffee'
+                    'lib/store/xrlt/onm-named-object-resolver.js': 'src/store/xrlt/onm-named-object-resolver.coffee'
+                    'lib/store/xrlt/onm-named-object-context.js': 'src/store/xrlt/onm-named-object-context.coffee'
+                    'lib/store/xrlt/onm-named-object-property-visitor.js': 'src/store/xrlt/onm-named-object-property-visitor.coffee'
+                    'lib/store/xrlt/onm-named-object-property-policy-common.js': 'src/store/xrlt/onm-named-object-property-policy-common.coffee'
+                    'lib/store/xrlt/onm-named-object-property-policy-initialize.js': 'src/store/xrlt/onm-named-object-property-policy-initialize.coffee'
+                    'lib/store/xrlt/onm-named-object-property-policy-update.js': 'src/store/xrlt/onm-named-object-property-policy-update.coffee'
 
                     # v0.2 observer/notification subsystem (to be replaced in v0.3)
-                    'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
+                    'lib/store/jsnp/onm-store-reifier.js': 'src/store/jsnp/onm-store-reifier.coffee'
 
-                    # Collection of common functions that don't fit elsewhere
-                    'lib/impl/onm-util-functions.js': 'src/impl/onm-util-functions.coffee'
 
         jshint:
             options: {}
