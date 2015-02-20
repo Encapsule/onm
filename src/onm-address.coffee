@@ -40,7 +40,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 classRegistry = require './common/onm-class-registry'
-
 AddressToken = require './address/onm-address-token'
 
 #
@@ -144,42 +143,24 @@ module.exports = class Address
     # Note that an onm URI can be converted back to an onm.Address via method
     # onm.Model.addressFromURI.
     uri: =>
-        try
-            if @implementation.humanReadableString? and @implementation.humanReadableString
-                return @implementation.humanReadableString
-            index = 0
-            stringTokens = []
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            generatorResponse = xRIP.generate.vector.uri address: @
+            if generatorResponse.error
+                errors.unshift generatorResponse.error
+                break
+            response.result = generatorResponse.result
+        if errors.length
+            errors.unshift "onm.Address.uri failed:"
+            response.error = errors.join ' '
 
-            addStringToken = (address_) =>
-                model = address_.getModel();
-                tokenString = null
-
-                switch model.namespaceType
-                    when 'root'
-                        return true
-                    when 'component'
-                        key = address_.implementation.getLastToken().key
-                        tokenString = key? and key or '-'
-                        break
-                    else
-                        tokenString = model.jsonTag
-                        break
-                stringTokens.push tokenString
-
-            @visitParentAddressesAscending( (addressParent_) =>
-                addStringToken(addressParent_)
-            )
-            addStringToken(@)
-
-            hashString = "onm-uri:#{@model.uuid}"
-            if stringTokens.length
-                hashString += ":#{stringTokens.join('.')}"
-            @implementation.humanReadableString = hashString
-            hashString
-        catch exception_
-            throw new Error "onm.Address.uri generate failed: #{exception.message}"
-
-
+        # TODO: REMOVE EXCEPTION INTERFACE
+        if errors.length
+            throw new Error response.error
+        response.result
 
     #
     # ============================================================================
@@ -608,8 +589,12 @@ module.exports = class Address
             throw new Error("visitExtensionPointAddresses failure: #{exception.message}");
 
 
+
+
+
 # AddressDetails must be in module scope for Address constructor. But has dependency
 # on this module. So, last. Otherwise, AddressDetails will resolve its in-module scope
 # reference to the Address constructor before it's defined. Never a good thing.
 
 AddressDetails = require './address/onm-address-details'
+xRIP = require './model/xrip/onm-xri-processor'

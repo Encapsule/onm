@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIGenerator = module.exports =
+xRIPGenerator = module.exports =
     path: require './onm-xri-generate-path'
     vector: require './onm-xri-generate-vector'
              
