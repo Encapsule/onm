@@ -16,6 +16,7 @@ module.exports = (grunt) ->
 
                     # API sub-modules
                     'lib/model/onm-model-details.js': 'src/model/onm-model-details.coffee'
+                    'lib/address/onm-address-details.js': 'src/address/onm-address-details.coffee'
 
 
                     # onm implementation modules
