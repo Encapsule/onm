@@ -7,12 +7,16 @@ module.exports = (grunt) ->
         coffee:
             compile:
                 files:
-                    # onm API modules
+                    # API modules
                     'lib/onm-model.js': 'src/onm-model.coffee'
                     'lib/onm-address.js': 'src/onm-address.coffee'
                     'lib/onm-store.js': 'src/onm-store.coffee'
                     'lib/onm-namespace.js': 'src/onm-namespace.coffee'
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
+
+                    # API sub-modules
+                    'lib/model/onm-model-details.js': 'src/model/onm-model-details.coffee'
+
 
                     # onm implementation modules
                     'lib/common/onm-class-registry.js': 'src/common/onm-class-registry.coffee'
