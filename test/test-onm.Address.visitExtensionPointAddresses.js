@@ -71,11 +71,10 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = "";
-        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.phoneNumbers"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.phoneNumbers"]';
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts.contact");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
-                assert.isFalse(addressExtensionPoint_.isResolvable());
                 extensionPointAddresses.push(addressExtensionPoint_.uri());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
@@ -91,10 +90,9 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
                     extensionPointAddresses.pop();
                 }
                 actualResult = '';
-                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.addresses.-.notes"]';
+                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses.address.notes"]';
                 address = store.model.createPathAddress("addressBook.contacts.contact.addresses.address");
                 address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
-                    assert.isFalse(addressExtensionPoint_.isResolvable());
                     extensionPointAddresses.push(addressExtensionPoint_.uri());
                 });
                 actualResult = JSON.stringify(extensionPointAddresses);

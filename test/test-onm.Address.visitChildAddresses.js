@@ -74,7 +74,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult = null;
         var expectedResult;
         before(function() {
-            expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.phoneNumbers"]';
+            expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.phoneNumbers"]';
             model = testData.createModel();
             address = model.createPathAddress("addressBook.contacts.contact");
             address.visitChildAddresses( function (addressChild_) {
@@ -94,7 +94,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             var expectedResult;
 
             before(function() {
-                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.phoneNumbers"]';
+                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.phoneNumbers"]',
                 store = testData.createStore();
                 var namespace = store.nsCreate(address);
                 addressContact = namespace.address();
@@ -120,7 +120,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
                 var expectedResult;
 
                 before(function() {
-                    expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.-.notes"]';
+                    expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.address.notes"]';
                     var address = addressContact.createSubpathAddress("addresses.address");
                     address.visitChildAddresses( function (addressChild_) {
                         childAddresses.push(addressChild_.uri());

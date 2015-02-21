@@ -36,7 +36,7 @@ xriParserUseCase({
     validConfig: false,
     model: "WAT",
     expectedResults: {
-        error: 'xRIP.parse failed: Invalid request object \'model\' value type \'[object String]\'. Expected onm.Model reference.'
+        error: 'xRIP.parse failed: Invalid request object \'model\' value type. Expected reference to onm.Model instance.'
     }
 });
 
@@ -97,7 +97,7 @@ xriParserUseCase({
     addressBase: [],
     xri: 'shouldNotEvenBeEvaluated',
     expectedResults: {
-        error: 'xRIP.parse \'shouldNotEvenBeEvaluated\' failed: Invalid request object \'addressBase\' value type \'[object Array]\'. Expected onm.Address reference.'
+        error: 'xRIP.parse \'shouldNotEvenBeEvaluated\' failed: Invalid request object \'addressBase\' value. Expected onm.Address reference.'
     }
 });
 

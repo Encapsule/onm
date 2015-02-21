@@ -73,7 +73,7 @@ xriParserUseCase({
     model: testDataModel,
     xri: "onm-uri:431c97059a0240f9312f1b8854d58bfa:random3",
     expectedResults: {
-        error: ''
+        error: 'xRIP.parse \'onm-uri:431c97059a0240f9312f1b8854d58bfa:random3\' failed: Path token 1, \'.>>>random3<<<\', vectors outside model\'s address space. Hint: parent namespace \'addressBook\' declares child namespace(s): \'contacts\' of type \'extensionPoint\', \'properties\' of type \'child\'.'
     }
 });
 
