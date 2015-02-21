@@ -39,8 +39,67 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIPGenerator = module.exports =
+classRegistry = require '../../../common/onm-class-registry'
+
+xRIP_Generators =
     path: require './onm-xri-generate-path'
     vector: require './onm-xri-generate-vector'
-             
+
+xRIP_GeneratorsByFormat =
+    'readable': xRIP_Generators.path
+    'hash': xRIP_Generators.path
+    'lri':  xRIP_Generators.vector
+    'uri':  xRIP_Generators.vector
+
+###
+    request = {
+        address: reference to onm.Address to convert
+        format: string (one of 'readable', 'hash', 'lri', or 'uri')
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: onm-format path xRI string
+    }
+
+###
+# ============================================================================
+xRIP_Generator = module.exports = (request_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        if not (request_? and request_)
+            errors.unshift "Missing required request object in-parameter."
+            break
+        if not (request_.address? and request_.address)
+            errors.unshift "Invalid request object missing required property 'address'."
+            break
+        if classRegistry.lookup[request_.address.onmClassType] != 'Address'
+            errors.unshift "Invalid request object 'address' value type. Expected reference to onm.Address."
+            break
+        if not (request_.format? and request_.format)
+            errors.unshift "Invalid request object missing required property 'format'."
+            break
+        formatType = Object.prototype.toString.call request_.format
+        if formatType != '[object String]'
+            errors.unshift "Invalid request object 'format' value type. Expected reference to '[object String]'."
+            break
+        format = request_.format
+        selectedGenerator = xRIP_GeneratorsByFormat[format]
+        if not (selectedGenerator? and selectedGenerator)
+            errors.unshift "Sorry. No registered xRI generator for format '#{format}'."
+            break
+        generatorResponse = selectedGenerator request_
+        if not generatorResponse.error
+            response.result = generatorResponse.result
+        else
+            errors.unshift generatorResponse.error
+    if errors.length
+        errors.unshift "xRIP_Generator failed:"
+        response.error = errors.join ' '
+    response
+
+
+
 

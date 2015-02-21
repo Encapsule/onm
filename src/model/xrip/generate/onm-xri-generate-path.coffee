@@ -39,6 +39,40 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIPathGenerator = module.exports =
+xRIP_PathGenerators =
     readable: require './onm-xri-generate-path-readable'
     hash: require './onm-xri-generate-path-hash'
+
+
+###
+    request = {
+        address: onm.Address reference
+        format: string (one of "readable" or "hash")
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: onm-format path xRI string
+    }
+
+###
+
+xRIP_PathGenerator = module.exports = (request_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        pathFormat = request_.format
+        selectedPathGenerator = xRIP_PathGenerators[pathFormat]
+        if not (selectedPathGenerator? and selectedPathGenerator)
+            errors.unshift "Internal error. No registered path generator for format '#{pathFormat}'."
+            break
+        generatorResponse = selectedPathGenerator request_
+        if not generatorResponse.error
+            response.result = generatorResponse.result
+        else
+            errors.unshift generatorResponse.error
+    if errors.length
+        errors.unshift "xRIP_PathGenerator failed:"
+        response.error = errors.join ' '
+    response

@@ -39,6 +39,40 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIVectorGenerator = module.exports =
+xRIP_VectorGenerators = 
     lri: require './onm-xri-generate-vector-lri'
     uri: require './onm-xri-generate-vector-uri'
+
+
+###
+    request = {
+        address: onm.Address reference
+        format: string (one of "lri" or "uri")
+    }
+    response = {
+        error: null or string explaining why result === null
+        result: onm-format path xRI string
+    }
+
+###
+
+xRIP_VectorGenerator = module.exports = (request_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        pathFormat = request_.format
+        selectedVectorGenerator = xRIP_VectorGenerators[pathFormat]
+        if not (selectedVectorGenerator? and selectedVectorGenerator)
+            errors.unshift "Internal error. No registered vector generator for format '#{pathFormat}'."
+            break
+        generatorResponse = selectedVectorGenerator request_
+        if not generatorResponse.error
+            response.result = generatorResponse.result
+        else
+            errors.unshift generatorResponse.error
+    if errors.length
+        errors.unshift "xRIP_VectorGenerator failed:"
+        response.error = errors.join ' '
+    response

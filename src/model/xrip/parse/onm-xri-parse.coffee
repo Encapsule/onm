@@ -77,7 +77,7 @@ xRIP_Parser = module.exports = (request_) ->
             errors.unshift "Invalid request object missing required property 'model'."
             break
         if classRegistry.lookup[request_.model.onmClassType] != 'Model'
-            errors.unshift "Invalid request object 'model' value. Expected reference to onm.Model instance."
+            errors.unshift "Invalid request object 'model' value type. Expected reference to onm.Model instance."
             break
         if not (request_.xri? and request_.xri)
             errors.unshift "Invalid request object missing required property 'xri'."

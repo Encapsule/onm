@@ -148,7 +148,7 @@ module.exports = class Address
         inBreakScope = false
         while not inBreakScope
             inBreakScope = true
-            generatorResponse = xRIP.generate.vector.uri address: @
+            generatorResponse = xRIP.generate address: @, format: 'uri'
             if generatorResponse.error
                 errors.unshift generatorResponse.error
                 break
@@ -171,48 +171,24 @@ module.exports = class Address
     #
     # ============================================================================
     lri: =>
-        try
-            if @implementation.hashString? and @implementation.hashString
-                return @implementation.hashString
-            index = 0
-            stringTokens = []
-            for token in @implementation.tokenVector
-               if index++
-                    stringTokens.push token.key? and "#{token.key}" or '-'
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            generatorResponse = xRIP.generate address: @, format: 'lri'
+            if generatorResponse.error
+                errors.unshift generatorResponse.error
+                break
+            response.result = generatorResponse.result
+        if errors.length
+            errors.unshift "onm.Address.lri failed:"
+            response.error = errors.join ' '
 
-                if token.idComponent != token.idNamespace
-                    stringTokens.push "#{token.idNamespace}"
-
-            # Given that an ONM object model is a singly-rooted tree structure, the raw
-            # hash strings of different addresses created for the same object model all share
-            # a common string prefix. All the information in the hash string is required to
-            # reconstruct the address if the hash is used as a URN. However, for local in-app
-            # processing, address hash strings are used as dictionary keys typically (e.g.
-            # to open observer state). Speed equality/relational operations on hash string
-            # by reversing the raw string (so that the common prefix appears at the tail
-            # and does not need to evaluated typically). Note that WE DO NOT CARE if we break
-            # Unicode character encoding here; the string is base64 encoded anyway and is
-            # generally meaningless to humans, and the original string may be recovered
-            # by reversing the process. https://github.com/mathiasbynens/esrever is a good
-            # sample of how one should reverse a string if maintaining Unicode is important.
-
-            hashString = "onm-lri:#{@model.uuidVersion}"
-            if stringTokens.length
-                hashString += ":#{stringTokens.join('.')}"
-
-            @implementation.hashString = hashString
-            return hashString
-
-            # TODO: Need to ensure all fragments are correctly URI-encoded
-            # here and in human-readable, and correctly decoded in corrollary model functions.
-            # SAVE FOR FUTURE INSPIRATION
-            #@implementation.hashString = encodeURIComponent(hashSource).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
-            #reversedHashString = humanReadableString.split('').reverse().join('')
-            #@implementation.hashString = window.btoa(reversedHashString)
-
-        catch exception_
-            throw new Error "onm.Address.lri generate failed: #{exception.message}"
-
+        # TODO: REMOVE EXCEPTION INTERFACE
+        if errors.length
+            throw new Error response.error
+        response.result
 
     #
     # ============================================================================
