@@ -181,7 +181,8 @@ xriReadablePathParser = module.exports = (request_) ->
 
             else
                 addressTokenVector.push currentAddressToken
-                key = (not ((pathToken == "+") or (pathToken == nsDescriptorCurrent.jsonTag))) and pathToken or undefined
+                targetComponentName = (model.implementation.getNamespaceDescriptorFromPathId nsDescriptorCurrent.archetypePathId).jsonTag
+                key = (not ((pathToken == "+") or (pathToken != targetComponentName))) and pathToken or undefined
                 currentAddressToken = new AddressToken model, nsDescriptorCurrent.id, key, nsDescriptorCurrent.archetypePathId
 
 

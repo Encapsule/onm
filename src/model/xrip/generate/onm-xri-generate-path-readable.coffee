@@ -81,7 +81,6 @@ xRIP_ReadablePathGenerator = module.exports = (request_) ->
                 pathTokens.push model.jsonTag
                 return true
             key = parentAddress_.implementation.getLastToken().key
-            console.log "While creating readable path key = '#{key}'"
             pathTokens.push key? and key or model.jsonTag
         request_.address.visitParentAddressesAscending evaluateAddress
         evaluateAddress request_.address

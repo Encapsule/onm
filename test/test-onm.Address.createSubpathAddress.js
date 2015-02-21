@@ -72,7 +72,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
             addressContact = namespace.address();
             addressContactAddresses = addressContact.createSubpathAddress("addresses");
             actualResult = addressContactAddresses.uri();
-            expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses';
+            expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses';
         });
 
         it("The actual result should match the expected result", function() {
@@ -85,7 +85,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
             before(function() {
                 var addressTest = addressContactAddresses.createSubpathAddress('address');
                 actualResult = addressTest.uri();
-                expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses.address';
+                expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.address';
             });
 
             it("The actual result should match the expected result", function() {

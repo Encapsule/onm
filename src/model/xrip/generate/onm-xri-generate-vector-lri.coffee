@@ -62,7 +62,7 @@ xRIP_LRIVectorGenerator = module.exports = (request_) ->
         if pathGenResponse.error
             errors.unshift pathGenResponse.error
             break
-        response.result = "onm-lri:#{request_.address.model.uuid}"
+        response.result = "onm-lri:#{request_.address.model.uuidVersion}"
         if pathGenResponse.result
             response.result += ":#{pathGenResponse.result}"
     if errors.length

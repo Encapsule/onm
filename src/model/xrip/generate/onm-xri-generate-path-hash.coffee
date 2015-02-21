@@ -61,7 +61,7 @@ xRIP_HashPathGenerator = module.exports = (request_) ->
         if addressToken.idComponent != addressToken.idNamespace
             hashTokens.push "#{addressToken.idNamespace}"
         firstToken = false
-    response.result = hashTokens.length and hashTokens.join '.' or undefined
+    response.result = hashTokens.length and (hashTokens.join '.') or undefined
     response
 
 
