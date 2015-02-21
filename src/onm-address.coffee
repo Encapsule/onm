@@ -349,65 +349,25 @@ module.exports = class Address
     #
     # ============================================================================
     createSubpathAddress: (subpath_) =>
-        try
-            if not (subpath_? and subpath_) then throw new Error("Missing subpath input parameter.");
+        console.log "onm.Address.createSubpathAddress is deprecated in v0.3. Use onm.Address.address API."
 
-            newTokenVector = [];
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            parseResponse = xRIP.parse model: @model, addressBase: @, xri: subpath_
+            if parseResponse.error
+                errors.unshift parseResponse.error
+                break
+            response.result = parseResponse.result
+        if errors.length
+            errors.unshift "onm.Address.createSubpathAddress failed:"
+            response.error = errors.join ' '
 
-            if (@implementation.tokenVector.length > 1)
-                # The base address token vector has two more more tokens. Clone the first through penultimate token(s).
-                newTokenVector = @implementation.tokenVector.slice(0, (@implementation.tokenVector.length - 1))
-
-            currentToken = @implementation.getLastToken()
-
-            subpathTokens = subpath_.split('.')
-
-            for subpathToken in subpathTokens
-
-                # begin loop
-
-                nd = currentToken.namespaceDescriptor
-
-                ndNew = undefined
-
-                if nd.namespaceType != 'extensionPoint'
-
-                    for child in nd.children
-                        if subpathToken == child.jsonTag
-                            ndNew = child
-                            break
-                    if not (ndNew? and ndNew)
-                        throw new Error("Invalid address token '#{subpathToken}'.");
-
-                    if ndNew.namespaceType == 'component'
-                        throw new Error("Internal error: components must be created within extension point namespaces. How did this happen?");
-
-                    currentToken = new AddressToken(currentToken.model, currentToken.idExtensionPoint, currentToken.key, ndNew.id)
-
-                else
-
-                    archetypePathId = nd.archetypePathId
-
-                    archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
-
-                    if subpathToken != archetypeDescriptor.jsonTag
-                        throw new Error("Expected component name '#{archetypeDescriptor.jsonTag}' but was given '#{subpathToken}'.");
-
-                    newTokenVector.push currentToken
-
-                    currentToken = new AddressToken(currentToken.model, currentToken.idNamespace, undefined, archetypePathId);
-
-
-                # end loop
-
-            #
-            newTokenVector.push currentToken
-            newAddress = new Address(@model, newTokenVector)
-
-            return newAddress
-
-        catch exception
-            throw new Error("createSubpathAddress failure: #{exception.message}");
+        if response.error
+            throw new Error response.error
+        response.result
 
 
     #

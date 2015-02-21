@@ -69,7 +69,7 @@ xRIP_URIVectorGenerator = module.exports = (request_) ->
             errors.unshift = "Invalid request object 'address' value. Expected reference to onm.Address."
             break
 
-        pathGenResponse = xRIP_ReadablePathGenerator address: request_.address, dropRoot: true
+        pathGenResponse = xRIP_ReadablePathGenerator address: request_.address, uriFormat: true
         if pathGenResponse.error
             errors.unshift pathGenResponse.error
             break

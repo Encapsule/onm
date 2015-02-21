@@ -57,50 +57,23 @@ module.exports = class AddressToken
             @idComponent = @namespaceDescriptor.idComponent
             @componentDescriptor = model_.implementation.getNamespaceDescriptorFromPathId(@idComponent)
 
-            @key =  (@componentDescriptor.id > 0) and key_? and key_ or undefined
-            @keyRequired = false # may be overridden later in the constructor
+            keyRequired = @componentDescriptor.id > 0
+
+            @key =  keyRequired and key_? and key_ or undefined
+            @keyRequired = keyRequired and @key? and @key and true or false
 
             # If the token specifies the root component namespace, or any of the root component's subnamespaces
             # then @idExtensionPoint == -1 and @extensionPointDescriptor == undefined.
-            @idExtensionPoint = idExtensionPoint_? and idExtensionPoint_ or -1
+            @idExtensionPoint = -1
             @extensionPointDescriptor = undefined
-
-            # If the AddressToken refers to the root component namespace, or any of its subnamespaces
-            # it does not require a key to resolve because by definition it is unambiguously owned by
-            # Store object.
-            if @componentDescriptor.id == 0 then return
-
-            # In all other cases the AddressToken refers to a namespace in an application component.
-            # Application components are resolved via key lookup in the extension point collection specified
-            # by @extensionPointId.
-            @keyRequired = true
-
-            # As a matter of policy we allow AddressToken to be constructed without explicit specification
-            # of the containing application component's extension point ID iff it can be trivially deduced.
-            if @idExtensionPoint == -1 and not @componentDescriptor.extensionPointReferenceIds.length
-                # We can deduce the extension point ID because for this component there are no cyclic references
-                # defined and thus the mapping of component to extension point ID's is 1:1 (child to parent respectively).
-                @idExtensionPoint = @componentDescriptor.parent.id
-
-            if not @idExtensionPoint
-                # This component is a valid extension of more than one extension point.
-                # Thus we must have the ID of the parent extension point in order to disambiguate.
-                throw new Error("You must specify the ID of the parent extension point when creating a token addressing a '#{@componentDescriptor.path}' component namespace.")
-
-            # Resolve the extension point's object model descriptor.
-            @extensionPointDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(@idExtensionPoint)
-
-            # Exists.
-            if not (@extensionPointDescriptor? and @extensionPointDescriptor)
-                throw new Error("Internal error: unable to resolve extension point object model descriptor in request.")
-
-            # Is an extension point.
-            if @extensionPointDescriptor.namespaceType != "extensionPoint"
-                throw new Error("Invalid selector key object specifies an invalid parent extension point ID. Not an extension point.")
-
-            # Is an extension point that contains the correct application component type.
-            if @extensionPointDescriptor.archetypePathId != @componentDescriptor.id
-                throw new Error("Invalid selector key object specifies unsupported extension point / component ID pair.")
+            if @idComponent != 0
+                if not (idExtensionPoint_? and idExtensionPoint_ and (idExtensionPoint_ != -1))
+                    throw new Error "Missing required idExtensionPoint in-parameter value."
+                @idExtensionPoint = idExtensionPoint_
+                if idExtensionPoint_ != -1
+                    @extensionPointDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(@idExtensionPoint)
+                    if @extensionPointDescriptor.namespaceType != 'extensionPoint'
+                        throw new Error "Invalid extension point namespace ID '#{idExtensionPoint} specified '#{@idExtensionPoint_}'. Actually a r '#{@extensionPointDescriptor.namespaceType}."
 
             return
 

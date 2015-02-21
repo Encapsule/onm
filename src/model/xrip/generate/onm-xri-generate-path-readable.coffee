@@ -44,13 +44,13 @@ classRegistry = require '../../../common/onm-class-registry'
 ###
     request = {
         address: onm.Address reference
-        dropRoot: optional boolean flag (defaults to false)
+        uriFormat: optional boolean flag (defaults to false)
     }
     response = {
         error: null or string explaining why result === null
-        result: onm-format readable path string, undefined (if dropRoot), or null to indicate error
+        result: onm-format readable path string, undefined (if uriFormat), or null to indicate error
     }
-    Note: If specified, request.dropRoot indicates that the routine should not include
+    Note: If specified, request.uriFormat indicates that the routine should not include
     a token for the base namespace of the address (i.e. the root address). xRIP_URIVectorGenerator
     requires this functionality.
 ###
@@ -70,11 +70,11 @@ xRIP_ReadablePathGenerator = module.exports = (request_) ->
         if classRegistry.lookup[request_.address.onmClassType] != 'Address'
             errors.unshift = "Invalid request object 'address' value. Expected reference to onm.Address."
             break
-        dropRoot = request_.dropRoot? and request_.dropRoot or false
+        uriFormat = request_.uriFormat? and request_.uriFormat or false
         index = 0
         pathTokens = []
         evaluateAddress = (parentAddress_) ->
-            if not (dropRoot and index++)
+            if not (uriFormat and index++)
                 return false
             model = parentAddress_.getModel()
             if model.namespaceType != 'component'
@@ -86,7 +86,7 @@ xRIP_ReadablePathGenerator = module.exports = (request_) ->
         request_.address.visitParentAddressesAscending evaluateAddress
         evaluateAddress request_.address
         if not pathTokens.length
-            if not dropRoot
+            if not uriFormat
                 errors.unshfit "Internal error: pathTokens array is empty?"
             break
         response.result = ((pathTokens.length > 1) and (pathTokens.join '.')) or pathTokens[0]

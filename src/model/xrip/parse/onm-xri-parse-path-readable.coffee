@@ -47,6 +47,7 @@ AddressToken = require '../../../address/onm-address-token'
         model: reference to onm.Model
         addressBase: optional reference to an onm.Address
         xriTokens: array of top-level xRI string tokens (path should be xriTokens[0])
+        uriFormat: false (default) true to indicate that path omits the root namespace name
     }
     response = {
         error: null or string explaining why result === null
@@ -78,6 +79,7 @@ xriReadablePathParser = module.exports = (request_) ->
     
     model = request_.model
     addressBase = request_.addressBase
+    uriFormat = request_.uriFormat? and request_.uriFormat or false
 
     inBreakScope = false
     while not inBreakScope
@@ -91,32 +93,36 @@ xriReadablePathParser = module.exports = (request_) ->
 
         pathTokenIndex = 0
 
-        # PARSE RELATIVE TO MODEL'S ANONYMOUS NAMESPACE
 
         if not (addressBase? and addressBase)
-            pathToken = pathTokens[pathTokenIndex++]
 
-            ###
-                Reserved 1st path token values (and all component key positions in model ns walk)
+            if not uriFormat
+        
+                # PARSE RELATIVE TO MODEL'S ANONYMOUS NAMESPACE
 
-                There are subtle degrees of freedom exposed by these options. Use them carefully.
+                pathToken = pathTokens[pathTokenIndex++]
 
-                '*' - use an asterisk to indicate that the token should match the model's root
-                      namespace's declared 'jsonTag' value whatever it is. This is easy but
-                      completely ambiguous vs. specifying the jsonTag value literally. Or,
-                      using the strong URI or the stronger-yet LRI xRI forms onm provides.
+                ###
+                    Reserved 1st path token values (and all component key positions in model ns walk)
 
-                jsonTag - specify the model's root namespace 'jsonTag' value to make a somewhat
-                      ambigous but usually safe request to enter the model's address space.
+                    There are subtle degrees of freedom exposed by these options. Use them carefully.
+
+                    '*' - use an asterisk to indicate that the token should match the model's root
+                          namespace's declared 'jsonTag' value whatever it is. This is easy but
+                          completely ambiguous vs. specifying the jsonTag value literally. Or,
+                          using the strong URI or the stronger-yet LRI xRI forms onm provides.
+
+                    jsonTag - specify the model's root namespace 'jsonTag' value to make a somewhat
+                          ambigous but usually safe request to enter the model's address space.
     
-                Prefer these colloquial forms for inner routines only that operate on base address
-                references passed from outer routines that leverage the stricter URI and LRI xRI forms.
-            ###
+                    Prefer these colloquial forms for inner routines only that operate on base address
+                    references passed from outer routines that leverage the stricter URI and LRI xRI forms.
+                ###
 
-            if not ((pathToken == '*') or (pathToken == model.jsonTag))
-                errors.unshift "Expected either '*' or '#{model.jsonTag}'."
-                errors.unshift "Path beginning with token '#{pathToken}' cannot be parsed relative to this model's anonymous namespace."
-                break
+                if not ((pathToken == '*') or (pathToken == model.jsonTag))
+                    errors.unshift "Expected either '*' or '#{model.jsonTag}'."
+                    errors.unshift "Path beginning with token '#{pathToken}' cannot be parsed relative to this model's anonymous namespace."
+                    break
 
             # We're in. Initialize the current address token bound to model's root namespace.
             currentAddressToken = new AddressToken model, undefined, undefined, 0
@@ -171,12 +177,12 @@ xriReadablePathParser = module.exports = (request_) ->
                     errors.unshift topLevelMessage
                     break
 
-                currentAddressToken = new AddressToken model, nsDescriptorCurrent.idExtensionPoint, nsDescriptorCurrent.key, nsDescriptorNew.id
+                currentAddressToken = new AddressToken model, currentAddressToken.idExtensionPoint, currentAddressToken.key, nsDescriptorNew.id
 
             else
                 addressTokenVector.push currentAddressToken
                 key = (not ((pathToken == "+") or (pathToken == nsDescriptorCurrent.jsonTag))) and pathToken or undefined
-                currentAddressToken = new AddressToken model, nsDescriptorCurrent.idNamespace, key, nsDescriptorCurrent.archetypePathId
+                currentAddressToken = new AddressToken model, nsDescriptorCurrent.id, key, nsDescriptorCurrent.archetypePathId
 
 
         if not errors.length

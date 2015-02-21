@@ -72,7 +72,7 @@ xRIP_URIVectorParser = module.exports = (request_) ->
             response.result = request_.model.createRootAddress()
             break
 
-        parseReadablePathResponse = xRIP_ReadablePathParser model: request_.model, xriTokens: xriTokens
+        parseReadablePathResponse = xRIP_ReadablePathParser model: request_.model, xriTokens: xriTokens, uriFormat: true
         if not parseReadablePathResponse.error
             response.result = parseReadablePathResponse.result
         else

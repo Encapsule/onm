@@ -147,14 +147,9 @@ module.exports = class AddressDetails
                     if not (parentToken_? and parentToken_ and childToken_? and childToken_)
                         throw new Error("Internal error: input parameters are not correct.");
 
-                    if not childToken_.keyRequired
-                        throw new Error("Child token is invalid because it specifies a namespace in the root component.");
-
                     if parentToken_.namespaceDescriptor.id != childToken_.extensionPointDescriptor.id
                         throw new Error("Child token is invalid because the parent token does not select the required extension point namespace.");
 
-                    if not parentToken_.isQualified() and childToken_.isQualified()
-                        throw new Error("Child token is invalid because the parent token is unqualified and the child is qualified.");
                     true
 
                 catch exception
