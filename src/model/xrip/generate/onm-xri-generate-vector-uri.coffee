@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../../../common/onm-class-registry'
+
 xRIP_ReadablePathGenerator = require './onm-xri-generate-path-readable'
 
 ###
@@ -51,37 +51,23 @@ xRIP_ReadablePathGenerator = require './onm-xri-generate-path-readable'
         result: onm-format URI string or null
     }
 ###
-
+# ============================================================================
 xRIP_URIVectorGenerator = module.exports = (request_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-
-        if not (request_? and request_)
-            errors.unshift = "Missing requires request object in-parameter."
-            break
-        if not (request_.address? and request_.address)
-            errors.unshift = "Invalid request object missing required property 'address'."
-            break
-        if classRegistry.lookup[request_.address.onmClassType] != 'Address'
-            errors.unshift = "Invalid request object 'address' value. Expected reference to onm.Address."
-            break
-
         pathGenResponse = xRIP_ReadablePathGenerator address: request_.address, uriFormat: true
         if pathGenResponse.error
             errors.unshift pathGenResponse.error
             break
-
         response.result = "onm-uri:#{request_.address.model.uuid}"
         if pathGenResponse.result
             response.result += ":#{pathGenResponse.result}"
-
     if errors.length
-        errors.unshift "xRIP.generate.vector.uri failed:"
+        errors.unshift "xRIP_URIVectorGenerator failed:"
         response.error = errors.join ' '
-
     response
             
 

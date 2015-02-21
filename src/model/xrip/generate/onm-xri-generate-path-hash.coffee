@@ -55,11 +55,11 @@ xRIP_HashPathGenerator = module.exports = (request_) ->
     response = error: null, result: null
     hashTokens = []
     firstToken = true
-    for addressToken in address.implementation.tokenVector
+    for addressToken in request_.address.implementation.tokenVector
         if not firstToken
             hashTokens.push addressToken.key? and addressToken.key or "+"
         if addressToken.idComponent != addressToken.idNamespace
-            hashTokens.push "#{token.idNamespace}"
+            hashTokens.push "#{addressToken.idNamespace}"
         firstToken = false
     response.result = hashTokens.length and hashTokens.join '.' or undefined
     response
