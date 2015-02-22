@@ -88,7 +88,7 @@ xriReadablePathParser = module.exports = (request_) ->
         if not pathTokens.length
             # By convention, if there are no path tokens return the addressBase. Or, if the request
             # is relative to the model's anonymous namespace return the model's root address.
-            response.result = addressBase? and addressBase or request_.model.createRootAddress()
+            response.result = addressBase? and addressBase or request_.model.address("*")
             break
 
         pathTokenIndex = 0

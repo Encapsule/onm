@@ -21,7 +21,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var actualResult = [];
         var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts"]';
         before(function() {
-            address = store.model.createRootAddress();
+            address = store.model.address("*");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                 extensionPointAddresses.push(addressExtensionPoint_.uri());
             });

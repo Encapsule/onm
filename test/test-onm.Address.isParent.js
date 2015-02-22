@@ -17,7 +17,7 @@ module.exports = describe("onm.Address.isParent tests", function() {
     });        
     describe("determine if the root address is a parent of the root address", function() {
         before(function() {
-            address1 = address2 = store.model.createRootAddress();
+            address1 = address2 = store.model.address("*");
         });
         it("address1.isParent(address2) === false", function() {
             assert.isFalse(address1.isParent(address2));
@@ -29,8 +29,8 @@ module.exports = describe("onm.Address.isParent tests", function() {
 
     describe("determine if 'addressBook' is a parent of 'addressBook.contacts'", function() {
         before(function() {
-            address1 = store.model.createRootAddress();
-            address2 = address1.createSubpathAddress("contacts");
+            address1 = store.model.address("*");
+            address2 = address1.address("contacts");
         });
         it("address1.isParent(address2) === true", function() {
             assert.isTrue(address1.isParent(address2));
@@ -58,16 +58,16 @@ module.exports = describe("onm.Address.isParent tests", function() {
             assert.isFalse(newContactAddress.isParent(address2));
         });
         it("determine if the root address is a parent of the newly-created contact", function() {
-            assert.isTrue(store.model.createRootAddress().isParent(address2));
+            assert.isTrue(store.model.address("*").isParent(address2));
         });
         it("determine if the root address is a parent of 'addressBook.properties'", function() {
-            assert.isTrue(store.model.createRootAddress().isParent(address1));
+            assert.isTrue(store.model.address("*").isParent(address1));
         });
         it("determine if the root address is a parent of newContactAddress", function() {
-            assert.isTrue(store.model.createRootAddress().isParent(newContactAddress));
+            assert.isTrue(store.model.address("*").isParent(newContactAddress));
         });
         it("determine if the newContactAddress is a parent of the root", function() {
-            assert.isFalse(newContactAddress.isParent(store.model.createRootAddress()));
+            assert.isFalse(newContactAddress.isParent(store.model.address("*")));
         });
     });
 });

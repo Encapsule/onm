@@ -8,7 +8,7 @@ var should = require('chai').should;
 var uuid = require('node-uuid');
 var onm = require('../index');
 
-module.exports = describe("onm.Address.createSubpathAddress tests.", function() {
+module.exports = describe("onm.Address.address (subpath) tests.", function() {
 
     var testData = require('./fixture/address-book-data-model');
     var model, response, addressRoot;

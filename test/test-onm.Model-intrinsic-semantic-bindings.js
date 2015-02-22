@@ -53,7 +53,7 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                     assert.instanceOf(store, onm.Store);
                 });
                 assert.doesNotThrow(function() {
-                    address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
+                    address = model.address("*").address("collectionA.componentA");
                     assert.isNotNull(address);
                     assert.instanceOf(address, onm.Address);
                 });

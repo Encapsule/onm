@@ -20,7 +20,7 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
     describe("Serialize/deserialize onm.Address 'addressBook' (root namespace)", function() {
         var addressString, address;
         before(function() {
-            addressString = model.createRootAddress().lri();
+            addressString = model.address("*").lri();
             address = model.addressFromLRI(addressString);
         });
         it("the deserialized result should be an onm.Address object", function() {

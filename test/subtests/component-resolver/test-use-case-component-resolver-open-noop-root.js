@@ -4,8 +4,7 @@ var onm = require('../../../index');
 var testComponentResolverUseCase = require('./test-core-component-resolver');
 var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var rootToken = dataModel.createRootAddress().implementation.getLastToken();
-
+var rootToken = dataModel.address("*").implementation.getLastToken();
 
 testComponentResolverUseCase({
     strategyName: "open",

@@ -5,9 +5,9 @@ var onm = require('../../../index');
 var testAddressResolverUseCase = require('./test-core-address-resolver');
 var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var rootAddress = dataModel.createRootAddress();
+var rootAddress = dataModel.address("*");
 
-var testAddress = rootAddress.createSubpathAddress("namespaceExtensionPointA.namespaceComponentA");
+var testAddress = rootAddress.address("namespaceExtensionPointA.namespaceComponentA");
 
 
 testResult = testAddressResolverUseCase({

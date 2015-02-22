@@ -86,7 +86,7 @@ class StoreDetails
 
             addressResolverOptions =
                 strategy: 'create'
-                address: @model.createRootAddress()
+                address: @model.address("*")
                 propertyAssignmentObject: ingress data_
                 parentDataReference: @dataReference
                 semanticBindingsReference: @model.getSemanticBindings()
@@ -140,7 +140,7 @@ module.exports = class Store
     #
     address: (request_) =>
         try
-            addressRoot = @model.createRootAddress()
+            addressRoot = @model.address("*")
             if not (request_? and request_)
                 return addressRoot
             if not (request_.rls? and request.rls)
@@ -153,13 +153,13 @@ module.exports = class Store
             rls = request_.rls
             addressSubpath = null
             try
-                addressSubpath = @model.createPathAddress rls
+                addressSubpath = @model.address rls
             catch exception_
                 try
-                    addressSubpath = @model.createAddressFromHumanReadableString rls
+                    addressSubpath = @model.lri rls
                 catch exception_
                     try
-                        addressSubpath = @model.createAddressFromHashString rls
+                        addressSubpath = @model.uri rls
                     catch exception_
                         throw new Error "Invalid resource locator string '#{rls}'."
             subpathAddress
@@ -355,7 +355,7 @@ module.exports = class Store
             # collections but excluding the components contained with child extension points.
 
             # Get the store's root address.
-            rootAddress = @model.createRootAddress()
+            rootAddress = @model.address "*"
 
             @implementation.reifier.dispatchCallback(undefined, "onObserverAttachBegin", observerIdCode)
 
@@ -390,7 +390,7 @@ module.exports = class Store
             @implementation.reifier.dispatchCallback(undefined, "onObserverDetachBegin", observerIdCode_)
 
             # Get the store's root address.
-            rootAddress = @model.createRootAddress()
+            rootAddress = @model.address "*"
 
             @implementation.reifier.reifyStoreExtensions(rootAddress, observerIdCode_, true)
             @implementation.reifier.unreifyStoreComponent(rootAddress, observerIdCode_)

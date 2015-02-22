@@ -4,9 +4,9 @@ var onm = require('../../../index');
 var testComponentResolverUseCase = require('./test-core-component-resolver');
 var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var rootAddress = dataModel.createRootAddress();
-var testToken1 = rootAddress.createSubpathAddress("namespaceChildA.namespaceChildB").implementation.getLastToken();
-var testToken2 = rootAddress.createSubpathAddress("namespaceChildA.namespaceExtensionPointB").implementation.getLastToken();
+var rootAddress = dataModel.address("*");
+var testToken1 = rootAddress.address("namespaceChildA.namespaceChildB").implementation.getLastToken();
+var testToken2 = rootAddress.address("namespaceChildA.namespaceExtensionPointB").implementation.getLastToken();
 
 testComponentResolverUseCase({
     strategyName: "open",

@@ -31,8 +31,8 @@ var dataModelDeclaration = {
 };
 
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var rootAddress = dataModel.createRootAddress();
-var testAddress = rootAddress.createSubpathAddress('hashtable.testRecord.hashtable.testRecord');
+var rootAddress = dataModel.address("*");
+var testAddress = rootAddress.address('hashtable.testRecord.hashtable.testRecord');
 testAddress.implementation.tokenVector[1].key = testAddress.implementation.tokenVector[2].key = 'test';
 
 testResult = testAddressResolverUseCase({

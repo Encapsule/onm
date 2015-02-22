@@ -19,7 +19,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         before( function() {
             expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts"]';
             store = testData.createStore();
-            address = store.model.createRootAddress();
+            address = store.model.address("*");
             address.visitChildAddresses( function(childAddress_) {
                 childAddresses.push(childAddress_.uri());
             });
@@ -121,7 +121,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
 
                 before(function() {
                     expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.address.notes"]';
-                    var address = addressContact.createSubpathAddress("addresses.address");
+                    var address = addressContact.address("addresses.address");
                     address.visitChildAddresses( function (addressChild_) {
                         childAddresses.push(addressChild_.uri());
                     })

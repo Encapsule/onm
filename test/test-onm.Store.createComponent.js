@@ -19,11 +19,11 @@ module.exports = describe("onm.Store.nsCreate method tests", function() {
         store = testData.createStore();
         assert.isNotNull(store);
         assert.instanceOf(store, onm.Store);
-        addressRoot = store.model.createRootAddress();
+        addressRoot = store.model.address("*");
         assert.isNotNull(addressRoot);
         assert.instanceOf(addressRoot, onm.Address);
         badDataModel = new onm.Model({ jsonTag: 'bogus', uuid: 'bogus', uuidVersion: 'bogus' });
-        badAddress = badDataModel.createRootAddress();
+        badAddress = badDataModel.address("*");
     });
 
     describe("Attempt to call onm.Store.nsCreate with a null onm.Address parameter should throw.", function() {
@@ -58,7 +58,7 @@ module.exports = describe("onm.Store.nsCreate method tests", function() {
     });
 
     it("Attempt to call onm.Store.nsCreate with a non-component address should throw.", function() {
-        var address = addressRoot.createSubpathAddress('properties.subproperties');
+        var address = addressRoot.address('properties.subproperties');
         assert.throws(function() { store.nsCreate(address); }, Error);
     });
 
@@ -68,7 +68,7 @@ module.exports = describe("onm.Store.nsCreate method tests", function() {
         var namespaceContact = null;
 
         before(function() {
-            addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
+            addressNewContact = addressRoot.address("contacts.contact");
             namespaceContact  = store.nsCreate(addressNewContact);
         });
 
@@ -127,7 +127,7 @@ module.exports = describe("onm.Store.nsCreate method tests", function() {
                     }
                 };
                 before(function() {
-                    addressNewPhoneNumber = namespace.address().createSubpathAddress("phoneNumbers.phoneNumber");
+                    addressNewPhoneNumber = namespace.address().address("phoneNumbers.phoneNumber");
                     namespacePhoneNumber = store.nsCreate(addressNewPhoneNumber, constructionOptions);
                 });
                 it("A contact component should have been created.", function() {

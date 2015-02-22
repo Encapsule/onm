@@ -9,7 +9,7 @@ var onm = require('../../../index');
 var testData = require('../../fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
-var testDataRootAddress = testDataModel.createRootAddress();
+var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 

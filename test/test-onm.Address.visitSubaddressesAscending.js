@@ -18,7 +18,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts","onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties","onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection"]';
         before(function() {
             store = testData.createStore();
-            address = store.model.createRootAddress();
+            address = store.model.address("*");
             address.visitSubaddressesAscending( function(subAddress_) {
                 subAddresses.push(subAddress_.uri());
             });

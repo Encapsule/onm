@@ -17,9 +17,9 @@ module.exports = describe("onm.Store.nsOpen method tests", function() {
 
         var testSetupWrapper = function() {
             store = testData.createStore();
-            addressRoot = store.model.createRootAddress();
+            addressRoot = store.model.address("*");
             namespaceRoot = store.nsOpen(addressRoot);
-            addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
+            addressNewContact = addressRoot.address("contacts.contact");
             namespaceContact = store.nsCreate(addressNewContact);
             addressContact = namespaceContact.address();
         };
@@ -89,7 +89,7 @@ module.exports = describe("onm.Store.nsOpen method tests", function() {
         var addressContacts, namespaceContacts = null;
 
         before(function() {
-            addressContacts = addressRoot.createSubpathAddress("contacts");
+            addressContacts = addressRoot.address("contacts");
             namespaceContacts = store.nsOpen(
                 addressContacts,
                 {

@@ -31,7 +31,7 @@ var dataModelDeclaration = {
 };
 
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var rootAddress = dataModel.createRootAddress();
+var rootAddress = dataModel.address("*");
 
 testResult = testAddressResolverUseCase({
     strategyName: "open",

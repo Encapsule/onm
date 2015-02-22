@@ -4,7 +4,7 @@ var onm = require('../../../index');
 var testComponentResolverUseCase = require('./test-core-component-resolver');
 var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
-var childToken = dataModel.createPathAddress("namespaceRoot.namespaceChildA.namespaceChildB.namespaceChildC").implementation.getLastToken();
+var childToken = dataModel.address("namespaceRoot.namespaceChildA.namespaceChildB.namespaceChildC").implementation.getLastToken();
 
 var testComponentResolverUseCase = require('./test-core-component-resolver');
 

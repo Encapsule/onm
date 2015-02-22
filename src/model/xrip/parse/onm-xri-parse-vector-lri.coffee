@@ -74,7 +74,7 @@ xRIP_LRIVectorParser = module.exports = (request_) ->
             break
 
         if not xriTokens.length
-            response.result = model.createRootAddress()
+            response.result = model.address("*")
             break
 
         hashPath = xriTokens.shift()

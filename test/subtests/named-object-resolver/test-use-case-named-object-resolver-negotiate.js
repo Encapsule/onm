@@ -5,9 +5,9 @@ var onm = require('../../../index');
 var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
 
-var rootAddress = dataModel.createRootAddress();
-var childAddress = rootAddress.createSubpathAddress('namespaceChildA');
-var extensionPointAddress = rootAddress.createSubpathAddress('namespaceExtensionPointA');
+var rootAddress = dataModel.address("*");
+var childAddress = rootAddress.address('namespaceChildA');
+var extensionPointAddress = rootAddress.address('namespaceExtensionPointA');
 
 var rootDescriptor = rootAddress.implementation.getDescriptor();
 var childDescriptor = childAddress.implementation.getDescriptor();
