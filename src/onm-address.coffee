@@ -92,17 +92,13 @@ module.exports = class Address
         relative to model's anonymous namespace.
     ###
     # ============================================================================
-    address: (request_) => 
+    address: (xri_) => 
         errors = []
         response = error: null, result: null
         inBreakScope = false
         while not inBreakScope
             inBreakScope = true
-            if not (request_? and request_)
-                errors.unshift "Missing requirest request object in-parameter."
-                break
-            xri = request_.xri
-            if not (xri? and xri)
+            if not (xri_? and xri_)
                 response.result = @
                 break
             parseResponse = xRIP.parse model: @model, addressBase: @, xri: xri_
@@ -113,23 +109,11 @@ module.exports = class Address
         if errors.length
             errors.unshift "onm.Address.address failed:"
             request.error = errors.join ' '
-        response
 
-    ###
-        request: {
-            xri: onm-format resource identifier string variant (path, LRI, URI)
-        }
-        response: {
-            error: null or string explaining why result === null
-            address: onm.Address reference or null to indicate error
-        }
-        Note: paths are parsed relative to the namespace addressed by this.
-        LRI and URI resource identifier string variants are always evaluated
-        relative to model's anonymous namespace.
-    ###
-    # ============================================================================
-
-
+        # TODO: FIX THE EXCEPTION INTERFACE
+        if response.error
+            throw new Error response.error
+        response.result
 
     #
     # ============================================================================
@@ -326,7 +310,6 @@ module.exports = class Address
     # ============================================================================
     createSubpathAddress: (subpath_) =>
         console.log "onm.Address.createSubpathAddress is deprecated in v0.3. Use onm.Address.address API."
-
         errors = []
         response = error: null, result: null
         inBreakScope = false

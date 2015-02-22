@@ -11,13 +11,13 @@ var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
-var testDataRootAddress = testDataModel.createRootAddress();
+var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 
-var testExtensionPointAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection");
+var testExtensionPointAddress = testDataRootAddress.address("properties.subproperties.collection");
 var testExtensionPointToken = testExtensionPointAddress.implementation.getLastToken();
 
-var embeddedComponentAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection.someObject");
+var embeddedComponentAddress = testDataRootAddress.address("properties.subproperties.collection.someObject");
 var embeddedComponentToken = embeddedComponentAddress.implementation.getLastToken();
 
 

@@ -6,8 +6,8 @@ var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
-var rootAddress = testDataModel.createRootAddress();
-var testObjectAddress = rootAddress.createSubpathAddress("properties.subproperties.collection.someObject");
+var rootAddress = testDataModel.address("*");
+var testObjectAddress = rootAddress.address("properties.subproperties.collection.someObject");
 
 describe("Validate the behavior of the onm address resolver.", function() {
 

@@ -77,7 +77,11 @@ module.exports = class Model
             address: onm.Address reference or null to indicate error
         }
     ###
-    address: (xri_) => xRIP.parse model: @, xri: xri_
+    address: (xri_) => 
+        parseResponse = xRIP.parse model: @, xri: xri_
+        if parseResponse.error
+            throw new Error "onm.Model.address failed: #{parseResponse.error}"
+        parseResponse.result
 
 
     #
