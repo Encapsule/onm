@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Object Namespace Manager (onm): data modeling, storage, URI addressing, type-introspection, CRUD normalization, serialization, and change observation framework for in-memory JSON data.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"
@@ -28,7 +28,7 @@
     "mocha": "^2.0.1",
     "leche": "~1.0.1",
     "lodash": "^2.4.1",
-    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v0.3"
+    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v1.0"
   },
   "dependencies": {
     "node-uuid": "~1.4.2"
