@@ -2,7 +2,7 @@
 
 _"So generic it's worthless."_
 
-v1.0 onm core implements an extensible, infinite scope, globally unique, synchronous, URI addressable, strongly-typed, memory-mapped journaling filesystem for shared and application-specific JSON data types.
+v1.0 onm core implements an extensible, infinite scope, globally unique, synchronous, URI addressable, strongly-typed, memory-mapped journaling filesystem for shared and application-specific JSON data types. [1]
 
 ## Overview
 
@@ -93,93 +93,93 @@ DOA containers support a new JSON ingress/outgress format called a Data-Addressa
 
 ## Operations
 
-### onm(NSD) -> ASM
+#### onm(NSD) -> ASM
 
 A Namespace Descriptor (NSD) can be compiled into an Address Space Map (ASM) object.
 
-### onm(NSD) -> RAS
+#### onm(NSD) -> RAS
 
 A Namespace Descriptor (NSD) can be compiled into an Address Space Map (ASM) object and then used immediately to construct a Runtime Address Space (RAS) database.
 
-### onm(ASM) -> RAS
+#### onm(ASM) -> RAS
 
 An Address Space Map (ASM) object can be used to construct a Runtime Address Space (RAS) database.
 
-### onm(RAS) -> ASM
+#### onm(RAS) -> ASM
 
 A Runtime Address Space (RAS) database can be serialized to an Address Space Map (ASM) object.
 
-### onm(RAS, RIS) -> RAL
+#### onm(RAS, RIS) -> RAL
 
 A Resource Identifier String (RIS) can be parsed by a Runtime Address Space (RAS) database to produce a Runtime Address Locator (RAL) object.
 
-### onm(RAS, RIS) -> NSD
+#### onm(RAS, RIS) -> NSD
 
 A Resource Identifier String (RIS) can be parsed by a Runtime Address Space (RAS) database to obtain its identified Namespace Descriptor (NSD) within an Address Space Map (ASM).
 
-### onm(RAL) -> RIS
+#### onm(RAL) -> RIS
 
 A Runtime Address Locator (RAL) can be serialized to a Resource Identifier String (RIS).
 
-### onm(RAL) -> NSD
+#### onm(RAL) -> NSD
 
 A Runtime Address Locator (RAL) can be queried to return its identified Namepsace Descriptor (NSD) in an Address Space Map (ASM).
 
-### onm(RAL, RIS) -> RAL
+#### onm(RAL, RIS) -> RAL
 
 A Runtime Address Locator (RAL) can be used along with a Resource Identifier String (RIS) offset to generate a new Resource Address Locator (RAL) object.
 
-### onm(RAS, JSON) -> DAO
+#### onm(RAS, JSON) -> DAO
 
 A Data-Addressable Object (DAO) JSON document proxy is constructed by onm given a Runtime Address Space (RAS) database, and optional JSON initialization data.
 
-### onm(DAO) -> DAB
+#### onm(DAO) -> DAB
 
 A Data-Addressable Object (DAO) JSON document proxy may be serialized to a Data Addressable Blob (DAB).
 
-### onm(DAO, RIS) -> RAL
+#### onm(DAO, RIS) -> RAL
 
 A Data-Addressable Object (DAO) container proxies for RASP and can parse Resource Identifier Strings (RIS).
 
-### onm(DAO, RAL) -> RLP
+#### onm(DAO, RAL) -> RLP
 
 A Data-Addressable Obejct (DOA) container proxies for RLTP and can affect resource location/transform operations on a Resource Address Locator (RAL) to produce a Resource Location Proxy (RLP) result.
 
-### onm(RLP) -> RIS
+#### onm(RLP) -> RIS
 
 Resource Location Proxy (RLP) objects are associated with a Resource Address Locator (RAL) and can be serialized to a Resource Identifier String (RIS).
 
-### onm(RLP) -> RAL
+#### onm(RLP) -> RAL
 
 Resource Location Proxy (RLP) can be queried to return its associated Resource Address Locator (RAL).
 
-### onm(RLP, RIS, JSON) -> RLP
+#### onm(RLP, RIS, JSON) -> RLP
 
 Resource Location Proxy (RLP) can be queried to locate/transform data in a DOA on resources located at a relative path specified by Resource Locator String (RIS) with data JSON.
 
-### onm(RLP) -> JSON
+#### onm(RLP) -> JSON
 
 The JSON data branch proxied by a Resource Location Proxy (RLP) may be serialized to raw JSON.
 
-### onm(RLP) -> DAB
+#### onm(RLP) -> DAB
 
 The JSON data branch proxied by a Resource Location Proxy (RLP) may be serialized to a Data-Addressable Blob (DAB).
 
-### onm(RLP) -> NSD
+#### onm(RLP) -> NSD
 
 A Resource Location Proxy (RLP) can be queried to return the NSD in the ASM associated with its RAL.
 
 ## Subsystems
 
-### DAOS (Data-Addressable Object Store)
+#### DAOS (Data-Addressable Object Store)
 
-### JNSP (Journal Notification Stream Processor)
+#### JNSP (Journal Notification Stream Processor)
 
-### RASP (Resource Address Space Processor)
+#### RASP (Resource Address Space Processor)
 
-### RISP (Resource Identifier String Processor)
+#### RISP (Resource Identifier String Processor)
 
-### RLTP (Resource Location Transform Processor)
+#### RLTP (Resource Location Transform Processor)
 
 [1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. Additionally, v1.x cannot address through arrays into sub-namespace structures; nodes in the DAO of JSON value type array are to onm, _properties_, of a namespace that by convention is always of JSON value type object.
 
