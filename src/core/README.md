@@ -2,15 +2,11 @@
 
 _"So generic it's worthless."_
 
-For v1.0 of onm I'm taking the work I've done for onm v0.3 release and reshaping it into a new low-level abstraction layer called onm core.
-
-The public API surface will depend on, and call into onm core for all calls to ensure that all client calls get delegated on expected tested code paths.
-
-What's coming up out of all this is that onm has become an extensible, global scope address space for JSON, with a runtime component that allows you to grab a chunk, map it into memory, and treat it like a journaling filesystem with full support for Internet-friendly URI addressing, self-describing JSON blobs... 
+v1.0 onm core implements an extensible, infinite scope, globally unique, synchronous, URI addressable, strongly-typed, memory-mapped journaling filesystem for shared and application-specific JSON data types.
 
 ## Overview
 
-_More that you want to know about how onm works inside._
+_This document provides a terse overview of core concepts embodied in onm, explains how these concepts relate to one another, and map to core subsystem code._
 
 A Namespace Descriptor (NSD) is a JSON object with sub-object and property name and value semantics defined by onm.
 
@@ -52,7 +48,7 @@ Just as a RAS is not a JSON document, a RAL is not a JSON resource but rather a 
 
 To get a RAL, client code codes calls a RAS, or DOA instance providing a Resource Identifier String (RIS).
 
-onm supports onm-format XRI variants dot-delimited path, LRI, and URI for use in various human and machine scenarios.
+onm supports dot-delimited path, LRI, and URI RIS variants for use in various human and machine scenarios.
 
 RIS strings are parsed to form RAS queries which may resolve to a RAL, or fail to indicate that desired resource is outside the address space of the queried RAS.
 
@@ -68,7 +64,7 @@ A RAL similarly encodes an opportunistic location strategy but targets instead a
 
 In a perfect world, the producer of the JSON your code consumes provides you with its ASM so you can just bail and check your package dependencies if you hit a bunch of RIS parse failures.
 
-But even with an ASM in hand, shit happens: resources go missing, or aren't what you expect them to be when you find them. XRLT location failures on RAL's alert to quickly that the data that your processing isn't what you expected.
+But even with an ASM in hand, shit happens: resources go missing, or aren't what you expect them to be when you find them. RLTP location failures on RAL's alert to quickly that the data that your processing isn't what you expected.
 
 The intent of this is to provide a simple but highly effective bulkheading protocol for proactively identifying upstream JSON data contract changes _before_ your routines operate on unknown data so that you can fail early with actionable telemetry. There's not really a good and consistent way to do this right now and it needless slows development, and absolutely fucking kills development teams trying to decipher complex distributed systems breaks. Bulkheading your functions lets you diagnose failures in your code using a binary search approach oftentimes using little more than failure telemetry.
 
@@ -79,7 +75,7 @@ RLP object references are magic:
 Given an RLP you can ask onm:
 
 - **what is it?** Query RASP and determine the type of the data (and any other application-specific property declared in your NSD).
-- **what is its value?** Query XRLT and open and create, and transform JSON in the DOA (covers all CRUD + other operations not discussed here).
+- **what is its value?** Query RLTP and open and create, and transform JSON in the DOA (covers all CRUD + other operations not discussed here).
 - **when does it change?** - Query JNSP to register a notification filter and callback function.
 
 DOA containers support a new JSON ingress/outgress format called a Data-Addressable Blob (DAB) that aggregates DAO JSON data and ASM meta-data in a single self-describing JSON object.
