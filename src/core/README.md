@@ -88,8 +88,8 @@ DOA containers support a new JSON ingress/outgress format called a Data-Addressa
 - DAO - Data-Addressable Object - generic in-memory JSON document store
 - RAL - Resource Address Location - a RIS parsed by a RAS in memory
 - RIS - Resource Identifier String - one of several onm-defined URI formats
-- RLP - Resource Location Proxy - proxy for a DAO resource
-- DAB - Data-Addressable Blob - self-describing JSON object containing an ARM, and enough information to reconstruct the JSON document in a DAO.
+- RLP - Resource Location Proxy - proxy for a RAL-specified resource in a DAO instance
+- DAB - Data-Addressable Blob - self-describing JSON (ASM + DOA diff aggregation)
 
 ## Operations
 
@@ -153,7 +153,7 @@ Resource Location Proxy (RLP) can be queried to return its associated Resource A
 
 Resource Location Proxy (RLP) can be queried to locate/transform data in a DOA on resources located at a relative path specified by Resource Locator String (RIS) with data JSON.
 
-### onm(RLP, RIS, JSON) - RLP
+### onm(RLP, RIS, JSON) -> RLP
 
 Runtime Location Proxy (RLP) can be queries to affect resource locate/transform operations on resources located at a relative path specified by a Resource Identifier String (RIS).
 
@@ -161,7 +161,7 @@ Runtime Location Proxy (RLP) can be queries to affect resource locate/transform 
 
 The JSON data branch proxied by a Resource Location Proxy (RLP) may be serialized to raw JSON.
 
-### onm(RLP) - DAB
+### onm(RLP) -> DAB
 
 The JSON data branch proxied by a Resource Location Proxy (RLP) may be serialized to a Data-Addressable Blob (DAB).
 
