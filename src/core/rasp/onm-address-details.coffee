@@ -43,7 +43,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 # THIS MODULE IS SLATED TO BE DEMOLISHED POST v0.3 onm.
 
 AddressToken = require './onm-address-token'
-Address = require '../onm-address'
+
+# TODO: Break this cycle. We're not going to use this pattern in v1.0 core.
+Address = require '../../onm-address'
 
 #
 #

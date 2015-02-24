@@ -13,7 +13,6 @@ module.exports = (grunt) ->
                     'lib/onm-address.js': 'src/onm-address.coffee'
                     'lib/onm-store.js': 'src/onm-store.coffee'
                     'lib/onm-namespace.js': 'src/onm-namespace.coffee'
-                    'lib/onm-address-store.js': 'src/onm-address-store.coffee'
 
                     # API sub-modules
 

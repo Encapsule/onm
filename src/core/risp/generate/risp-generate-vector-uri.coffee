@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-xRIP_ReadablePathGenerator = require './onm-xri-generate-path-readable'
+xRIP_ReadablePathGenerator = require './risp-generate-path-readable'
 
 ###
     request = {

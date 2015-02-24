@@ -43,8 +43,8 @@ classRegistry = require '../../../common/onm-class-registry'
 Model = require '../../../onm-model'
 Address = require '../../../onm-address'
 
-xRIP_parsePath = require './onm-xri-parse-path'
-xRIP_parseVector = require './onm-xri-parse-vector'
+xRIP_parsePath = require './risp-parse-path'
+xRIP_parseVector = require './risp-parse-vector'
 
 ###
     request = {

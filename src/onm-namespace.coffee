@@ -40,9 +40,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 classRegistry = require './common/onm-class-registry'
-AddressToken = require './address/onm-address-token'
+AddressToken = require './core/rasp/onm-address-token'
 Address = require './onm-address'
-addressResolver = require './store/xrlt/onm-address-resolver'
+addressResolver = require './core/rltp/rltp-address-resolver'
 
 #
 #

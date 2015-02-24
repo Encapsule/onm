@@ -38,7 +38,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 helperFunctions = require '../../common/onm-util-functions'
 Address = require '../../onm-address'
-componentResolver = require './onm-component-resolver'
+componentResolver = require './rltp-component-resolver'
 
 module.exports = addressResolver = {}
 

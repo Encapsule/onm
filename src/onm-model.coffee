@@ -44,14 +44,14 @@ helperFunctions = require './common/onm-util-functions'
 intrinsicDataModels = require './common/onm-intrinsic-data-models'
 
 Address = require './onm-address'
-AddressToken = require './address/onm-address-token'
+AddressToken = require './core/rasp/onm-address-token'
+ModelDetails = require './core/rasp/onm-model-details'
 
-xRIP = require './model/xrip/onm-xri-processor'
+xRIP = require './core/risp/risp'
 
 uuid = require 'node-uuid'
 
 
-ModelDetails = require './model/onm-model-details'
 
 #
 #

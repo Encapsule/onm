@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 classRegistry = require './common/onm-class-registry'
-AddressToken = require './address/onm-address-token'
+AddressToken = require './core/rasp/onm-address-token'
 
 #
 #
@@ -515,5 +515,5 @@ module.exports = class Address
 # on this module. So, last. Otherwise, AddressDetails will resolve its in-module scope
 # reference to the Address constructor before it's defined. Never a good thing.
 
-AddressDetails = require './address/onm-address-details'
-xRIP = require './model/xrip/onm-xri-processor'
+AddressDetails = require './core/rasp/onm-address-details'
+xRIP = require './core/risp/risp'

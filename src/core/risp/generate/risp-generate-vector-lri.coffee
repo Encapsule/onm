@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-xRIP_HashPathGenerator = require './onm-xri-generate-path-hash'
+xRIP_HashPathGenerator = require './risp-generate-path-hash'
 
 ###
     request = {

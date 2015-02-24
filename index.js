@@ -2,12 +2,6 @@
 /*
   Object Namespace Manager (onm)
 
-  +-------------+---------------+
-  | onm.Address | onm.Namespace |
-  +-------------+---------------+
-  | onm.Model   | onm.Store     |
-  +-------------+---------------+
-
   Copyright (C) 2015 Encapsule Project (http://encapsule.org)
 
   License: MIT (https://github.com/Encapsule/onm/blob/master/LICENSE)
@@ -19,17 +13,51 @@
   Designed and implemented by Christopher D. Russell
 
   Ongoing development of onm and other derived Encapsule Project
-  repositories is funded through consulting engagements. If onm
-  resonates with you, there's likely more that you could be doing
-  with Encapsule Project alienware. Please follow @Encapsule on
-  GitHub and Twitter and share the love with your friends.
+  repositories is funded through consulting engagements. Please
+  follow @Encapsule on Twitter and GitHub and get in touch if we
+  can help you with that awesome thing you're building.
 
 */
 
+
+/*
+  v0.2
+  +-------------+---------------+
+  | onm.Address | onm.Namespace |
+  +-------------+---------------+
+  | onm.Model   | onm.Store     |
+  +-------------+---------------+
+
+*/
 module.exports.Model = require('./lib/onm-model');
 module.exports.Address = require('./lib/onm-address');
 module.exports.Store = require('./lib/onm-store');
 module.exports.Namespace = require('./lib/onm-namespace');
+
+
+/*
+  v1.0
+  +----------------+---------------+
+  | onm.Coordinate | onm.Location  |
+  +----------------+---------------+
+  | onm.Map        | onm.Region    |
+  +----------------+---------------+
+
+*/
+
+
+/*
+  +-----+-----+
+  | RAL | RLP |
+  +-- --+-----+
+  | RAS | DAO |
+  +-----+ ----+
+*/
+
+
+/*
+  Utility and test exports.
+*/
 module.exports.intrinsics = require('./lib/common/onm-intrinsic-data-models');
 module.exports.util = require('./lib/common/onm-util-functions');
 

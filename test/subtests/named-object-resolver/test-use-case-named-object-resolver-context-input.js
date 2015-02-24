@@ -13,7 +13,7 @@ var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var moduleUnderTest = require('../../../lib/store/xrlt/onm-named-object-context')
+var moduleUnderTest = require('../../../lib/core/rltp/rltp-named-object-context')
 
 var testVector = {
 

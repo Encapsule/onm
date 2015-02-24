@@ -40,8 +40,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 xRIP_parseVariant =
-    'onm-lri': require './onm-xri-parse-vector-lri'
-    'onm-uri': require './onm-xri-parse-vector-uri'
+    'onm-lri': require './risp-parse-vector-lri'
+    'onm-uri': require './risp-parse-vector-uri'
 
 ###
     request = {

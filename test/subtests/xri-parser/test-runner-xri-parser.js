@@ -1,7 +1,7 @@
 // test-impl-onm-xri-parser.js
 
 var Address = require('../../../lib/onm-address');
-var xriParser = require('../../../lib/model/xrip/onm-xri-processor');
+var xriParser = require('../../../lib/core/risp/risp');
 
 var assert = require('chai').assert;
 

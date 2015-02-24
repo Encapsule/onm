@@ -13,11 +13,11 @@ var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var functionUnderTest = require('../../../lib/store/xrlt/onm-named-object-resolver');
-var moduleUnderTestImpl = require('../../../lib/store/xrlt/onm-named-object-context')
+var functionUnderTest = require('../../../lib/core/rltp/rltp-named-object-resolver');
+var moduleUnderTestImpl = require('../../../lib/core/rltp/rltp-named-object-context')
 
-var namedObjectResolver = require('../../../lib/store/xrlt/onm-named-object-resolver');
-var namedObjectContext = require('../../../lib/store/xrlt/onm-named-object-context');
+var namedObjectResolver = require('../../../lib/core/rltp/rltp-named-object-resolver');
+var namedObjectContext = require('../../../lib/core/rltp/rltp-named-object-context');
 
 module.exports = describe("namedObjectResolver.resolve base 'open' strategy w/no data operation test.", function() {
 

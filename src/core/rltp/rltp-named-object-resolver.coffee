@@ -36,12 +36,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namedObjectContextHelpers = require('./onm-named-object-context')
-namedObjectPropertyVisitor = require('./onm-named-object-property-visitor')
+namedObjectContextHelpers = require('./rltp-named-object-context')
+namedObjectPropertyVisitor = require('./rltp-named-object-property-visitor')
 
 namedObjectPropertyVisitorInterfaces =
-    open: require('./onm-named-object-property-policy-update')
-    create: require('./onm-named-object-property-policy-initialize')
+    open: require('./rltp-named-object-property-policy-update')
+    create: require('./rltp-named-object-property-policy-initialize')
     
 module.exports = namedObjectResolver = {}
 

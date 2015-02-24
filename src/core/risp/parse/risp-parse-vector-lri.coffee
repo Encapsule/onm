@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 Address = require '../../../onm-address'
-AddressToken = require '../../../address/onm-address-token'
+AddressToken = require '../../rasp/onm-address-token'
 
 ###
     request = {
@@ -83,6 +83,7 @@ xRIP_LRIVectorParser = module.exports = (request_) ->
         addressTokenVector = []
         addressTokenCurrent = new AddressToken model, undefined, undefined, 0
 
+        # There's a submodule created for this... This should be moved.
         while hashPathTokens.length
 
             hashToken = hashPathTokens.shift()

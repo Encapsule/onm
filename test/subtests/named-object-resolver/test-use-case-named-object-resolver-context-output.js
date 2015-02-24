@@ -4,7 +4,7 @@
 var assert = require('chai').assert;
 var withData = require('leche').withData;
 
-var moduleUnderTest = require('../../../lib/store/xrlt/onm-named-object-context')
+var moduleUnderTest = require('../../../lib/core/rltp/rltp-named-object-context')
 
 var testVector = {
 

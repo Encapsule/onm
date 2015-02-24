@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIP_ReadablePathParser = require './onm-xri-parse-path-readable'
+xRIP_ReadablePathParser = require './risp-parse-path-readable'
 
 ###
     request = {

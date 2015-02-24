@@ -40,8 +40,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 xRIP_VectorGenerators = 
-    lri: require './onm-xri-generate-vector-lri'
-    uri: require './onm-xri-generate-vector-uri'
+    lri: require './risp-generate-vector-lri'
+    uri: require './risp-generate-vector-uri'
 
 
 ###

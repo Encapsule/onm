@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-propertyCommonLib = require './onm-named-object-property-policy-common'
+propertyCommonLib = require './rltp-named-object-property-policy-common'
 
 module.exports =
 

@@ -40,8 +40,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 xRIP_PathGenerators =
-    readable: require './onm-xri-generate-path-readable'
-    hash: require './onm-xri-generate-path-hash'
+    readable: require './risp-generate-path-readable'
+    hash: require './risp-generate-path-hash'
 
 
 ###

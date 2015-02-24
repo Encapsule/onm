@@ -39,13 +39,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-helperFunctions = require '../common/onm-util-functions'
-intrinsicDataModels = require '../common/onm-intrinsic-data-models'
+helperFunctions = require '../../common/onm-util-functions'
+intrinsicDataModels = require '../../common/onm-intrinsic-data-models'
 
-Address = require '../onm-address'
-AddressToken = require '../address/onm-address-token'
+Address = require '../../onm-address'
+AddressToken = require './onm-address-token'
 
-xRIP = require '../model/xrip/onm-xri-processor'
+xRIP = require '../risp/risp'
 
 uuid = require 'node-uuid'
 LUID = 1
