@@ -131,7 +131,11 @@ A Runtime Address Locator (RAL) can be used along with a Resource Identifier Str
 
 ### onm(RAS, JSON) -> DAO
 
-A Data-Addressable Object (DAO) JSON document proxy is constructed by onm given a Runtime Address Space (RAS) database, and options JSON initialization data.
+A Data-Addressable Object (DAO) JSON document proxy is constructed by onm given a Runtime Address Space (RAS) database, and optional JSON initialization data.
+
+### onm(DAO) -> DAB
+
+A Data-Addressable Object (DAO) JSON document proxy may be serialized to a Data Addressable Blob (DAB).
 
 ### onm(DAO, RIS) -> RAL
 
@@ -149,13 +153,9 @@ Resource Location Proxy (RLP) objects are associated with a Resource Address Loc
 
 Resource Location Proxy (RLP) can be queried to return its associated Resource Address Locator (RAL).
 
-### onm(RLP, RIS, JSON) -> RAL
-
-Resource Location Proxy (RLP) can be queried to locate/transform data in a DOA on resources located at a relative path specified by Resource Locator String (RIS) with data JSON.
-
 ### onm(RLP, RIS, JSON) -> RLP
 
-Runtime Location Proxy (RLP) can be queries to affect resource locate/transform operations on resources located at a relative path specified by a Resource Identifier String (RIS).
+Resource Location Proxy (RLP) can be queried to locate/transform data in a DOA on resources located at a relative path specified by Resource Locator String (RIS) with data JSON.
 
 ### onm(RLP) -> JSON
 
@@ -180,7 +180,6 @@ A Resource Location Proxy (RLP) can be queried to return the NSD in the ASM asso
 ### RISP (Resource Identifier String Processor)
 
 ### RLTP (Resource Location Transform Processor)
-
 
 [1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. Additionally, v1.x cannot address through arrays into sub-namespace structures; nodes in the DAO of JSON value type array are to onm, _properties_, of a namespace that by convention is always of JSON value type object.
 
