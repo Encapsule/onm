@@ -16,8 +16,6 @@ module.exports = (grunt) ->
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
 
                     # API sub-modules
-                    'lib/model/onm-model-details.js': 'src/model/onm-model-details.coffee'
-                    'lib/address/onm-address-details.js': 'src/address/onm-address-details.coffee'
 
                     # Common modules
                     # ============================================================================
@@ -38,43 +36,40 @@ module.exports = (grunt) ->
 
                     # RASP - Resource Address Space Processor
                     # ----------------------------------------------------------------------------
+                    'lib/core/rasp/onm-model-details.js': 'src/core/rasp/onm-model-details.coffee'
                     'lib/core/rasp/onm-address-token.js': 'src/core/rasp/onm-address-token.coffee'
+                    'lib/core/rasp/onm-address-details.js': 'src/core/rasp/onm-address-details.coffee'
 
 
                     # RISP - Resource Identifier String Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/risp/onm-xri-processor.js': 'src/core/risp/onm-xri-processor.coffee'
-                    'lib/core/risp/generate/onm-xri-generate.js': 'src/core/risp/generate/onm-xri-generate.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-path.js': 'src/core/risp/generate/onm-xri-generate-path.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-path-readable.js': 'src/core/risp/generate/onm-xri-generate-path-readable.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-path-hash.js': 'src/core/risp/generate/onm-xri-generate-path-hash.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-vector.js': 'src/core/risp/generate/onm-xri-generate-vector.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-vector-uri.js': 'src/core/risp/generate/onm-xri-generate-vector-uri.coffee'
-                    'lib/core/risp/generate/onm-xri-generate-vector-lri.js': 'src/core/risp/generate/onm-xri-generate-vector-lri.coffee'
-                    'lib/core/risp/parse/onm-xri-parse.js': 'src/core/risp/parse/onm-xri-parse.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-path.js': 'src/core/risp/parse/onm-xri-parse-path.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-path-readable.js': 'src/core/risp/parse/onm-xri-parse-path-readable.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-path-hash.js': 'src/core/risp/parse/onm-xri-parse-path-hash.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-vector.js': 'src/core/risp/parse/onm-xri-parse-vector.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-vector-uri.js': 'src/core/risp/parse/onm-xri-parse-vector-uri.coffee'
-                    'lib/core/risp/parse/onm-xri-parse-vector-lri.js': 'src/core/risp/parse/onm-xri-parse-vector-lri.coffee'
+                    'lib/core/risp/risp.js': 'src/core/risp/risp.coffee'
+                    'lib/core/risp/generate/risp-generate.js': 'src/core/risp/generate/risp-generate.coffee'
+                    'lib/core/risp/generate/risp-generate-path.js': 'src/core/risp/generate/risp-generate-path.coffee'
+                    'lib/core/risp/generate/risp-generate-path-readable.js': 'src/core/risp/generate/risp-generate-path-readable.coffee'
+                    'lib/core/risp/generate/risp-generate-path-hash.js': 'src/core/risp/generate/risp-generate-path-hash.coffee'
+                    'lib/core/risp/generate/risp-generate-vector.js': 'src/core/risp/generate/risp-generate-vector.coffee'
+                    'lib/core/risp/generate/risp-generate-vector-uri.js': 'src/core/risp/generate/risp-generate-vector-uri.coffee'
+                    'lib/core/risp/generate/risp-generate-vector-lri.js': 'src/core/risp/generate/risp-generate-vector-lri.coffee'
+                    'lib/core/risp/parse/risp-parse.js': 'src/core/risp/parse/risp-parse.coffee'
+                    'lib/core/risp/parse/risp-parse-path.js': 'src/core/risp/parse/risp-parse-path.coffee'
+                    'lib/core/risp/parse/risp-parse-path-readable.js': 'src/core/risp/parse/risp-parse-path-readable.coffee'
+                    'lib/core/risp/parse/risp-parse-path-hash.js': 'src/core/risp/parse/risp-parse-path-hash.coffee'
+                    'lib/core/risp/parse/risp-parse-vector.js': 'src/core/risp/parse/risp-parse-vector.coffee'
+                    'lib/core/risp/parse/risp-parse-vector-uri.js': 'src/core/risp/parse/risp-parse-vector-uri.coffee'
+                    'lib/core/risp/parse/risp-parse-vector-lri.js': 'src/core/risp/parse/risp-parse-vector-lri.coffee'
 
                     # RLTP - Resource Location Transformation Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/rltp/onm-address-resolver.js': 'src/core/rltp/onm-address-resolver.coffee'
-                    'lib/core/rltp/onm-component-resolver.js': 'src/core/rltp/onm-component-resolver.coffee'
-                    'lib/core/rltp/onm-component-context.js': 'src/core/rltp/onm-component-context.coffee'
-                    'lib/core/rltp/onm-named-object-resolver.js': 'src/core/rltp/onm-named-object-resolver.coffee'
-                    'lib/core/rltp/onm-named-object-context.js': 'src/core/rltp/onm-named-object-context.coffee'
-                    'lib/core/rltp/onm-named-object-property-visitor.js': 'src/core/rltp/onm-named-object-property-visitor.coffee'
-                    'lib/core/rltp/onm-named-object-property-policy-common.js': 'src/core/rltp/onm-named-object-property-policy-common.coffee'
-                    'lib/core/rltp/onm-named-object-property-policy-initialize.js': 'src/core/rltp/onm-named-object-property-policy-initialize.coffee'
-                    'lib/core/rltp/onm-named-object-property-policy-update.js': 'src/core/rltp/onm-named-object-property-policy-update.coffee'
-
-
-
-
-
+                    'lib/core/rltp/rltp-address-resolver.js': 'src/core/rltp/rltp-address-resolver.coffee'
+                    'lib/core/rltp/rltp-component-resolver.js': 'src/core/rltp/rltp-component-resolver.coffee'
+                    'lib/core/rltp/rltp-component-context.js': 'src/core/rltp/rltp-component-context.coffee'
+                    'lib/core/rltp/rltp-named-object-resolver.js': 'src/core/rltp/rltp-named-object-resolver.coffee'
+                    'lib/core/rltp/rltp-named-object-context.js': 'src/core/rltp/rltp-named-object-context.coffee'
+                    'lib/core/rltp/rltp-named-object-property-visitor.js': 'src/core/rltp/rltp-named-object-property-visitor.coffee'
+                    'lib/core/rltp/rltp-named-object-property-policy-common.js': 'src/core/rltp/rltp-named-object-property-policy-common.coffee'
+                    'lib/core/rltp/rltp-named-object-property-policy-initialize.js': 'src/core/rltp/rltp-named-object-property-policy-initialize.coffee'
+                    'lib/core/rltp/rltp-named-object-property-policy-update.js': 'src/core/rltp/rltp-named-object-property-policy-update.coffee'
 
 
         jshint:
