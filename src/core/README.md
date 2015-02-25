@@ -1,4 +1,4 @@
-# onm core (Node.js / HTML 5)
+# onm core
 
 v1.0 onm core allows developers to define potentially infinite scope and reach "address space maps" that correlate application-specific and shared JSON data types [1] with an onm-defined URI schema.
 
@@ -9,7 +9,7 @@ The core runtime implementation for Node.js and HTML 5 clients provides normaliz
 - Introspection back to "address space map" meta-data by URI.
 - Observing changes to JSON resources by URI and filter predicate.
 
-Used together and consistently in derived JavaScript, these facilities provide a holistic conceptual and runtime framework for dealing complex, heterogeneous, distributed JSON data sets. That's kind of hard to do well now. So, I hope this helps you out.
+Used consistently and together, these facilities provide a holistic conceptual and runtime framework for dealing with complex, heterogeneous, distributed JSON data sets in just a few lines of JavaScript. That's not exactly easy to do well right now. So, I hope this helps you out.
 
 ## Overview
 

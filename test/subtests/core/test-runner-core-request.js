@@ -27,7 +27,7 @@ module.exports = function (testVector_) {
             var requestRunner = function() {
                 response = onmCore.request(testVector_.request);
             };
-            assert.doesNotThrow(requestRunner, "onm core requests should never throw.");
+            assert.doesNotThrow(requestRunner, "!!! ONM CORE REQUESTS SHOULD NEVER THROW !!!");
         });
 
         it("The request should have executed.", function() {

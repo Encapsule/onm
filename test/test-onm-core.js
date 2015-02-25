@@ -57,8 +57,8 @@ describe("Attempt to load the onm core module.", function() {
 
     describe("Execute subtest suites.", function() {
 
-        require('./subtests/onm-core/test-use-case-core-wrap-pods');
-        require('./subtests/onm-core/test-use-case-core-bad-requests');
+        require('./subtests/core/test-use-case-core-wrap-pods');
+        require('./subtests/core/test-use-case-core-bad-requests');
 
     });
 

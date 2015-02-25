@@ -46,7 +46,7 @@ crp = {}
 crp.normalize = module.exports = (request_) ->
 
     errors = []
-    request = undefined
+    normalizedRequest = undefined
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
@@ -60,10 +60,10 @@ crp.normalize = module.exports = (request_) ->
         # Request must be an object.
         requestType = Object.prototype.toString.call request_
         if requestType != '[object Object]'
-            errors.unshift "Invalid request type. Expected reference to '[object Object]'."
+            errors.unshift "Invalid request object type. Expected reference to '[object Object]'."
             break
 
-        request = {}
+        normalizedRequest = {}
 
         # The caller must specify a request verb.
         if not (request_.verb? and request_.verb)
@@ -76,17 +76,7 @@ crp.normalize = module.exports = (request_) ->
             errors.unshift "Invalid request 'verb' value type. Expected '[object String]'."
             break
 
-        request.verb = request_.verb
-
-        # The caller may optionally specify an input array of onm core object references.
-        if request_.inputs? and request_.inputs
-            # The request inputs property must be an array.
-            inputsType = Object.prototype.toString.call request_.inputs
-            if inputsType != '[object Array]'
-                errors.unshift "Invalid request object 'inputs' value type. Expected reference to '[object Array]]."
-                break
-
-        request.inputs = request_.inputs? and request_.inputs or []
+        normalizedRequest.verb = request_.verb
 
         # The caller must specify the onm class type of the response result object.
         if not (request_.outputType? and request_.outputType)
@@ -105,7 +95,18 @@ crp.normalize = module.exports = (request_) ->
             errors.unshift "Invalid request object 'outputType' value '#{request_.outputType}' is invalid."
             break
 
-        request.outputType = request_.outputType
+        normalizedRequest.outputType = request_.outputType
+
+        # The caller may optionally specify an input array of onm core object references.
+        if request_.inputs? and request_.inputs
+            # The request inputs property must be an array.
+            inputsType = Object.prototype.toString.call request_.inputs
+            if inputsType != '[object Array]'
+                console.log "step 2: Graceful exit w/error"
+                errors.unshift "Invalid request object 'inputs' value type. Expected reference to '[object Array]]."
+                break
+
+        normalizedRequest.inputs = request_.inputs? and request_.inputs or []
 
         # The caller may optionally specify an options property. It must be an object.
         if request_.options? and request_.options
@@ -114,10 +115,13 @@ crp.normalize = module.exports = (request_) ->
                 errors.unshift "Invalid request object 'options' value type. Expected reference to '[object Object]'."
                 break
 
-        request.options = request_.options? and request_.options or {}
+        normalizedRequest.options = request_.options? and request_.options or {}
+
+        response.result = normalizedRequest
         
     if errors.length
         response.error = errors.join ' '
+
     response
 
 
