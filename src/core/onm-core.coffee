@@ -39,8 +39,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+# TODO: Remove this when we get wrapX off the main exports object.
 classRegistry = require '../common/onm-class-registry'
-operationMap = require './onm-core-operation-map'
+
+
+CRP = require './crp/crp'
 
 ###
 DAOS = require './doas/doas'
@@ -56,9 +59,10 @@ onm = module.exports = {}
 
 ###
     request = {
-        input: [] // an array of one or more onm core objects to use as context for the request
-        outputType: // the onm class type of the requested output
-        options: {} // operation-specific options object
+        verb: required string indicating the class of operation to perform
+        inputs: optional array of zero or more onm core object references
+        outputType: required string indicating the onm class type of response.result
+        options: possibly optional, sub-request-format-specific options object
     }
     response: {
         error: null // or a string explaining why result is null
@@ -67,78 +71,29 @@ onm = module.exports = {}
 ###
 # ============================================================================
 onm.request = (request_) ->
+
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
-        inBreakScope = true
+        inBreakScope = true        
 
-        # The caller is required to specify a value for the request in-parameter.
-        if not (request_? and request_)
-            errors.unshift "Missing required request object in-parameter."
+        normalizeResponse = CRP.normalize request_
+        if normalizeResponse.error
+            errors.unshift normalizeResponse.error
             break
 
-        # Request must be an object.
-        requestType = Object.prototype.toString.call request_
-        if requestType != '[object Object]'
-            errors = "Invalid request type. Expected reference to '[object Object]'."
+        bindResponse = CRP.bindop normalizeResponse.result
+        if bindResponse.error
+            errors.unshift bindResponse.error
             break
 
-        # The caller may optionally specify an input array of onm core object references.
-        if not (request_.inputs? and request_.inputs)
-            errors.unshift "Invalid request object missing 'inputs' property."
+        dispatchResponse = CRP.dispatch bindResponse.result
+        if dispatchResponse.error
+            errors.unshift dispatchResponse.error
             break
 
-        # The request inputs property must be an array.
-        inputsType = Object.prototype.toString.call request_.inputs
-        if inputsType != '[object Array]'
-            errors.unshift "Invalid request object 'inputs' value type. Expected reference to '[object Array]]."
-            break
-
-        # The caller may optionally specify an options property. It must be an object.
-        optionsType = Object.prototype.toString.call request_.options
-        if request_.options? and request_.options and optionsType != '[object Object]'
-            errors.unshift "Invalid request object 'options' value type. Expected reference to '[object Object]'."
-            break
-        
-        # The caller must specify the type of onm core object they want returned.
-        if not (request_.outputType? and request_.outputType)
-            errors.unshift "Invalid request object missing 'outputType' property."
-            break
-
-        # The output type specification must be a string.
-        outputTypeType = Object.prototype.toString.call request_.outputType
-        if outputTypeType != '[object String]'
-            errors.unshift "Invalid request object 'outputType' value type. Expected '[object String]'."
-            break
-
-        # The output type specification must be a registered onm class.
-        outputClassType = classRegistry.ids[request_.outputType]
-        if not (outputClassType? and outputClassType)
-            errors.unshift "Invalid request object 'outputType' value '#{request_.outputType}' is invalid."
-            break
-
-        # Create an operation ID for the request.
-        inputObjectNames = []
-        for coreObject in request_.inputs
-            onmClassType = classRegistry.lookup[coreObject? and coreObject and coreObject.onmClassType or undefined]
-            inputObjectNames.push onmClassType? and onmClassType or Object.prototype.toString.call coreObject
-
-        opTokens = request_.inputs.sort (a_, b_) -> a_.localeCompare(b_)
-        opId = "#{request_.outputType}<=#{opTokens.join ':'}"
-
-        operationDescriptor = operationMap[opId]
-
-        if not (operationDescriptor? and operationDescriptor)
-            sortedInputNames = inputObjectNames.sort (a_, b_) -> a_.localeCompare(b_)
-            inputSpec = sortedInputNames.length and "[ #{sortedInputNames.join ','} ]" or "[ null ]"
-            outputTypeName = classRegistry.lookup[request_.outputType]
-            outputTypeName = outputTypeName? and outputTypeName or request_.outputType
-            outputSpec = "[ #{outputTypeName} ]"
-            errors.unshift "Sorry. No registered transform from '#{inputSpec}' to '#{outputSpec}."
-            break
-
-
+        response.result = dispatchResponse.result
 
     if errors.length
         errors.unshift "onm.request failed:"
@@ -147,6 +102,9 @@ onm.request = (request_) ->
     response
 
 
+
+
+# ============================================================================
 onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     errors = []
     response = error: null, result: null
@@ -171,24 +129,28 @@ onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
         response.error = errors.join ' '
     response
 
+# ============================================================================
 onm.wrapDAB = (dabString_) ->
     response = onm.wrapXPOD dabString_, '[object String]', 'DAB'
     if response.error
         response.error = "onm.wrapDAB: #{response.error}"
     response
 
+# ============================================================================
 onm.wrapDATA = (dataObject_) ->
     response = onm.wrapXPOD dataObject_, '[object Object]', 'DATA'
     if response.error
         response.error = "onm.wrapDATA: #{response.error}"
     response
 
+# ============================================================================
 onm.wrapJSON = (jsonString_) ->
     response = onm.wrapXPOD jsonString_, '[object String]', 'JSON'
     if response.error
         response.error = "onm.wrapJSON: #{response.error}"
     response
 
+# ============================================================================
 onm.wrapRIS = (risString_) ->
     response = onm.wrapXPOD risString_, '[object String]', 'RIS'
     if response.error

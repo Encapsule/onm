@@ -26,9 +26,13 @@ module.exports = (grunt) ->
                     # onm core modules
                     # ============================================================================
                     
-                    # LMAO - Largely Misunderstood Addressable Object (main request processor)
+                    # onm core request processor
                     'lib/core/onm-core.js': 'src/core/onm-core.coffee'
-                    'lib/core/onm-core-operation-map.js' : 'src/core/onm-core-operation-map.coffee'
+                    'lib/core/crp/crp.js': 'src/core/crp/crp.coffee'
+                    'lib/core/crp/crp-normalize.js': 'src/core/crp/crp-normalize.coffee'
+                    'lib/core/crp/crp-bind.js': 'src/core/crp/crp-bind.coffee'
+                    'lib/core/crp/crp-dispatch.js': 'src/core/crp/crp-dispatch.coffee'
+                    'lib/core/crp/crp-ops-map.js' : 'src/core/crp/crp-ops-map.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------

@@ -171,15 +171,29 @@ A Resource Location Proxy (RLP) can be queried to return the NSD in the ASM asso
 
 ## Subsystems
 
-#### DAOS (Data-Addressable Object Store)
+#### CRP ####
 
-#### JNSP (Journal Notification Stream Processor)
+Core Request Processor (CRP)
 
-#### RASP (Resource Address Space Processor)
+#### DAOS
 
-#### RISP (Resource Identifier String Processor)
+Data-Addressable Object Store (DAOS)
 
-#### RLTP (Resource Location Transform Processor)
+#### JNSP 
+
+Journal Notification Stream Processor (JNSP)
+
+#### RASP 
+
+Resource Address Space Processor (RASP)
+
+#### RISP 
+
+Resource Identifier String Processor (RISP)
+
+#### RLTP
+
+Resource Location Transform Processor
 
 [1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. Additionally, v1.x cannot address through arrays into sub-namespace structures; nodes in the DAO of JSON value type array are to onm, _properties_, of a namespace that by convention is always of JSON value type object.
 
