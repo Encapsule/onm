@@ -25,6 +25,10 @@ module.exports = (grunt) ->
 
                     # onm core modules
                     # ============================================================================
+                    
+                    # LMAO - Largely Misunderstood Addressable Object (main request processor)
+                    'lib/core/onm-core.js': 'src/core/onm-core.coffee'
+                    'lib/core/onm-core-operation-map.js' : 'src/core/onm-core-operation-map.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
@@ -38,7 +42,6 @@ module.exports = (grunt) ->
                     'lib/core/rasp/onm-model-details.js': 'src/core/rasp/onm-model-details.coffee'
                     'lib/core/rasp/onm-address-token.js': 'src/core/rasp/onm-address-token.coffee'
                     'lib/core/rasp/onm-address-details.js': 'src/core/rasp/onm-address-details.coffee'
-
 
                     # RISP - Resource Identifier String Processor
                     # ----------------------------------------------------------------------------
