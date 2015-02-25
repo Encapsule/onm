@@ -1,8 +1,13 @@
 # onm core (Node.js / HTML 5)
 
-_"So generic it's worthless."_
+v1.0 onm core allows developers to define potentially infinite scope and reach "address space maps" that correlate application-specific and shared JSON data types [1] with an onm-defined URI schema.
 
-v1.0 onm core implements an extensible, infinite scope, globally unique, synchronous, URI addressable, strongly-typed, memory-mapped journaling filesystem for shared and application-specific JSON data types. [1]
+The core runtime implementation for Node.js and HTML 5 clients provides normalized facilities for:
+
+- Creating new in-memory, address space-bound JSON document(s) from data, or from address space meta-data.
+- JSON resource location and transformation by URI (create, read, update, delete, ...)
+- Introspection back to "address space map" meta-data by URI.
+- Observing changes to JSON resources by URI and filter predicate.
 
 ## Overview
 
@@ -195,8 +200,16 @@ Resource Identifier String Processor (RISP)
 
 Resource Location Transform Processor
 
-[1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. Additionally, v1.x cannot address through arrays into sub-namespace structures; nodes in the DAO of JSON value type array are to onm, _properties_, of a namespace that by convention is always of JSON value type object.
+[1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. 
 
-[2] There are a few diffult-to-explain but well reported and tested cases where the RLTP subsystem will reject arbitrary client JSON due to framing issues. Rather than spending a lot of time documenting these exceptional cases, I'm working to augment RASP with full JSON semantics in a later release.
+Additionally, v1.x cannot address through arrays into sub-namespace structures because v1.x NSD format treats JSON arrays like namespace properties (if they're declared at all).
+
+Tip: Declare your arrays as namespace properties. Annotate the property declaration with enough information to instantiate DOA's for the elements.
+
+Future: Full support for arrays and all native JSON types is planned in onm's successor, jbus (which will retain onm as the moniker for these core routines).
+
+[2] There are a few diffult-to-explain but well reported and tested cases where the RLTP subsystem will reject arbitrary client JSON due to framing issues.
+
+Policy over framing errors, as well as their exposure to caller (e.g. in request response), and to subscribers via JNSP will for v1.0.0 be adequate but likely require some fine tuning.
 
 [3] JSON is not in and of itself, self-describing. That is, a JSON document contains values. Developers with forsight often encode meta-data along with their actual data in JSON. But this introduces a custom code depenedency and for that reason fails miserably at scale.
