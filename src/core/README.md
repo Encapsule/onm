@@ -9,6 +9,8 @@ The core runtime implementation for Node.js and HTML 5 clients provides normaliz
 - Introspection back to "address space map" meta-data by URI.
 - Observing changes to JSON resources by URI and filter predicate.
 
+Used together and consistently in derived JavaScript, these facilities provide a holistic conceptual and runtime framework for dealing complex, heterogeneous, distributed JSON data sets. That's kind of hard to do well now. So, I hope this helps you out.
+
 ## Overview
 
 _This document provides a terse overview of core concepts embodied in onm, explains how these concepts relate to one another, and map to core subsystem code._
@@ -198,7 +200,7 @@ Resource Identifier String Processor (RISP)
 
 #### RLTP
 
-Resource Location Transform Processor
+Resource Location Transform Processor (RLTP)
 
 [1] onm v1.x cannot be used to model a JSON document with a root element of JSON value type array. 
 
