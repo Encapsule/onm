@@ -112,10 +112,16 @@ onm.request = (request_) ->
             errors.unshift "Invalid request object 'outputType' value type. Expected '[object String]'."
             break
 
+        # The output type specification must be a registered onm class.
+        outputClassType = classRegistry.ids[request_.outputType]
+        if not (outputClassType? and outputClassType)
+            errors.unshift "Invalid request object 'outputType' value '#{request_.outputType}' is invalid."
+            break
+
         # Create an operation ID for the request.
         inputObjectNames = []
         for coreObject in request_.inputs
-            onmClassType = classRegistry.lookup coreObject.onmClassType
+            onmClassType = classRegistry.lookup[coreObject? and coreObject and coreObject.onmClassType or undefined]
             inputObjectNames.push onmClassType? and onmClassType or Object.prototype.toString.call coreObject
 
         opTokens = request_.inputs.sort (a_, b_) -> a_.localeCompare(b_)
