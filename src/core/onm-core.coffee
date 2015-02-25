@@ -42,14 +42,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 classRegistry = require '../common/onm-class-registry'
 operationMap = require './onm-core-operation-map'
 
+###
 DAOS = require './doas/doas'
 JNSP = require './jnsp/jnsp'
 RASP = require './rasp/rasp'
 RISP = require './risp/risp'
 RLTP = require './rltp/rltp'
+###
 
 
-### Largely Misunderstood Addressable Object (LMAO) is onm core's main request processor. ###
 onm = module.exports = {}
 
 
@@ -85,13 +86,13 @@ onm.request = (request_) ->
 
         # The caller may optionally specify an input array of onm core object references.
         if not (request_.inputs? and request_.inputs)
-            errors.unshift "Invalid request object missing 'input' property."
+            errors.unshift "Invalid request object missing 'inputs' property."
             break
 
         # The request inputs property must be an array.
-        inputType = Object.prototype.toString.call request_.input
-        if inputType != '[object Array]'
-            errors.unshift "Invalid request object 'input' value type. Expected reference to '[object Array]]."
+        inputsType = Object.prototype.toString.call request_.inputs
+        if inputsType != '[object Array]'
+            errors.unshift "Invalid request object 'inputs' value type. Expected reference to '[object Array]]."
             break
 
         # The caller may optionally specify an options property. It must be an object.
@@ -115,22 +116,19 @@ onm.request = (request_) ->
         inputObjectNames = []
         for coreObject in request_.inputs
             onmClassType = classRegistry.lookup coreObject.onmClassType
-            if not (onmClassType? and onmClassType)
-                errors.unshift "Invalid request object 'inputs' array contains illegal, non-onm, object type '#{Object.prototype.toString.call coreObject}'."
-                break
-            inputObjectNames.push onmClassType
-        if errors.length
-            break
+            inputObjectNames.push onmClassType? and onmClassType or Object.prototype.toString.call coreObject
 
         opTokens = request_.inputs.sort (a_, b_) -> a_.localeCompare(b_)
-        opID = "#{request_.outputType}<=#{opTokens.join ':'}"
+        opId = "#{request_.outputType}<=#{opTokens.join ':'}"
 
         operationDescriptor = operationMap[opId]
 
         if not (operationDescriptor? and operationDescriptor)
             sortedInputNames = inputObjectNames.sort (a_, b_) -> a_.localeCompare(b_)
-            inputSpec = "[ #{sortedInputNames.join ','} ]"
-            outputSpec = "[ #{classRegistry.lookup[request_.outputType]} ]"
+            inputSpec = sortedInputNames.length and "[ #{sortedInputNames.join ','} ]" or "[ null ]"
+            outputTypeName = classRegistry.lookup[request_.outputType]
+            outputTypeName = outputTypeName? and outputTypeName or request_.outputType
+            outputSpec = "[ #{outputTypeName} ]"
             errors.unshift "Sorry. No registered transform from '#{inputSpec}' to '#{outputSpec}."
             break
 
@@ -138,7 +136,7 @@ onm.request = (request_) ->
 
     if errors.length
         errors.unshift "onm.request failed:"
-        result.error = errors.join ' '
+        response.error = errors.join ' '
 
     response
 

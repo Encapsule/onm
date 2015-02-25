@@ -42,6 +42,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 classRegistry = require '../common/onm-class-registry'
 cids = classRegistry.ids
 
+operationMap = module.exports = {}
 
 operationDescriptorArray = [
 
@@ -162,15 +163,12 @@ operationDescriptorArray = [
 ];
 
 
-operationMap = {}
-operationArray = []
-
 for operationDescriptor in operationDescriptorArray
     opTokens = operationDescriptor.inputTypes.sort (a_, b_) -> a_.localeCompare(b_)
     opId = "#{operationDescriptor.outputType}<=#{opTokens.join ':'}"
     mapEntry = operationMap[opId]
     if mapEntry? and mapEntry
-        throw new Error "Duplicate operation ID '#{operationDescriptor.name}'."
+        throw new Error "Duplicate operation '#{operationDescriptor.name}' with opID='#{opId}'."
     operationMap[opId] = operationDescriptor
 
 
