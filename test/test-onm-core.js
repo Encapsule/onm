@@ -2,9 +2,6 @@
 
 var assert = require('chai').assert;
 
-var testOnmCoreRequest = require('./subtests/onm-core/test-runner-core-request');
-
-
 describe("Attempt to load the onm core module.", function() {
 
     var onmCore = null;
@@ -53,29 +50,17 @@ describe("Attempt to load the onm core module.", function() {
         assert.isFunction(onmCore.wrapRIS);
     });
 
-    describe("I fucking hate Mocha.", function() {
-        testOnmCoreRequest({
-            testName: "first core request",
-            validConfig: false,
-            request: undefined,
-            expectedResults: {
-                error: 'onm.request failed: Missing required request object in-parameter.'
-            }
-        });
-
-        testOnmCoreRequest({
-            testName: "whatever",
-            validConfig: false,
-            request: {
-                inputs: [ dab ],
-                outputType: "DOA"
-            },
-            expectedResults: {
-                error: 'onm.request failed: Invalid request object \'outputType\' value \'DOA\' is invalid.'
-            }
-        });
+    it("onm core should export function 'wrapXPOD'.", function() {
+        assert.property(onmCore, 'wrapXPOD');
+        assert.isFunction(onmCore.wrapXPOD);
     });
 
+    describe("Execute subtest suites.", function() {
+
+        require('./subtests/onm-core/test-use-case-core-wrap-pods');
+        require('./subtests/onm-core/test-use-case-core-bad-requests');
+
+    });
 
 });
 

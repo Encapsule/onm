@@ -147,7 +147,7 @@ onm.request = (request_) ->
     response
 
 
-wrapType = (value_, expectedNativeType, onmClassName) ->
+onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
@@ -157,40 +157,40 @@ wrapType = (value_, expectedNativeType, onmClassName) ->
             errors.unshift "Missing required value in-parameter."
             break
         valueNativeType = Object.prototype.toString.call value_
-        if valueNativeType != expectedNativeType
-            errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{expectedNativeType_}'."
+        if valueNativeType != constrainToJavaScriptType_
+            errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{constrainToJavaScriptType_}'."
             break
-        classId = classRegistry.ids[onmClassName]
+        classId = classRegistry.ids[onmClassName_]
         if not classId? and classId
-            errors.unshift "Invalid request specifies unknown wrapper type '#{onmClassName}'."
+            errors.unshift "Invalid request specifies unknown wrapper type '#{onmClassName_}'."
             break
         response.result =
             onmClassType: classId
             value: value_
     if errors.length
-        result.error = errors.join ' '
+        response.error = errors.join ' '
     response
 
 onm.wrapDAB = (dabString_) ->
-    response = wrapType dabString_, '[object String]', 'DAB'
+    response = onm.wrapXPOD dabString_, '[object String]', 'DAB'
     if response.error
         response.error = "onm.wrapDAB: #{response.error}"
     response
 
 onm.wrapDATA = (dataObject_) ->
-    response = wrapType dataObject_, '[object Object]', 'DATA'
+    response = onm.wrapXPOD dataObject_, '[object Object]', 'DATA'
     if response.error
         response.error = "onm.wrapDATA: #{response.error}"
     response
 
 onm.wrapJSON = (jsonString_) ->
-    response = wrapType jsonString_, '[object String]', 'JSON'
+    response = onm.wrapXPOD jsonString_, '[object String]', 'JSON'
     if response.error
         response.error = "onm.wrapJSON: #{response.error}"
     response
 
 onm.wrapRIS = (risString_) ->
-    response = wrapType risString_, '[object String]', 'RIS'
+    response = onm.wrapXPOD risString_, '[object String]', 'RIS'
     if response.error
         response.error = "onm.wrapRIS: #{response.error}"
     response
