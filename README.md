@@ -3,6 +3,10 @@
 
 Encapsule Project Object Namespace Manager (onm) library is a data-model-driven JavaScript data object/JSON factory and in-memory subsystem communication bus for building complex data-driven Node.js/HTML 5 client applications in JavaScript based on the the Model-Store-Observe-Feedback-Signal design pattern.
 
+#### Tests
+
+[![Build Status](https://travis-ci.org/Encapsule/onm.svg?branch=chris%2Fv1.0-core-refactor)](https://travis-ci.org/Encapsule/onm)
+
 #### Package
 
 The latest onm package is available via npm:
