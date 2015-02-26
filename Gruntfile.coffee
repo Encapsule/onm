@@ -19,7 +19,6 @@ module.exports = (grunt) ->
                     # Common modules
                     # ============================================================================
 
-                    'lib/common/onm-class-registry.js': 'src/common/onm-class-registry.coffee'
                     'lib/common/onm-util-functions.js': 'src/common/onm-util-functions.coffee'
                     'lib/common/onm-intrinsic-data-models.js': 'src/common/onm-intrinsic-data-models.coffee'
 
@@ -33,6 +32,10 @@ module.exports = (grunt) ->
                     'lib/core/crp/crp-bind.js': 'src/core/crp/crp-bind.coffee'
                     'lib/core/crp/crp-dispatch.js': 'src/core/crp/crp-dispatch.coffee'
                     'lib/core/crp/crp-ops-map.js' : 'src/core/crp/crp-ops-map.coffee'
+
+                    # CIDS - Class Identification Subsystem
+                    # ----------------------------------------------------------------------------
+                    'lib/core/cids/cids.js':     'src/core/cids/cids.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------

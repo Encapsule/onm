@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 # TODO: Remove this when we get wrapX off the main exports object.
-classRegistry = require '../common/onm-class-registry'
+classRegistry = require './cids/cids'
 
 
 CRP = require './crp/crp'

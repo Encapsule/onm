@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-classRegistry = require './common/onm-class-registry'
+classRegistry = require './core/cids/cids'
 helperFunctions = require './common/onm-util-functions'
 intrinsicDataModels = require './common/onm-intrinsic-data-models'
 

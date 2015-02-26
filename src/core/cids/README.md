@@ -1,5 +1,11 @@
 # onm core CIDS subsystem
 
-Class ID Subsystem (CIDS) implements onm core's class typing system that leverages a simple JavaScript object annotation protocol, strong unique identifiers, and normalized set/get functions, and an some in-memory look-up tables to affect generic type-based programming idioms in JavaScript.
+Class Identification Subsystem (CIDS) implements onm core's class typing system that leverages a simple JavaScript object annotation protocol, strong unique identifiers, and normalized set/get functions, and an some in-memory look-up tables to affect generic type-based programming idioms in JavaScript.
 
-Routines in the Native Type Conversion Library (NTCL) are available for wrapping native JavaScript and JSON types in CIDS compatible wrappers suitable for use as onm core request parameters.
+Virtually all core subsystems leverage CIDS when verifying the type of objects they're passed as input, and for generating the objects they return as output.
+
+The Native Type Conversion Library (NTCL) provides the ingress to this protocol for native JavaScript and JSON values by providing functions for generating appropriately cid-labeled wrapper objects which are required by most core subsystem request protocols.
+
+
+
+

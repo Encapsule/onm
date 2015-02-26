@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './common/onm-class-registry'
+classRegistry = require './core/cids/cids'
 AddressToken = require './core/rasp/onm-address-token'
 
 #
