@@ -31,6 +31,7 @@
     "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v1.0"
   },
   "dependencies": {
+    "jsgraph": "^0.1.4",
     "node-uuid": "~1.4.2"
   }
 }

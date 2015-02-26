@@ -37,35 +37,42 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
 #
 #
 
-UTIL = module.exports = {}
+CIDS = require '../cids/cids'
 
-UTIL.uuidNull = "00000000-0000-0000-0000-000000000000"
+uuid = require 'node-uuid'
 
-UTIL.clone = (object_) ->
-    try
-        # Copied from http://coffeescriptcookbook.com/chapters/classes_and_objects/cloning
-        if not object_? or typeof object_ isnt 'object'
-            return object_
-        if object_ instanceof Date
-            return new Date(object_.getTime()) 
-        if object_ instanceof RegExp
-            flags = ''
-            flags += 'g' if object_.global?
-            flags += 'i' if object_.ignoreCase?
-            flags += 'm' if object_.multiline?
-            flags += 'y' if object_.sticky?
-            return new RegExp(object_.source, flags) 
-        newInstance = new object_.constructor()
-        for key of object_
-            newInstance[key] = UTIL.clone object_[key]
-        return newInstance
-    catch exception
-        throw new Error "onm.UTIL.clone FATAL: #{exception.message}"
+RISP = {}
+RISP.generators = module.exports = {}
 
-UTIL.dictionaryLength = (dictionary_) ->
-    try
-        Object.keys(dictionary_).length
-    catch exception
-        throw new Error("dictionaryLength: #{exception.message}");
+###
+    Generate an Internet-Routable Unique Token (IRUT)
 
-UTIL.getEpochTime = -> Math.round new Date().getTime() / 1000.0
+    IRUT's are 22-character, ASCII-encoded, UUID v4, URI and RIS token-friendly string identifiers.
+
+    Use cases:
+    1. v4 UUID uniqueness semantics: addressed w/node-uuid package
+    2. ASCII: addressed by using base64 encoding of the v4 UUID
+    3. Short as possible: addressed by trimming superfluous '=' padding from base64
+    4. URI token safe: addressed by replacing '/' characters with '_'
+    5. RIS token safe: addressed by replacing '+' with '-'
+
+    References:
+    http://stackoverflow.com/questions/11431886/url-safe-uuids-in-the-smallest-number-of-characters
+    http://stackoverflow.com/questions/6182315/how-to-do-base64-encoding-in-node-js
+    http://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
+
+###
+# ============================================================================
+RISP.generators.generateIRUT ->
+    r1 = uuid.v4 null, new Uint8Array 16, 0
+    r2 = (new Buffer r1).toString 'base64'
+    pads = 0
+    while r2.charAt(r2.length - pads - 1) == '='
+        pads++
+    r3 = r2.slice 0, r2.length - pads
+    r4 = r3.replace(/\//g, "_");
+    r5 = r4.replace(/\+/g, "-");
+    { onmClassId: CIDS.ids['IRUT'], value: r5}
+
+
+

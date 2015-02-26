@@ -39,7 +39,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-helperFunctions = require '../../common/onm-util-functions'
+UTIL = require '../../common/onm-util-functions'
+
+if not (UTIL? and UTIL)
+   throw new Error "Failed to load helper functions"
+
+if not (UTIL.clone? and UTIL.clone)
+   throw new Error "Why are we missing the clone function?"
+
 intrinsicDataModels = require '../../common/onm-intrinsic-data-models'
 
 Address = require '../../onm-address'
@@ -77,7 +84,7 @@ module.exports = class ModelDetails
                     namespaceType = (ONMD_.namespaceType? and ONMD_.namespaceType) or (not id and (ONMD_.namespaceType = "root")) or throw new Error("Internal error unable to determine namespace type.");
                     parentPathExtensionPoints = undefined
                     if parentPathExtensionPointIdVector_? and parentPathExtensionPointIdVector_
-                        parentPathExtensionPoints = helperFunctions.clone parentPathExtensionPointIdVector_
+                        parentPathExtensionPoints = UTIL.clone parentPathExtensionPointIdVector_
                     else
                         parentPathExtensionPoints = []
 
@@ -114,7 +121,7 @@ module.exports = class ModelDetails
                     if parentDescriptor_? and parentDescriptor_
                         parentDescriptor_.children.push thisDescriptor
                         # Clone the parent's parentPathIdVector and add ourselves to it.
-                        thisDescriptor.parentPathIdVector = helperFunctions.clone parentDescriptor_.parentPathIdVector
+                        thisDescriptor.parentPathIdVector = UTIL.clone parentDescriptor_.parentPathIdVector
                         thisDescriptor.parentPathIdVector.push parentDescriptor_.id
 
                     if @rankMax < thisDescriptor.parentPathIdVector.length
@@ -155,7 +162,7 @@ module.exports = class ModelDetails
                             else
                                 throw new Error("Cannot process extension point declaration because its corresponding extension archetype is missing from the object model declaration.");
 
-                            updatedParentPathExtensionPointIdVector = helperFunctions.clone parentPathExtensionPoints
+                            updatedParentPathExtensionPointIdVector = UTIL.clone parentPathExtensionPoints
                             updatedParentPathExtensionPointIdVector.push id
                             @countExtensionPoints++
 
@@ -269,7 +276,7 @@ module.exports = class ModelDetails
                     targetDescriptor = @getNamespaceDescriptorFromPathId(pathId_)
                     newAddress = new Address(@model)
                     token = undefined
-                    pathIds = helperFunctions.clone(targetDescriptor.parentPathIdVector)
+                    pathIds = UTIL.clone(targetDescriptor.parentPathIdVector)
                     pathIds.push(targetDescriptor.id)
                     for parentPathId in pathIds
                         descriptor = @getNamespaceDescriptorFromPathId(parentPathId)
@@ -307,7 +314,7 @@ module.exports = class ModelDetails
             @model.uuidVersion = objectModelDeclaration_.uuidVersion? and objectModelDeclaration_.uuidVersion or throw new Error "Data model declaration missing required root namespace property 'uuidVersion'."
 
             # Deep copy the specified object model declaration object.
-            @objectModelDeclaration = helperFunctions.clone objectModelDeclaration_
+            @objectModelDeclaration = UTIL.clone objectModelDeclaration_
             Object.freeze @objectModelDeclaration
 
             if not (@objectModelDeclaration? and @objectModelDeclaration)
@@ -395,7 +402,7 @@ module.exports = class ModelDetails
                         if data_.uuidRevision?
                             data_.uuidRevision = uuid.v4()
                         if data_.revisionTime?
-                            data_.revisionTime = helperFunctions.getEpochTime()
+                            data_.revisionTime = UTIL.getEpochTime()
                     break
                 when "external"
                     break

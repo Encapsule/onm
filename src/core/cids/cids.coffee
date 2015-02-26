@@ -39,11 +39,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-registry = module.exports = {}
+CIDS = module.exports = {}
 
-# TODO: The binary representation of these can be base64 encoded to save a few bytes of heap.
+# Obtain a CID given its CNAME
 
-registry.ids =
+CIDS.ids =
+    IRUT: 'NX_zU3FeRDublNx6WSQTog'
+
     # v0.3 public API object identifiers
     Model:      '57347d22-cefb-4b5d-a2ed-1732a764fe6b'
     Address:    '075d9b07-c612-416e-a0b2-e839c8677de7'
@@ -60,14 +62,101 @@ registry.ids =
     # ^--- 1st class onm core objects with constructors v--- Disciminating wrappers for JavaScript types
     RIS:        '9e84b41a-7bce-4620-ad7a-b208aecabb11' # Wraps a RIS-encoded string
     DAB:        '43e81405-722b-4c9e-8a67-c6fa82869bc0' # Wraps a DAB-encoded string
+
     JSON:       '502b7bf1-c6f6-473c-a748-9b5d7e22d9fc' # Wraps a JSON-encoded string
     DATA:       'b9c2634c-3497-436b-8c12-f6647de599d1' # Wraps an Object convertible to JSON
     
-registry.lookup = {}
-for classname of registry.ids
-    classid = registry.ids[classname]
-    registry.lookup[classid] = classname
+# Obtain a CNAME given its CID
+
+CIDS.lookup = {}
+for classname of CIDS.ids
+    classid = CIDS.ids[classname]
+    CIDS.lookup[classid] = classname
 
         
 
-    
+
+###
+    request = {
+        object: reference to an object
+        cname: CIDS-registered class name string
+    }
+    response = {
+        error: null or a string explaining why result is null
+        result: input object w/__onmcid__ property set on its prototype
+    }
+###
+# ============================================================================
+CIDS.setObjectCID = (object_, cname_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+
+        innerResponse = CIDS.getCIDInfo object_
+        if not getInfoResponse.error
+            errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
+            break
+
+        if innerResponse.result.cid? and innerResponse.result.cid
+            errors.unshift innerResponse.error
+            break
+
+        cid = CIDS.ids[cname_]
+        if not (cid? and cid)
+            errors.unshift "Unknown object class name '#{cname_}'."
+            break
+
+        response.result = object_.prototype.__onmcid__ = cid
+
+    if errors.length
+        errors.unshift "CIDS.setObjectCID failed:"
+        response.error = errors.join ' '
+
+    response
+
+
+
+
+# Returns a response object with the specified object's CID.
+# The routine ensures that the object is registered and that
+# the CID value is in the expected format. However, the returne
+# CID value is not reconciled against the registry and may not
+# refer to a registered onm object class.A
+
+CIDS.getObjectCIDInfo = (object_) ->
+    errors = []
+    response = error: null, result: { cid: null, cname: null }
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        if not (object_? and object)
+            errors.unshift "Missing required object in-parameter."
+            break
+        objectType = Object.prototype.toString.call object_
+        if objectType != '[object Object]'
+            errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
+            break
+        response.result.cid = objectCID = object_.__onmcid__
+        if not (objectCID? and objectCID)
+            errors.unshift "Object is not identified with a CID value."
+            break
+        objectCIDType = Object.prototype.toString.call objectCID
+        if objectCIDType != '[object String]'
+            errors.unshift "INTERNAL ERROR: Object CID identifier is not an '[object String]' as expected!"
+            break
+        if objectCID.length != 22
+            errors.unshift "INTERNAL ERROR: Object CID identifier is not a 22-character IRUT-format string as exepected!"
+            break
+        cname = CIDS.lookup[objectCID]
+        if not (cname? and cname)
+            errors.unshift "Object is identified with an unknown CID."
+            break;
+        response.result.cname = cname
+    if errors.length
+        errors.unshift "CIDS.getCIDInfo:"
+        response.error = errors.join ' '
+
+    response
+
