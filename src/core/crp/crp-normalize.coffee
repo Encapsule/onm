@@ -102,7 +102,6 @@ crp.normalize = module.exports = (request_) ->
             # The request inputs property must be an array.
             inputsType = Object.prototype.toString.call request_.inputs
             if inputsType != '[object Array]'
-                console.log "step 2: Graceful exit w/error"
                 errors.unshift "Invalid request object 'inputs' value type. Expected reference to '[object Array]]."
                 break
 

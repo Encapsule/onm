@@ -53,26 +53,23 @@ crp.bindop = module.exports = (request_) ->
     while not inBreakScope
         inBreakScope = true
 
-        inputTypes = []
+        inputsClassNameVector = []
         for someObject in request_.inputs
             cid = someObject? and someObject? and someObject.onmClassType or undefined
-            cidName = classRegistry.lookup[cidString]
-            someObjectType = cidName? and cidName or Object.prototype.toString.call someObject
-            inputTypes.push someObjectType
-        inputTypes.sort (a_, b_) -> a_.compareLocale b_
-        normalizedInputVectorString = inputTypes.length and "[ #{inputTypes.join ','} ]" or "<null inputs>"
+            cname = classRegistry.lookup[cid]? or Object.prototype.toString.call someObject
+            inputClassNameVector.push cname
+        inputsClassNameVector.sort (a_, b_) -> a_.compareLocale b_
 
-        opId = "onm-request://#{request_.verb}/output:#{request_.outputType}/inputs:#{normalizedInputVectorString}"
+        bindKeyTokens = []
+        bindKeyTokens.push "(#{request_.outputType})"
+        bindKeyTokens.push "<==(#{request_.verb})==<"
+        bindKeyTokens.push (not inputsClassNameVector.length) and "(~)" or "(#{inputsClassNameVector.join ":"})"
+        bindKey = "onm-crp::#{bindKeyTokens.join ''}"
 
-        operationDescriptor = operationMap[opId]
+        operationDescriptor = operationMap[bindKey]
 
         if not (operationDescriptor? and operationDescriptor)
-            sortedInputNames = inputObjectNames.sort (a_, b_) -> a_.localeCompare(b_)
-            inputSpec = sortedInputNames.length and "[ #{sortedInputNames.join ','} ]" or "[ null ]"
-            outputTypeName = classRegistry.lookup[request.outputType]
-            outputTypeName = outputTypeName? and outputTypeName or request.outputType
-            outputSpec = "[ #{outputTypeName} ]"
-            errors.unshift "Sorry. No registered transform from '#{inputSpec}' to '#{outputSpec}."
+            errors.unshift "No operation for request signature '#{bindKey}'. Not the droids we're looking for..."
             break
 
         response.result = operationDescriptor
@@ -80,5 +77,5 @@ crp.bindop = module.exports = (request_) ->
     if errors.length
         response.error = errors.join ' '
 
-    repsonse
+    response
 

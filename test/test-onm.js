@@ -12,6 +12,9 @@ describe("Object Namespace Manager v" + packageMeta.version + " (onm) module tes
     // Validate data models used by these tests.
     require('./test-fixture-data-models');
 
+    // Validate the v1 onm core
+    require('./test-onm-core');
+
     // Base level onm export object API test suites.
     require('./test-onm.Model');
     require('./test-onm.Address');

@@ -29,7 +29,7 @@ testOnmCoreRequest({
     validConfig: false,
     request: "whoops",
     expectedResults: {
-        error: 'onm.request failed: Invalid request type. Expected reference to \'[object Object]\'.'
+        error: 'onm.request failed: Invalid request object type. Expected reference to \'[object Object]\'.'
     }
 });
 
@@ -38,7 +38,7 @@ testOnmCoreRequest({
     validConfig: false,
     request: [],
     expectedResults: {
-        error: 'onm.request failed: Invalid request type. Expected reference to \'[object Object]\'.'
+        error: 'onm.request failed: Invalid request object type. Expected reference to \'[object Object]\'.'
     }
 });
 
@@ -74,7 +74,7 @@ testOnmCoreRequest({
     validConfig: false,
     request: { verb: undefined },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: Invalid request missing \'verb\' property.'
     }
 });
 
@@ -107,10 +107,10 @@ testOnmCoreRequest({
 
 testOnmCoreRequest({
     testName: "bad request: request object 'outputType' set to undefined",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", outputType: undefined },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: Invalid request object missing \'outputType\' property.'
     }
 });
 
@@ -134,56 +134,56 @@ testOnmCoreRequest({
 
 testOnmCoreRequest({
     testName: "bad request: request object 'outputType' value set to known classname/but no inputs so no operation",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", outputType: "JSON" },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: No operation for request signature \'onm-crp::(JSON)<==(test)==<(~)\'. Not the droids we\'re looking for...'
     }
 });
 
 testOnmCoreRequest({
     testName: "bad request: request object 'inputs' set to null",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", outputType: "JSON", inputs: null },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: No operation for request signature \'onm-crp::(JSON)<==(test)==<(~)\'. Not the droids we\'re looking for...'
     }
 });
 
 testOnmCoreRequest({
     testName: "bad request: request object 'inputs' set to undefined",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", outputType: "JSON", inputs: undefined },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: No operation for request signature \'onm-crp::(JSON)<==(test)==<(~)\'. Not the droids we\'re looking for...'
     }
 });
 
 testOnmCoreRequest({
     testName: "bad request: request object 'inputs' set to non-array (object)",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", outputType: "JSON", inputs: {} },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: Invalid request object \'inputs\' value type. Expected reference to \'[object Array]].'
     }
 });
 
 testOnmCoreRequest({
     testName: "bad request: request object verb valid / input valid / missing outputType",
-    validConfig: true,
+    validConfig: false,
     request: { verb: "test", inputs: [] },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: Invalid request object missing \'outputType\' property.'
     }
 });
 
 
 testOnmCoreRequest({
     testName: "bad request: request object input valid / output valid / missing verb",
-    validConfig: true,
+    validConfig: false,
     request: { inputs: [], outputType: "JSON" },
     expectedResults: {
-        error: ''
+        error: 'onm.request failed: Invalid request missing \'verb\' property.'
     }
 });
 
