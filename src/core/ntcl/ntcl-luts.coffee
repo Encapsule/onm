@@ -36,40 +36,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-NTCL = {}
+LUTS = module.exports = {}
 
-LUTS = NTCL.LUTS = module.exports = {}
+# Alternately, to rebuild the CLUTS JSON string, require('./ntcl-cluts-generator') instead.
 
-# Manifest constant string tables.
+CLUTS = JSON.parse '{"jsCode2jsTypeStringVector":["[object Undefined]","[object Null]","[object Boolean]","[object String]","[object Number]","[object Object]","[object Array]","[object Function]"],"jsCode2jsMonikerVector":["jsUndefined","jsNull","jsBoolean","jsString","jsNumber","jsObject","jsArray","jsFunction"],"jsCode2jsonMonikerVector":[null,"jsonNull","jsonBoolean","jsonString","jsonNumber","jsonObject","jsonArray",null],"jsMoniker2jsCodeHash":{"jsUndefined":0,"jsNull":1,"jsBoolean":2,"jsString":3,"jsNumber":4,"jsObject":5,"jsArray":6,"jsFunction":7},"jsTypeString2jsCodeHash":{"[object Undefined]":0,"[object Null]":1,"[object Boolean]":2,"[object String]":3,"[object Number]":4,"[object Object]":5,"[object Array]":6,"[object Function]":7},"jsMoniker2jsTypeStringHash":{"jsUndefined":"[object Undefined]","jsNull":"[object Null]","jsBoolean":"[object Boolean]","jsString":"[object String]","jsNumber":"[object Number]","jsObject":"[object Object]","jsArray":"[object Array]","jsFunction":"[object Function]"},"jsTypeString2jsMonikerHash":{"[object Undefined]":"jsUndefined","[object Null]":"jsNull","[object Boolean]":"jsBoolean","[object String]":"jsString","[object Number]":"jsNumber","[object Object]":"jsObject","[object Array]":"jsArray","[object Function]":"jsFunction"},"jsonMoniker2jsCodeHash":{"jsonNull":1,"jsonBoolean":2,"jsonString":3,"jsonNumber":4,"jsonObject":5,"jsonArray":6},"vectorLength":8}'
 
-LUTS.dimensions = 4
-LUTS.values = 8
+Object.freeze CLUTS
 
-LUTS.jsTypeStrings = [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
-LUTS.jsMonikers =    [ 'jsUndefined',        'jsNull',       'jsBoolean',        'jsString',        'jsNumber',        'jsObject',         'jsArray',        'jsFunction' ]
-LUTS.jsonMonikers =  [ null,                 'jsonNull',     'jsonBoolean',      'jsonString',      'jsonNumber',      'jsonObject',       'jsonArray',      null ]
-
-# Derived LUTS.
-LUTS.jsMoniker2Code = {}
-LUTS.jsTypeString2Code = {}
-LUTS.jsMoniker2String = {}
-LUTS.jsTypeString2Moniker = {}
-LUTS.jsonMoniker2Code = {}
-
-# Populate derived LUTS.
-index = 0
-while index < LUTS.values
-    jsMoniker = LUTS.jsMonikers[index]
-    jsTypeString =  LUTS.jsTypeStrings[index]
-    jsonMoniker = LUTS.jsonMonikers[index]
-    console.log "#{index}: #{jsMoniker} #{jsString} #{jsonMoniker}"
-
-    LUTS.jsMoniker2Code[jsMoniker] = index
-    LUTS.jsTypeString2Code[jsTypeString] = index
-    LUTS.jsMoniker2TypeString[jsMoniker] = jsTypeString
-    LUTS.jsTypeString2Moniker[jsTypeString] = jsMoniker
-    if jsonMoniker? and jsonMoniker
-        LUTS.jsonMoniker2Code[jsonMoniker] = index
-    index++
-
-console.log "Exit w/index = #{index}"
+LUTS.cluts = CLUTS

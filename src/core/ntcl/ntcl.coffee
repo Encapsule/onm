@@ -87,9 +87,6 @@ NTCL.jsRef2JsonMoniker = (ref_) ->
         return undefined
     LUTS.jsonMonikers[jsonCode - LUTS.values]
 
-
-
-
 ###
     => A. CONVERT ONM JAVASCRIPT TYPE CODE => B, C, D, E
     <- B. JavaScript type string (i.e. Object.prototype.toString.call)
@@ -161,20 +158,15 @@ NTCL.jsonCode2jsTypeString = (jsonCode_) -> NTCL.jsCode2jsTypeString NTCL.jsonCo
 NTCL.jsonCode2jsMoniker = (jsonCode_) -> NTCL.jsCode2jsMoniker NTCL.jsonCode2jsCode jsonCode_
 NTCL.jsonCode2jsonMoniker = (jsonCode_) -> LUTS.jsonMonikers[NTCL.jsonCode2jsCode jsonCode_]
                      
-
 ###
     <- A. onm JavaScript type code ordinal
     <- B. JavaScript type string (i.e. Object.prototype.toString.call)
     <- C. onm JavaScript type moniker string
     <- D. onm JSON value type code
     => E. CONVERT ONM JSON VALUE TYPE MONIKER => A, B, C, D, E
-NTCL.jsonMoniker2jsCode = (moniker_) ->
-NTCL.jsonMoniker2jsTypeString = (moniker_) ->
-NTCL.jsonMoniker2jsMoniker = (moniker_) ->
-NTCL.jsonMoniker2jsonCode = (moniker_)->
-
-
-
 ###
+NTCL.jsonMoniker2jsCode = (moniker_) -> NTCL.jsonCode2jsCode LUTS.jsonMoniker2Code
+NTCL.jsonMoniker2jsTypeString = (moniker_) -> LUTS.jsTypeStrings[NTCL.jsonCode2jsCode LUTS.jsonMoniker2Code[moniker_]]
+NTCL.jsonMoniker2jsMoniker = (moniker_) -> LUTS.jsMonikers[NTCL.jsonCode2jsCode LUTS.jsonMoniker2Code]
+NTCL.jsonMoniker2jsonCode = (moniker_)-> 
 
-# ^---- PICK UP AND FINISH THIS IN THE MORNING.
