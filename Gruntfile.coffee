@@ -37,6 +37,11 @@ module.exports = (grunt) ->
                     # ----------------------------------------------------------------------------
                     'lib/core/cids/cids.js':     'src/core/cids/cids.coffee'
 
+                    # NTCL - Native Type Conversion Library
+                    # ----------------------------------------------------------------------------
+                    'lib/core/ntcl/ntcl.js': 'src/core/ntcl/ntcl.coffee'
+                    'lib/core/ntcl/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
+
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
 
