@@ -37,19 +37,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 # Constant Look-Up Tables
-cluts =
-    # constants
-    jsCode2jsTypeStringVector: [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
-    jsCode2jsMonikerVector:    [ 'jsUndefined',        'jsNull',       'jsBoolean',        'jsString',        'jsNumber',        'jsObject',         'jsArray',        'jsFunction' ]
-    jsCode2jsonMonikerVector: [ null,                 'jsonNull',     'jsonBoolean',      'jsonString',      'jsonNumber',      'jsonObject',       'jsonArray',      null ]
-    # derived on module load
-    jsMoniker2jsCodeHash: {}
-    jsTypeString2jsCodeHash: {}
-    jsMoniker2jsTypeStringHash: {}
-    jsTypeString2jsMonikerHash: {}
-    jsonMoniker2jsCodeHash: {}
-
-# Populate derived LUTS.cluts
+cluts = {}
+cluts.jsCode2jsTypeStringVector =  [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
+cluts.jsCode2jsMonikerVector =     [ 'jsUndefined',        'jsNull',       'jsBoolean',        'jsString',        'jsNumber',        'jsObject',         'jsArray',        'jsFunction' ]
+cluts.jsCode2jsonMonikerVector =   [ null,                 'jsonNull',     'jsonBoolean',      'jsonString',      'jsonNumber',      'jsonObject',       'jsonArray',      null ]
+cluts.jsMoniker2jsCodeHash =       {}
+cluts.jsTypeString2jsCodeHash =    {}
+cluts.jsMoniker2jsTypeStringHash = {}
+cluts.jsTypeString2jsMonikerHash = {}
+cluts.jsonMoniker2jsCodeHash =     {}
+cluts.vectorLength = cluts.jsCode2jsTypeStringVector.length
 jsCode = 0
 while jsCode < cluts.vectorLength
     jsMoniker =     cluts.jsCode2jsMonikerVector[jsCode]
@@ -62,9 +59,6 @@ while jsCode < cluts.vectorLength
     if jsonMoniker? and jsonMoniker
         cluts.jsonMoniker2jsCodeHash[jsonMoniker] = jsCode
     jsCode++
-
-# Fixup the CLUTS and serialize to single-line JSON string
-cluts.vectorLength = cluts.jsCode2jsTypeStringVector.length
 
 # Return the result a single line of JSON-encoded data.
 module.exports = JSON.stringify cluts

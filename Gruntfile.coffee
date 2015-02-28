@@ -42,6 +42,7 @@ module.exports = (grunt) ->
                     'lib/core/ntcl/ntcl.js': 'src/core/ntcl/ntcl.coffee'
                     'lib/core/ntcl/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
                     'lib/core/ntcl/ntcl-cluts-generator.js': 'src/core/ntcl/ntcl-cluts-generator.coffee'
+                    'lib/core/ntcl/ntcl-cluts-production.js': 'src/core/ntcl/ntcl-cluts-production.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
@@ -96,8 +97,9 @@ module.exports = (grunt) ->
             options:
                 reporter: 'spec'
                 checkLeaks: true
+                captureFile: "./test.log/mocha-spec-results.log" # git ignored
  
-            src: [ 'test/test-onm.js' ]
+            src: [ './test/**/*.js' ]
 
         clean: [ 'lib' ]
 
