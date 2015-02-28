@@ -5,16 +5,16 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 var withData = require('leche').withData;
-
 var uuid = require('node-uuid');
-var onm = require('../../../index');
 
-var namedObjectResolver = require('../../../lib/core/rltp/rltp-named-object-resolver');
-var namedObjectContext = require('../../../lib/core/rltp/rltp-named-object-context');
+var testModuleDependencies = require('./requires-dependencies');
+var onm = testModuleDependencies.onm;
 
+var namedObjectResolver = testModuleDependencies.namedObjectResolver;
+var namedObjectContext = testModuleDependencies.namedObjectContext;
 
-var namespaceDescriptorResolveCreateVectors = require('../../vectors/named-object-create-strategy-vectors')();
-var subcomponentCreationTestVectors = require('../../vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
+var namespaceDescriptorResolveCreateVectors = require('../../../../vectors/named-object-create-strategy-vectors')();
+var subcomponentCreationTestVectors = require('../../../../vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
 
 describe("resolveNamespaceDescriptorCreate internal function whitebox test matrix:", function () {
     withData(namespaceDescriptorResolveCreateVectors, function(testData) {

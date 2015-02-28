@@ -3,21 +3,17 @@
 
 var assert = require('chai').assert;
 var withData = require('leche').withData;
-
 var uuid = require('node-uuid');
-var onm = require('../../../index');
-var testData = require('../../fixture/address-book-data-model');
 
+var testModuleDependencies = require('./requires-dependencies');
+var namedObjectResolver = testModuleDependencies.namedObjectResolver;
+var namedObjectContext = testModuleDependencies.namedObjectContext;
+
+var testData = testModuleDependencies.testData;
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
-
-var functionUnderTest = require('../../../lib/core/rltp/rltp-named-object-resolver');
-var moduleUnderTestImpl = require('../../../lib/core/rltp/rltp-named-object-context')
-
-var namedObjectResolver = require('../../../lib/core/rltp/rltp-named-object-resolver');
-var namedObjectContext = require('../../../lib/core/rltp/rltp-named-object-context');
 
 module.exports = describe("namedObjectResolver.resolve base 'open' strategy w/no data operation test.", function() {
 

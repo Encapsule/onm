@@ -5,9 +5,15 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-var namedObjectResolver = require('../../../lib/core/rltp/rltp-named-object-resolver');
+var testModuleDependencies = require('./requires-dependencies');
+
+var namedObjectResolver = testModuleDependencies.namedObjectResolver;
 
 module.exports = function (testOptions_) {
+
+    console.log(testOptions_.targetNamespace + " testModuleDependencies='" + testModuleDependencies + "'");
+    console.log("... " + testModuleDependencies.namedObjectResolver);
+
 
     if (!testOptions_.expectCallToThrow && !testOptions_.resultExpectations) {
         throw new Error("Test options are invalid. If the function call is expected to succeed, you must define the expected results object.");

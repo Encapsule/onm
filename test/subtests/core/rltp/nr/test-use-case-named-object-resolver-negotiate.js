@@ -1,9 +1,10 @@
 // test-use-case-named-object-resolver-negotiate.js
 //
 
-var onm = require('../../../index');
-var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
-var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
+var testModuleDependencies = require('./requires-dependencies');
+
+var dataModelDeclaration = testModuleDependencies.namedObjectTestDataModel;
+var dataModel = new testModuleDependencies.onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
 
 var rootAddress = dataModel.address("*");
 var childAddress = rootAddress.address('namespaceChildA');
@@ -13,7 +14,7 @@ var rootDescriptor = rootAddress.implementation.getDescriptor();
 var childDescriptor = childAddress.implementation.getDescriptor();
 var extensionPointDescriptor = extensionPointAddress.implementation.getDescriptor();
 
-var testNamedObjectResolverUseCase = require('./test-core-named-object-resolver');
+var testNamedObjectResolverUseCase = testModuleDependencies.testNamedObjectResolverUseCase;
 
 // ----------------------------------------------------------------------------
 

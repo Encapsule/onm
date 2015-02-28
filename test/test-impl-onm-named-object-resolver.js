@@ -62,11 +62,11 @@ module.exports = describe("Named object resolver module test suite.", function()
     });
 
     describe("Named object resolver implementation test suite.", function() {
-        require('./subtests/named-object-resolver/test-use-case-named-object-resolver-context-input');
-        require('./subtests/named-object-resolver/test-use-case-named-object-resolver-context-output');
-        require('./subtests/named-object-resolver/test-use-case-named-object-resolver-open');
-        require('./subtests/named-object-resolver/test-use-case-named-object-resolver-create');
-        require('./subtests/named-object-resolver/test-use-case-named-object-resolver-negotiate');
+        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-context-input');
+        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-context-output');
+        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-open');
+        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-create');
+        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-negotiate');
     });
 
 });

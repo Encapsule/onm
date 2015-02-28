@@ -3,17 +3,19 @@
 
 var assert = require('chai').assert;
 var withData = require('leche').withData;
-
 var uuid = require('node-uuid');
-var onm = require('../../../index');
-var testData = require('../../fixture/address-book-data-model');
+
+
+var testModuleDependencies = require('./requires-dependencies');
+var onm = testModuleDependencies.onm;
+var testData = testModuleDependencies.testData;
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.address("*");
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var moduleUnderTest = require('../../../lib/core/rltp/rltp-named-object-context')
+var moduleUnderTest = testModuleDependencies.namedObjectContext;
 
 var testVector = {
 
