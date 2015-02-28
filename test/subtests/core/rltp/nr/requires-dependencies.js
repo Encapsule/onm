@@ -6,13 +6,9 @@
 //
 
 module.exports = {
-    onm: require('../../../../../index'),
-    testData: require('../../../../fixture/address-book-data-model'),
-    namedObjectTestDataModel: require('../../../../fixture/named-object-resolve-test-data-model'),
-
-    namedObjectResolver: require('../../../../../lib/core/rltp/rltp-named-object-resolver'),
-    namedObjectContext:  require('../../../../../lib/core/rltp/rltp-named-object-context'),
-
-    testNamedObjectResolverUseCase: require('./test-core-named-object-resolver')
-
+    onm:                            require('../../../../../index'),
+    namedObjectResolver:            require('../../../../../lib/core/rltp/rltp-named-object-resolver'),
+    namedObjectContext:             require('../../../../../lib/core/rltp/rltp-named-object-context'),
+    testData:                       require('../../../../fixture/address-book-data-model'),
+    namedObjectTestDataModel:       require('../../../../fixture/named-object-resolve-test-data-model'),
 };

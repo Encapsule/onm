@@ -6,6 +6,8 @@ var testModuleDependencies = require('./requires-dependencies');
 var dataModelDeclaration = testModuleDependencies.namedObjectTestDataModel;
 var dataModel = new testModuleDependencies.onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
 
+console.log(dataModel.uuid + dataModel.jsonTag);
+
 var rootAddress = dataModel.address("*");
 var childAddress = rootAddress.address('namespaceChildA');
 var extensionPointAddress = rootAddress.address('namespaceExtensionPointA');
@@ -14,7 +16,7 @@ var rootDescriptor = rootAddress.implementation.getDescriptor();
 var childDescriptor = childAddress.implementation.getDescriptor();
 var extensionPointDescriptor = extensionPointAddress.implementation.getDescriptor();
 
-var testNamedObjectResolverUseCase = testModuleDependencies.testNamedObjectResolverUseCase;
+var testNamedObjectResolverUseCase = require('./test-core-named-object-resolver.js');
 
 // ----------------------------------------------------------------------------
 

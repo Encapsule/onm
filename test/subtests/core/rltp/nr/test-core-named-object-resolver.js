@@ -9,14 +9,39 @@ var testModuleDependencies = require('./requires-dependencies');
 
 var namedObjectResolver = testModuleDependencies.namedObjectResolver;
 
+if (!namedObjectResolver || (namedObjectResolver === null) || !namedObjectResolver.resolve || (namedObjectResolver.resolve === null)) {
+    throw new Error("He's dead, Jim.");
+}
+
+/*
+  What could possibly go wrong?
+
+  testOptions = {
+      strategy: informational string indicating the resolver stratey
+      operationName: informational string indicating the operation
+      targetNamespace: informational string indicating some qualities about the target namespace, test env. etc.
+      inputOptions: options object to pass to the namespace resolver's request function
+      expectedCallToThrow: boolean true if resolver request is expected to throw (i'm typing this scratching my head).
+      resultExpectations: {
+          strategyFollowed:
+          namespaceEffectiveKey:
+          pendingSubobjectCount:
+          JSON: {
+              namespace:
+              events 
+          }
+      }
+  }
+*/
+
 module.exports = function (testOptions_) {
-
-    console.log(testOptions_.targetNamespace + " testModuleDependencies='" + testModuleDependencies + "'");
-    console.log("... " + testModuleDependencies.namedObjectResolver);
-
 
     if (!testOptions_.expectCallToThrow && !testOptions_.resultExpectations) {
         throw new Error("Test options are invalid. If the function call is expected to succeed, you must define the expected results object.");
+    }
+
+    if (!namedObjectResolver || (namedObjectResolver === null) || !namedObjectResolver.resolve || (namedObjectResolver.resolve === null)) {
+        throw new Error("Seriously? Fail in test harness scope but passing in module scope?");
     }
 
     var testName = "Named object resolver use case: strategy=" + 
