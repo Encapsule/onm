@@ -108,7 +108,7 @@ module.exports = class Address
             response.result = parseResponse.result
         if errors.length
             errors.unshift "onm.Address.address failed:"
-            request.error = errors.join ' '
+            response.error = errors.join ' '
 
         # TODO: FIX THE EXCEPTION INTERFACE
         if response.error
