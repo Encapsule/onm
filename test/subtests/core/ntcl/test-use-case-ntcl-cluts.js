@@ -7,7 +7,7 @@ describe("Verify the production CLUTS leveraged by the NTCL's LUTS module is up-
     describe("Attempt to load production CLUTS module.", function() {
         before(function() {
             var moduleLoader = function() {
-                productionCLUTS = require('../../../../lib/core/ntcl/ntcl-cluts-production');
+                productionCLUTS = require('../../../../lib/core/ntcl/ntcl-cluts');
             };
             assert.doesNotThrow(moduleLoader, "The ntcl-cluts-production module should be found and should load.");
         });
