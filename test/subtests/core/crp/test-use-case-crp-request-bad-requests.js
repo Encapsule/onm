@@ -1,7 +1,7 @@
 // test-use-case-core-bad-requests.js
 
-var onmcore = require('../../../lib/core/onm-core');
-var testOnmCoreRequest = require('./test-runner-core-request');
+var onmcore = require('../../../../lib/core/onm-core');
+var testOnmCoreRequest = require('./test-runner-crp-request');
 
 
 

@@ -57,8 +57,9 @@ describe("Attempt to load the onm core module.", function() {
 
     describe("Execute subtest suites.", function() {
 
-        require('./subtests/core/test-use-case-core-wrap-pods');
-        require('./subtests/core/test-use-case-core-bad-requests');
+        require('./subtests/core/test-core-ntcl');  // Native Type Classification/Conversation Library (NTCL)
+        require('./subtests/core/test-core-cids');  // Class Identification Subsystem (CIDS)
+        require('./subtests/core/test-core-crp');   // Core Request Processor (CRP)
 
     });
 
