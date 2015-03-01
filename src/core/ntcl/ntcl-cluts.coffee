@@ -36,14 +36,84 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-# Alternately, uncomment the line below to regenerate/reserialize with latest revision of the generator.
-# CLUTS = require './ntcl-cluts-generator'
 
-# This is a static resource that is not expected to change unless JavaScript, JSON, or their relationship to one another changes radically.
-# So let's not bother with an extra build step to run the same generator over and over and over...
+CLUTS = module.exports = {}
 
-CLUTS = JSON.parse '{"jsCode2jsTypeStringVector":["[object Undefined]","[object Null]","[object Boolean]","[object String]","[object Number]","[object Object]","[object Array]","[object Function]"],"jsCode2jsMonikerVector":["jsUndefined","jsNull","jsBoolean","jsString","jsNumber","jsObject","jsArray","jsFunction"],"jsCode2jsonMonikerVector":[null,"jsonNull","jsonBoolean","jsonString","jsonNumber","jsonObject","jsonArray",null],"jsMoniker2jsCodeHash":{"jsUndefined":0,"jsNull":1,"jsBoolean":2,"jsString":3,"jsNumber":4,"jsObject":5,"jsArray":6,"jsFunction":7},"jsTypeString2jsCodeHash":{"[object Undefined]":0,"[object Null]":1,"[object Boolean]":2,"[object String]":3,"[object Number]":4,"[object Object]":5,"[object Array]":6,"[object Function]":7},"jsMoniker2jsTypeStringHash":{"jsUndefined":"[object Undefined]","jsNull":"[object Null]","jsBoolean":"[object Boolean]","jsString":"[object String]","jsNumber":"[object Number]","jsObject":"[object Object]","jsArray":"[object Array]","jsFunction":"[object Function]"},"jsTypeString2jsMonikerHash":{"[object Undefined]":"jsUndefined","[object Null]":"jsNull","[object Boolean]":"jsBoolean","[object String]":"jsString","[object Number]":"jsNumber","[object Object]":"jsObject","[object Array]":"jsArray","[object Function]":"jsFunction"},"jsonMoniker2jsCodeHash":{"jsonNull":1,"jsonBoolean":2,"jsonString":3,"jsonNumber":4,"jsonObject":5,"jsonArray":6},"vectorLength":8}'
 
-Object.freeze CLUTS
+cluts =
+    'jsCode:jsTypeString': [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
+    'jsCode:jsMoniker': [ 'jsUndefined', 'jsNull', 'jsBoolean',  'jsString', 'jsNumber', 'jsObject', 'jsArray', 'jsFunction' ]
+    'jsCode:jsonMoniker': [ null, 'jsonNull', 'jsonBoolean', 'jsonString', 'jsonNumber', 'jsonObject', 'jsonArray', null ]
 
-module.exports = CLUTS
+clutsMaxIndex = cluts['jsCode:jsTypeString'].length
+
+###
+    ... Is ironically quite agile ;)
+    request = {
+        uMoniker: string moniker of the source value (indicates its type)
+        vMoniker: string moniker of the destination value (indicates its type)
+        sourceValue: string moniker or integer index: integer [0, cluts.array.length-1]
+    }
+###
+CLUTS.request = (request_) ->
+
+    errors = []
+    response = error: null, result: undefined
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        if not (request_? and request_)
+            errors.unshift "Missing request object."
+            break
+        requestType = Object.prototype.toString request_
+        if requestType != '[object Object]'
+            errors.unshift "Invalid request value type. Expected reference to '[object Object]'."
+            break
+        request = {}
+        if not (request_.uMoniker? and request_.uMoniker)
+            errors.unshift "Invalid request missing 'uMoniker' property."
+            break
+        requestType = Object.prototype.toString.call request_.uMoniker
+        if requestType != '[object String]'
+            errors.unshift "Invalid request 'uMoniker' value type. Expected reference to '[object String]'."
+            break
+        request.uMoniker = request_.uMoniker
+        if not (request_.vMoniker? and request_.vMoniker)
+            errors.unshift "Invalid request missing 'vMoniker' property."
+            break
+        requestType = Object.prototype.toString.call request_.vMoniker
+        if requestType != '[object String]'
+            errors.unshift "Invalid request 'vMoniker' value type. Expected reference to '[object String]'."
+            break
+        request.vMoniker = request_.vMoniker
+        sourceValueType = Object.prototype.toString.call request_.sourceValue
+        switch sourceValueType
+            when '[object Number]'
+                if (request_.index < 0) or (request_.index >= clutsMaxIndex)
+                    errors = "Invalid request 'sourceValue' value is numerically out of range."
+                tableKey = "#{request.uMoniker}:#{request.vMoniker}"
+                forwardLookup = true
+                break
+            when '[object String]'
+                tableKey = "#{request.vMoniker}:#{request.uMoniker}"
+                forwardLookup = false
+                break
+            else
+                errors.unshift "Invalid request 'sourceValue' value type '#{sourceValueType}'. Expected reference to '[object String]', or '[object Number]'."
+                break
+        if errors.length
+            break
+        table = cluts[tableKey]
+        if not (table? and table)
+            errors.unshift "Sorry. There is no conversion from from '#{request.sourceValue}' of type '#{request.uMoniker}' to value of type '#{request.vMoniker}."
+            break
+        response.result = table[request.sourceValue]
+
+    if errors.length
+        errors.unshift "CLUTS.request failed:"
+        response.error = errors.join " "
+
+    response
+
+
+

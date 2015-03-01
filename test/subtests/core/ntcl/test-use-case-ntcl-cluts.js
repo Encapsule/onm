@@ -22,7 +22,7 @@ describe("Verify the production CLUTS leveraged by the NTCL's LUTS module is up-
                     generatedCLUTS_JSON = require('../../../../lib/core/ntcl/ntcl-cluts-generator');
                     //console.log("============================================================================");
                     //console.log("Latest generated:");
-                    //console.log(generatedCLUTS_JSON);
+                    console.log(generatedCLUTS_JSON);
                     //console.log("============================================================================");
                 };
                 assert.doesNotThrow(moduleLoader, "The ntcl-cluts-generator module should be found and should load.");

@@ -37,10 +37,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 # Constant Look-Up Tables
-cluts = {}
-cluts.jsCode2jsTypeStringVector =  [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
-cluts.jsCode2jsMonikerVector =     [ 'jsUndefined',        'jsNull',       'jsBoolean',        'jsString',        'jsNumber',        'jsObject',         'jsArray',        'jsFunction' ]
-cluts.jsCode2jsonMonikerVector =   [ null,                 'jsonNull',     'jsonBoolean',      'jsonString',      'jsonNumber',      'jsonObject',       'jsonArray',      null ]
+cluts =
+    tables:
+        'jsCode:jsTypeString': [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
+        'jsCode:jsMoniker': [ 'jsUndefined', 'jsNull', 'jsBoolean',  'jsString', 'jsNumber', 'jsObject', 'jsArray', 'jsFunction' ]
+        'jsCode:jsonMoniker': [ null, 'jsonNull', 'jsonBoolean', 'jsonString', 'jsonNumber', 'jsonObject', 'jsonArray', null ]
+
+
+
+cluts.jsCode2jsTypeStringVector =  
+cluts.jsCode2jsMonikerVector =    
+cluts.jsCode2jsonMonikerVector = 
 cluts.jsMoniker2jsCodeHash =       {}
 cluts.jsTypeString2jsCodeHash =    {}
 cluts.jsMoniker2jsTypeStringHash = {}
