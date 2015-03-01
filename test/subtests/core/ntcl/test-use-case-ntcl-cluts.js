@@ -1,51 +1,241 @@
 // test-use-case-ntcl-cluts.js
 
 var assert = require('chai').assert;
-describe("Verify the production CLUTS leveraged by the NTCL's LUTS module is up-to-date.", function() {
-    productionCLUTS = null
-    generatedCLUTS_JSON = null
-    describe("Attempt to load production CLUTS module.", function() {
+
+/*
+  test = {
+      cluts: CLUTS module export object
+      testName: string
+      validConfig: boolean
+      request: {
+          uMoniker: string
+          vMoniker: string
+          value: JavaScript refernence to valUE
+      },
+      expectedResults: {
+          error: string
+          result: string, number, or undefined?
+      }
+  }
+*/
+var testCLUTS = function(test_) {
+    describe("NTCL.CLUTS test use case: " + test_.testName, function() {
+        response = null;
         before(function() {
-            var moduleLoader = function() {
-                productionCLUTS = require('../../../../lib/core/ntcl/ntcl-cluts');
+            var testFunctionWrapper = function() {
+                response = test_.cluts.request(test_.request);
             };
-            assert.doesNotThrow(moduleLoader, "The ntcl-cluts-production module should be found and should load.");
+            assert.doesNotThrow(testFunctionWrapper, "CLUTS.request should never throw.");
         });
-        it("The ntcl-cluts-production module should have loaded returning an object.", function() {
-            assert.isDefined(productionCLUTS);
-            assert.isNotNull(productionCLUTS);
-            assert.isObject(productionCLUTS);
+        it("CLUTS.request should have returned a response of type object.", function() {
+            assert.isDefined(response);
+            assert.isNotNull(response);
+            assert.isObject(response);
         });
-        describe("Attempt to load the CLUTS generator module.", function() {
-            before(function() {
-                var moduleLoader = function() {
-                    generatedCLUTS_JSON = require('../../../../lib/core/ntcl/ntcl-cluts-generator');
-                    //console.log("============================================================================");
-                    //console.log("Latest generated:");
-                    console.log(generatedCLUTS_JSON);
-                    //console.log("============================================================================");
-                };
-                assert.doesNotThrow(moduleLoader, "The ntcl-cluts-generator module should be found and should load.");
+        if (test_.validConfig) {
+            it("The request is expected to have succeeded.", function() {
+                assert.isNull(response.error);
+                assert.isDefined(response.result);
+                assert.isNotNull(response.result);
             });
-            it("The ntcl-cluts-generator module should have loaded returning a string (JSON).", function() {
-                assert.isDefined(generatedCLUTS_JSON);
-                assert.isNotNull(generatedCLUTS_JSON);
-                assert.isString(generatedCLUTS_JSON);
+            it("The response result should match the expected test control value.", function() {
+                assert.equal(response.result, test_.expectedResults.result);
             });
-            describe("Verify that the CLUTS leveraged in production onm v1 LUTS is up-to-date.", function() {
-                productionCLUTS_JSON = null
-                before(function() {
-                    productionCLUTS_JSON = JSON.stringify(productionCLUTS);
-                    //console.log("============================================================================");
-                    //console.log("Production:");
-                    //console.log(productionCLUTS_JSON);
-                    //console.log("============================================================================");
-                });
-                it("The production CLUTS JSON should match the CLUTS JSON created by the most recent CLUTS generator module.", function() {
-                    assert.equal(productionCLUTS_JSON, generatedCLUTS_JSON);
-                });
+        } else {
+            it("The request is expected to have failed.",  function() {
+                assert.isDefined(response.error);
+                assert.isNotNull(response.error);
+                assert.isString(response.error);
+                assert.isUndefined(response.result);
             });
-        });
+            it("The response error should match the expected test control value.", function() {
+                assert.equal(response.error, test_.expectedResults.error);
+            });
+        }
     });
+}
+
+CLUTS = require('../../../../lib/core/ntcl/ntcl-cluts');
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Missing request object",
+    validConfig: false,
+    request: undefined,
+    expectedResults: {
+        error: 'CLUTS.request failed: Missing request object.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Null request object",
+    validConfig: false,
+    request: null,
+    expectedResults: {
+        error: 'CLUTS.request failed: Missing request object.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object type",
+    validConfig: false,
+    request: [],
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request value type. Expected reference to \'[object Object]\'.',
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: missing 'uMoniker'",
+    validConfig: false,
+    request: {},
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'uMoniker' is null",
+    validConfig: false,
+    request: {
+        uMoniker: null
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'uMoniker' is undefined",
+    validConfig: false,
+    request: {
+        uMoniker: undefined
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'uMoniker' is not a string",
+    validConfig: false,
+    request: {
+        uMoniker: 6
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request \'uMoniker\' value type. Expected reference to \'[object String]\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Missing 'vMoniker'",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'vMoniker' is null",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: null
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'vMoniker' is undefined",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: undefined
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: 'vMoniker' is not a string",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: { test: "YO!" }
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request \'vMoniker\' value type. Expected reference to \'[object String]\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Invalid 'uMoniker' string",
+    validConfig: false,
+    request: {
+        uMoniker: "ERROR",
+        vMoniker: "jsReference"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Attempting conversion from \'ERROR\' to \'jsReference\': Invalid request \'uMoniker\' value \'ERROR\' is not a recognized onm type alias string.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Unity conversion doesn't make sense",
+    validConfig: false,
+    request: {
+        uMoniker: "whatever",
+        vMoniker: "whatever"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Conversion request to convert \'whatever\' to reference of itself is invalid.'
+    }
+});
+
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Conversion from 'jsCode' with invalid value type.",
+    validConfig: false,
+    request: {
+        uMoniker: "jsCode",
+        vMoniker: "jsMoniker",
+        value: "should be a number"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Attempting conversion from \'jsCode\' to \'jsMoniker\': Invalid request \'value\' type. Expected reference to \'[object Number]\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Conversion from 'jsCode' with numerical value out-of-range.",
+    validConfig: false,
+    request: {
+        uMoniker: "jsCode",
+        vMoniker: "jsMoniker",
+        value: 100
+    },
+    expectedResults: {
+        error: ''
+    }
 });
 

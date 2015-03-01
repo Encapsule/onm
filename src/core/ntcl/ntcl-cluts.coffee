@@ -52,7 +52,7 @@ clutsMaxIndex = cluts['jsCode:jsTypeString'].length
     request = {
         uMoniker: string moniker of the source value (indicates its type)
         vMoniker: string moniker of the destination value (indicates its type)
-        sourceValue: string moniker or integer index: integer [0, cluts.array.length-1]
+        value: JavaScript reference expected to refer to a value of type uMoniker
     }
 ###
 CLUTS.request = (request_) ->
@@ -65,7 +65,7 @@ CLUTS.request = (request_) ->
         if not (request_? and request_)
             errors.unshift "Missing request object."
             break
-        requestType = Object.prototype.toString request_
+        requestType = Object.prototype.toString.call request_
         if requestType != '[object Object]'
             errors.unshift "Invalid request value type. Expected reference to '[object Object]'."
             break
@@ -86,28 +86,50 @@ CLUTS.request = (request_) ->
             errors.unshift "Invalid request 'vMoniker' value type. Expected reference to '[object String]'."
             break
         request.vMoniker = request_.vMoniker
-        sourceValueType = Object.prototype.toString.call request_.sourceValue
-        switch sourceValueType
-            when '[object Number]'
-                if (request_.index < 0) or (request_.index >= clutsMaxIndex)
-                    errors = "Invalid request 'sourceValue' value is numerically out of range."
-                tableKey = "#{request.uMoniker}:#{request.vMoniker}"
-                forwardLookup = true
+
+        if request.uMoniker == request.vMoniker
+            errors.unshift "Conversion request to convert '#{request.uMoniker}' to reference of itself is invalid."
+            break;
+
+        valueType = Object.prototype.toString.call request_.value
+
+        forwardLookup = true
+
+        switch request.uMoniker
+            when 'jsReference'
                 break
-            when '[object String]'
-                tableKey = "#{request.vMoniker}:#{request.uMoniker}"
+            when 'jsCode'
+                if valueType != '[object Number]'
+                    errors.unshift "Invalid request 'value' type. Expected reference to '[object Number]'."
+                    break
+                if (request_.index < 0) or (request_.index >= clutsMaxIndex)
+                    errors.unshift "Invalid request 'value' value is numerically out of range in."
+                break
+            when 'jsMoniker' or 'jsonMoniker' or 'jsTypeString'
+                if valueType != '[object String]'
+                    errors.unshift "Invalid request 'value' type. Expected reference to '[object String]'."
                 forwardLookup = false
                 break
             else
-                errors.unshift "Invalid request 'sourceValue' value type '#{sourceValueType}'. Expected reference to '[object String]', or '[object Number]'."
+                errors.unshift "Invalid request 'uMoniker' value '#{request.uMoniker}' is not a recognized onm type alias string."
                 break
-        if errors.length
-            break
-        table = cluts[tableKey]
-        if not (table? and table)
-            errors.unshift "Sorry. There is no conversion from from '#{request.sourceValue}' of type '#{request.uMoniker}' to value of type '#{request.vMoniker}."
-            break
-        response.result = table[request.sourceValue]
+
+         if errors.length
+             errors.unshift "Attempting conversion from '#{request.uMoniker}' to '#{request.vMoniker}':"
+             break
+
+         request.value = request_.value
+
+         sourceType = forwardLookup and request.uMoniker or request.vMoniker
+         destinationType = forwardLookup and request.vMoniker or request.uMoniker
+         tableKey = "#{sourceType}:#{destinationType}"
+         selectedTable = cluts[tableKey]
+
+         if not (selectedTable? and selectedTable)
+             errors.unshift "Invalid request no conversion operator from '#{sourceType}' to '#{destinationType}'."
+             break
+
+         response.result = forwardLookup and selectedTable[request.value] or selectedTable.indexOf request.value
 
     if errors.length
         errors.unshift "CLUTS.request failed:"
