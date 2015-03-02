@@ -46,7 +46,7 @@ var testCLUTS = function(test_) {
                 assert.isDefined(response.error);
                 assert.isNotNull(response.error);
                 assert.isString(response.error);
-                assert.isUndefined(response.result);
+                assert.isNull(response.result);
             });
             it("The response error should match the expected test control value.", function() {
                 assert.equal(response.error, test_.expectedResults.error);
@@ -297,15 +297,57 @@ testCLUTS({
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: Conversion of 'jsReference' to 'jsMoniker'",
+    testName: "Invalid request object: Conversion of 'jsReference' to 'jsMoniker' with invalid 'value'",
     validConfig: false,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsMoniker",
+        uMoniker: "jsMoniker",
+        vMoniker: "jsonMoniker",
         value: "WTF-THIS"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: In request to convert of \'jsReference\' to \'jsMoniker\': Invalid request \'uMoniker\' value \'jsReference\' must be \'jsCode\' when converting \'jsReference\' value.'
+        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request: Convert a jsMoniker to jsonMoniker with value 'jsUndefined'",
+    validConfig: false,
+    request: {
+        uMoniker: "jsMoniker",
+        vMoniker: "jsonMoniker",
+        value: "jsUndefined"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Cannot convert value \'jsUndefined\' of type \'jsMoniker\' to type \'jsonMoniker\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request: Convert a jsMoniker to jsonMoniker with value 'jsFunction'",
+    validConfig: false,
+    request: {
+        uMoniker: "jsMoniker",
+        vMoniker: "jsonMoniker",
+        value: "jsFunction"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Cannot convert value \'jsFunction\' of type \'jsMoniker\' to type \'jsonMoniker\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invlid request: Convert a jsMoniker to jsonMoniker with value 'jsArray'",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsonMoniker",
+        value: function() { console.log("nope"); }
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Cannot convert value \'[object Function]\' of type \'jsTypeString\' to type \'jsonMoniker\'.'
     }
 });
 
@@ -355,7 +397,7 @@ testCLUTS({
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Classify undefined reference with 'value' set to true.",
+    testName: "Classify boolean reference with 'value' set to true.",
     validConfig: true,
     request: {
         uMoniker: "jsReference",
@@ -371,7 +413,7 @@ testCLUTS({
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Classify undefined reference with 'value' set to 'test' string.",
+    testName: "Classify string reference with 'value' set to 'test' string.",
     validConfig: true,
     request: {
         uMoniker: "jsReference",
@@ -386,7 +428,7 @@ testCLUTS({
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Classify undefined reference with 'value' set to function.",
+    testName: "Classify function reference with 'value' set to function.",
     validConfig: true,
     request: {
         uMoniker: "jsReference",
@@ -398,6 +440,23 @@ testCLUTS({
         result: 7
     }
 });
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Convert a jsMoniker to jsonMoniker with value 'jsArray'",
+    validConfig: true,
+    request: {
+        uMoniker: "jsMoniker",
+        vMoniker: "jsonMoniker",
+        value: "jsArray"
+    },
+    expectedResults: {
+        error: '',
+        result: 'jsonArray'
+    }
+});
+
+
 
 
 

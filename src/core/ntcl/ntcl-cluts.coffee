@@ -58,7 +58,7 @@ clutsMaxIndex = cluts.jsTypeString.length
 CLUTS.request = (request_) ->
 
     errors = []
-    response = error: null, result: undefined
+    response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
 
@@ -112,9 +112,6 @@ CLUTS.request = (request_) ->
         switch request.uMoniker
             when 'jsReference'
                 console.log "HIT REWRITE REQUEST CODE PATH"
-                if request.vMoniker != 'jsCode'
-                    errors.unshift "Invalid request 'uMoniker' value '#{request.uMoniker}' must be 'jsCode' when converting 'jsReference' value."
-                    break
                 rewriteRequest =
                     uMoniker: 'jsTypeString'
                     vMoniker: request.vMoniker
@@ -143,16 +140,15 @@ CLUTS.request = (request_) ->
 
          skipLookup = not forwardLookup  and request.vMoniker != 'jsCode'
 
-         if not skipLookup
-             if not (rewriteRequest? and rewriteRequest)
-                 request.value = request_.value
-             else
-                 console.log "REWRITING REQUEST."
-                 request = rewriteRequest
+         if not (rewriteRequest? and rewriteRequest)
+             request.value = request_.value
+         else
+             console.log "REWRITING REQUEST."
+             request = rewriteRequest
 
-             table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
+         table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
 
-         if skipLookup or not (table? and table)
+         if not (table? and table)
              errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
              break
 
@@ -169,6 +165,22 @@ CLUTS.request = (request_) ->
                  errors.unshift "Invalid request 'value' specifies unknown #{request.uMoniker} '#{request.value}'."
                  break
              console.log "REVERSE LOOKUP by '#{request.value}' returned '#{lookupResult}'."
+
+             if request.vMoniker != 'jsCode'
+
+                 table = cluts[request.vMoniker]
+                 if not (table? and table)
+                     errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
+                     break
+
+                 jsCode = lookupResult
+                 lookupResult = table[jsCode]
+
+                 if not (lookupResult? and lookupResult)
+                     errors.unshift "Cannot convert value '#{request.value}' of type '#{request.uMoniker}' to type '#{request.vMoniker}'."
+                     break
+
+                 console.log "FORWARD LOOKUP by index value '#{jsCode}' returned '#{lookupResult}'."
 
          response.result = lookupResult
 
