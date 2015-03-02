@@ -36,23 +36,29 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+'use strict'
 
 CLUTS = module.exports = {}
 
+cluts = CLUTS.cluts = {}
+cluts.jsCodes = { jsUndefined: 0, jsNull: 1, jsBoolean: 2, jsString: 3, jsNumber: 4, jsObject: 5, jsArray: 6, jsFunction: 7 }
+cluts.dimensions = [ 'jsReference', 'jsCode', 'jsTypeString', 'jsMoniker', 'jsonMoniker' ]
+cluts.jsTypeString = [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
+cluts.jsMoniker = [ 'jsUndefined', 'jsNull', 'jsBoolean',  'jsString', 'jsNumber', 'jsObject', 'jsArray', 'jsFunction' ]
+cluts.jsonMoniker = [ null, 'jsonNull', 'jsonBoolean', 'jsonString', 'jsonNumber', 'jsonObject', 'jsonArray', null ]
+cluts.jsCodeMax = cluts.jsCodes.jsFunction + 1
 
-cluts =
-    jsTypeString: [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
-    jsMoniker: [ 'jsUndefined', 'jsNull', 'jsBoolean',  'jsString', 'jsNumber', 'jsObject', 'jsArray', 'jsFunction' ]
-    jsonMoniker: [ null, 'jsonNull', 'jsonBoolean', 'jsonString', 'jsonNumber', 'jsonObject', 'jsonArray', null ]
-
-clutsMaxIndex = cluts.jsTypeString.length
+Object.freeze cluts
 
 ###
-    CLUTS is not clutzy.
     request = {
         uMoniker: string moniker of the source value (indicates its type)
         vMoniker: string moniker of the destination value (indicates its type)
         value: JavaScript reference expected to refer to a value of type uMoniker
+    }
+    response = {
+        error: null or string explaining by result is null
+        result: integer in range 0 to 7 inclusive (jsCode) or string (jsStringType, jsMoniker, jsonMoniker) or null to indicate error
     }
 ###
 CLUTS.request = (request_) ->
@@ -111,7 +117,6 @@ CLUTS.request = (request_) ->
 
         switch request.uMoniker
             when 'jsReference'
-                console.log "HIT REWRITE REQUEST CODE PATH"
                 rewriteRequest =
                     uMoniker: 'jsTypeString'
                     vMoniker: request.vMoniker
@@ -122,7 +127,7 @@ CLUTS.request = (request_) ->
                 if valueType != '[object Number]'
                     errors.unshift "Invalid request 'value' type. Expected reference to '[object Number]'."
                     break
-                if (request_.value < 0) or (request_.value >= clutsMaxIndex)
+                if (request_.value < 0) or (request_.value >= cluts.jsCodeMax)
                     errors.unshift "Invalid request 'value' '#{request_.value}' is not a valid 'jsCode' value."
                 break
             when 'jsMoniker' or 'jsonMoniker' or 'jsTypeString'
@@ -138,12 +143,9 @@ CLUTS.request = (request_) ->
              errors.unshift "In request to convert of '#{request.uMoniker}' to '#{request.vMoniker}':"
              break
 
-         skipLookup = not forwardLookup  and request.vMoniker != 'jsCode'
-
          if not (rewriteRequest? and rewriteRequest)
              request.value = request_.value
          else
-             console.log "REWRITING REQUEST."
              request = rewriteRequest
 
          table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
@@ -152,19 +154,13 @@ CLUTS.request = (request_) ->
              errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
              break
 
-         console.log "STARTING LOOKUP on table '#{JSON.stringify table}'"
-
          if forwardLookup
              lookupResult = table[request.value] # expected always good as request.value is range validated
-
-             console.log "FORWARD LOOKUP by index value '#{request.value}' returned '#{lookupResult}'."
-             # lookupResult is expected to be a string type
          else
              lookupResult = table.indexOf request.value # may not be valid as we cannot pre-validate request.value
              if lookupResult == -1
                  errors.unshift "Invalid request 'value' specifies unknown #{request.uMoniker} '#{request.value}'."
                  break
-             console.log "REVERSE LOOKUP by '#{request.value}' returned '#{lookupResult}'."
 
              if request.vMoniker != 'jsCode'
 
@@ -180,12 +176,7 @@ CLUTS.request = (request_) ->
                      errors.unshift "Cannot convert value '#{request.value}' of type '#{request.uMoniker}' to type '#{request.vMoniker}'."
                      break
 
-                 console.log "FORWARD LOOKUP by index value '#{jsCode}' returned '#{lookupResult}'."
-
          response.result = lookupResult
-
-
-
 
     if errors.length
         errors.unshift "CLUTS.request failed:"
