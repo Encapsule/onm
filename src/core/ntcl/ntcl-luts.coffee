@@ -40,6 +40,7 @@ CLUTS = require './ntcl-cluts'
 
 
 LUTS = module.exports = {}
+
 LUTS.jsCodes = CLUTS.jsCodes
 LUTS.dimensions = CLUTS.dimensions
 LUTS.request = CLUTS.request

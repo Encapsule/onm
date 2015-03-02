@@ -22,9 +22,29 @@ describe("Attempt to load the ntcl-luts module.", function() {
         assert.isObject(LUTS);
     });
 
-    it("The LUTS modules should export property 'cluts' of type object.", function() {
-        assert.property(LUTS, 'cluts');
-        assert.isObject(LUTS.cluts); // the validity of which is verified by test-use-case-ntcl-cluts.js
+    it("The LUTS module should export property 'jsCodes' of type object.", function() {
+        assert.property(LUTS, 'jsCodes');
+        assert.isObject(LUTS.jsCodes);
+    });
+
+    it("The LUTS module should export property 'dimensions' of type array.", function() {
+        assert.property(LUTS, 'dimensions');
+        assert.isArray(LUTS.dimensions);
+    });
+
+    it("The LUTS module should export property 'request' of type function.", function() {
+        assert.property(LUTS, 'request');
+        assert.isFunction(LUTS.request);
+    });
+
+    it("The LUTS module should export property 'refInJsTypeSet' of type function.", function() {
+        assert.property(LUTS, 'refInJsTypeSet');
+        assert.isFunction(LUTS.refInJsTypeSet);
+    });
+
+    it("The LUTS module should export property 'refValidJsonType' of type function.", function() {
+        assert.property(LUTS, 'refValidJsonType');
+        assert.isFunction(LUTS.refValidJsonType);
     });
 
 

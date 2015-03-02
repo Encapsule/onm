@@ -263,7 +263,7 @@ testCLUTS({
         value: "jsBoolean"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: No conversion operator from \'jsMoniker\' to \'WTF-THIS\'. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
+        error: 'CLUTS.request failed: No conversion from dimension \'jsMoniker\' to \'WTF-THIS\' available. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -319,7 +319,7 @@ testCLUTS({
         value: "jsUndefined"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Cannot convert value \'jsUndefined\' of type \'jsMoniker\' to type \'jsonMoniker\'.'
+        error: 'CLUTS.request failed: No coversion from dimension \'jsMoniker\' to \'jsonMoniker\' for value \'jsUndefined\'.'
     }
 });
 
@@ -333,13 +333,13 @@ testCLUTS({
         value: "jsFunction"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Cannot convert value \'jsFunction\' of type \'jsMoniker\' to type \'jsonMoniker\'.'
+        error: 'CLUTS.request failed: No coversion from dimension \'jsMoniker\' to \'jsonMoniker\' for value \'jsFunction\'.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invlid request: Convert a jsMoniker to jsonMoniker with value 'jsArray'",
+    testName: "Invlid request: Convert a jsReference to jsonMoniker with value function() {}",
     validConfig: false,
     request: {
         from: "jsReference",
@@ -347,7 +347,7 @@ testCLUTS({
         value: function() { console.log("nope"); }
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Cannot convert value \'[object Function]\' of type \'jsTypeString\' to type \'jsonMoniker\'.'
+        error: 'CLUTS.request failed: No coversion from dimension \'jsTypeString\' to \'jsonMoniker\' for value \'[object Function]\'.'
     }
 });
 
@@ -360,7 +360,6 @@ testCLUTS({
         to: "jsCode",
     },
     expectedResults: {
-        error: '',
         result: 0
     }
 });
@@ -425,6 +424,53 @@ testCLUTS({
         result: 3
     }
 });
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify string reference with 'value' set to 17 number.",
+    validConfig: true,
+    request: {
+        from: "jsReference",
+        to: "jsCode",
+        value: 17
+    },
+    expectedResults: {
+        error: '',
+        result: 4
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify string reference with 'value' set to {} object.",
+    validConfig: true,
+    request: {
+        from: "jsReference",
+        to: "jsCode",
+        value: {}
+    },
+    expectedResults: {
+        error: '',
+        result: 5
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify string reference with 'value' set to [] array.",
+    validConfig: true,
+    request: {
+        from: "jsReference",
+        to: "jsCode",
+        value: []
+    },
+    expectedResults: {
+        error: '',
+        result: 6
+    }
+});
+
+
 
 testCLUTS({
     cluts: CLUTS,
