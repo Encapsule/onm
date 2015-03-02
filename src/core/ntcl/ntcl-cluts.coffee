@@ -48,7 +48,7 @@ cluts =
 clutsMaxIndex = cluts.jsTypeString.length
 
 ###
-    ... Is ironically quite agile ;)
+    CLUTS is not clutzy.
     request = {
         uMoniker: string moniker of the source value (indicates its type)
         vMoniker: string moniker of the destination value (indicates its type)
@@ -107,10 +107,14 @@ CLUTS.request = (request_) ->
         valueType = Object.prototype.toString.call request_.value
 
         forwardLookup = true
+        rewriteRequest = undefined
 
         switch request.uMoniker
             when 'jsReference'
-                console.log "HIT THIS CODE PATH"
+                console.log "HIT REWRITE REQUEST CODE PATH"
+                if request.vMoniker != 'jsCode'
+                    errors.unshift "Invalid request 'uMoniker' value '#{request.uMoniker}' must be 'jsCode' when converting 'jsReference' value."
+                    break
                 rewriteRequest =
                     uMoniker: 'jsTypeString'
                     vMoniker: request.vMoniker
@@ -137,30 +141,39 @@ CLUTS.request = (request_) ->
              errors.unshift "In request to convert of '#{request.uMoniker}' to '#{request.vMoniker}':"
              break
 
-         if not (rewriteRequest? and rewriteRequest)
-             console.log "REWRITING REQUEST."
-             request.value = request_.value
-         else
-             request = rewriteRequest
+         skipLookup = not forwardLookup  and request.vMoniker != 'jsCode'
 
-         table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
+         if not skipLookup
+             if not (rewriteRequest? and rewriteRequest)
+                 request.value = request_.value
+             else
+                 console.log "REWRITING REQUEST."
+                 request = rewriteRequest
 
-         if not (table? and table)
+             table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
+
+         if skipLookup or not (table? and table)
              errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
              break
 
-         console.log "STARTING LOOKUP"
+         console.log "STARTING LOOKUP on table '#{JSON.stringify table}'"
 
          if forwardLookup
              lookupResult = table[request.value] # expected always good as request.value is range validated
+
+             console.log "FORWARD LOOKUP by index value '#{request.value}' returned '#{lookupResult}'."
              # lookupResult is expected to be a string type
          else
              lookupResult = table.indexOf request.value # may not be valid as we cannot pre-validate request.value
              if lookupResult == -1
                  errors.unshift "Invalid request 'value' specifies unknown #{request.uMoniker} '#{request.value}'."
                  break
+             console.log "REVERSE LOOKUP by '#{request.value}' returned '#{lookupResult}'."
 
          response.result = lookupResult
+
+
+
 
     if errors.length
         errors.unshift "CLUTS.request failed:"

@@ -263,7 +263,7 @@ testCLUTS({
         value: "jsBoolean"
     },
     expectedResults: {
-        error: ''
+        error: 'CLUTS.request failed: No conversion operator from \'jsMoniker\' to \'WTF-THIS\'.'
     }
 });
 
@@ -280,4 +280,125 @@ testCLUTS({
         error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
     }
 });
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Conversion of 'jsMoniker' to 'jsCode' w/'value' set to bogus moniker value.",
+    validConfig: false,
+    request: {
+        uMoniker: "jsMoniker",
+        vMoniker: "jsCode",
+        value: "WTF-THIS"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Invalid request object: Conversion of 'jsReference' to 'jsMoniker'",
+    validConfig: false,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsMoniker",
+        value: "WTF-THIS"
+    },
+    expectedResults: {
+        error: 'CLUTS.request failed: In request to convert of \'jsReference\' to \'jsMoniker\': Invalid request \'uMoniker\' value \'jsReference\' must be \'jsCode\' when converting \'jsReference\' value.'
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' missing from request.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+    },
+    expectedResults: {
+        error: '',
+        result: 0
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' set to undefined.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+        value: undefined
+    },
+    expectedResults: {
+        error: '',
+        result: 0
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' set to null.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+        value: null
+    },
+    expectedResults: {
+        error: '',
+        result: 1
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' set to true.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+        value: true
+    },
+    expectedResults: {
+        error: '',
+        result: 2
+    }
+});
+
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' set to 'test' string.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+        value: "test"
+    },
+    expectedResults: {
+        error: '',
+        result: 3
+    }
+});
+
+testCLUTS({
+    cluts: CLUTS,
+    testName: "Classify undefined reference with 'value' set to function.",
+    validConfig: true,
+    request: {
+        uMoniker: "jsReference",
+        vMoniker: "jsCode",
+        value: function() { x = 5 }
+    },
+    expectedResults: {
+        error: '',
+        result: 7
+    }
+});
+
+
+
 
