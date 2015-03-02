@@ -39,31 +39,35 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../../cids/cids'
 
-xRIP_Generators =
+Generators =
     path: require './risp-generate-path'
     vector: require './risp-generate-vector'
+    irut: require './risp-generate-irut'
 
-xRIP_GeneratorsByFormat =
-    'readable': xRIP_Generators.path
-    'hash': xRIP_Generators.path
-    'lri':  xRIP_Generators.vector
-    'uri':  xRIP_Generators.vector
+GeneratorsByFormat =
+    'readable': Generators.path
+    'hash': Generators.path
+    'lri':  Generators.vector
+    'uri':  Generators.vector
+    'irut': Generators.irut
+
+
 
 ###
     request = {
-        address: reference to onm.Address to convert
-        format: string (one of 'readable', 'hash', 'lri', or 'uri')
+        address: reference to onm.Address to convert or undefined for 'irut' request
+        format: string (one of 'readable', 'hash', 'lri', or 'uri', 'irut')
     }
     response = {
         error: null or string explaining why result === null
         result: onm-format path xRI string
     }
-
 ###
 # ============================================================================
-xRIP_Generator = module.exports = (request_) ->
+RISP = {}
+RISP.generate = module.exports = (request_) ->
+
     errors = []
     response = error: null, result: null
     inBreakScope = false
@@ -72,12 +76,7 @@ xRIP_Generator = module.exports = (request_) ->
         if not (request_? and request_)
             errors.unshift "Missing required request object in-parameter."
             break
-        if not (request_.address? and request_.address)
-            errors.unshift "Invalid request object missing required property 'address'."
-            break
-        if classRegistry.lookup[request_.address.onmClassType] != 'Address'
-            errors.unshift "Invalid request object 'address' value type. Expected reference to onm.Address."
-            break
+
         if not (request_.format? and request_.format)
             errors.unshift "Invalid request object missing required property 'format'."
             break
@@ -85,19 +84,27 @@ xRIP_Generator = module.exports = (request_) ->
         if formatType != '[object String]'
             errors.unshift "Invalid request object 'format' value type. Expected reference to '[object String]'."
             break
+
         format = request_.format
-        selectedGenerator = xRIP_GeneratorsByFormat[format]
+        selectedGenerator = GeneratorsByFormat[format]
         if not (selectedGenerator? and selectedGenerator)
-            errors.unshift "Sorry. No registered xRI generator for format '#{format}'."
+            validFormats = []
+            for format of GeneratorsByFormat
+                validFormats.push format
+            errors.unshift "Sorry. No registered generator for format '#{format}'. Valid formats: [#{validFormats}]."
             break
+
         generatorResponse = selectedGenerator request_
+
         if not generatorResponse.error
             response.result = generatorResponse.result
         else
             errors.unshift generatorResponse.error
+
     if errors.length
-        errors.unshift "xRIP_Generator failed:"
+        errors.unshift "RISP.generate failed:"
         response.error = errors.join ' '
+
     response
 
 

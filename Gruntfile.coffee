@@ -66,6 +66,8 @@ module.exports = (grunt) ->
                     'lib/core/risp/generate/risp-generate-vector.js': 'src/core/risp/generate/risp-generate-vector.coffee'
                     'lib/core/risp/generate/risp-generate-vector-uri.js': 'src/core/risp/generate/risp-generate-vector-uri.coffee'
                     'lib/core/risp/generate/risp-generate-vector-lri.js': 'src/core/risp/generate/risp-generate-vector-lri.coffee'
+                    'lib/core/risp/generate/risp-generate-irut.js': 'src/core/risp/generate/risp-generate-irut.coffee'
+
                     'lib/core/risp/parse/risp-parse.js': 'src/core/risp/parse/risp-parse.coffee'
                     'lib/core/risp/parse/risp-parse-path.js': 'src/core/risp/parse/risp-parse-path.coffee'
                     'lib/core/risp/parse/risp-parse-path-readable.js': 'src/core/risp/parse/risp-parse-path-readable.coffee'

@@ -39,7 +39,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-module.exports =
+### Core Request Processor (CRP) ###
+
+CRP = module.exports =
+
     normalize: require './crp-normalize'
-    bindop:      require './crp-bind'
+    bindop:    require './crp-bind'
     dispatch:  require './crp-dispatch' 

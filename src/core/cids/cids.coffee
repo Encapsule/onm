@@ -39,32 +39,58 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+### 
+    Class Identification Subsystem (CIDS)
+
+    CIDS defines a simple protocol for managing classes of in-memory JavaScript object resources at runtime.
+
+    The object property name `__onmcid__` is reserved by CIDS for use as a Class Identifier (CID).
+
+    The CID value assigend to an object's '__onmcid__` property is an onm-format Internet Routable URI Token (IRUT) string.
+
+    Comparison of the CID value of two objects for equality is the only meaningful discrimination semantic provided by CIDS.
+
+    This is still useful however. Data (e.g. objects created by derived client code) that do not participate in CIDS will
+    generally not be tagged with CID values. Internally, onm wraps just about every meaningful piece of client state
+    in a CID-tagged object as it crosses the onm API surface and is validated. Additionally, all object generators within
+    onm produce CID-tagged objects.
+
+    CID are IRUT are globally unique so suitable for use as database indices alone, or in app-specific derived key scenarios.
+
+ ###
+
+
 CIDS = module.exports = {}
 
 # Obtain a CID given its CNAME
 
 CIDS.ids =
-    IRUT: 'NX_zU3FeRDublNx6WSQTog'
+    IRUT:       'onmRWMgVT-Gls0D99oo-9A' # <= FOUND IRUT beginning in 'onm' in 334842 attempts.
 
-    # v0.3 public API object identifiers
-    Model:      '57347d22-cefb-4b5d-a2ed-1732a764fe6b'
-    Address:    '075d9b07-c612-416e-a0b2-e839c8677de7'
-    Store:      'a5fc2cff-a105-4750-b2ed-8b7b11f73af5'
-    Namespace:  '62286994-befa-4ef5-8f39-8eaaf890fabf'
+    # v0.3 API object identifiers
+    Model:      'onmnqPaPSWKDsC9c8GZaEg' # <= FOUND IRUT beginning in 'onm' in 235152 attempts.
+    Address:    'onm-jxccSVSMum1pxB7-RA' # <= FOUND IRUT beginning in 'onm' in 81105 attempts.
+    Store:      'onmJ854qRVarn0zv7arr1w' # <= FOUND IRUT beginning in 'onm' in 104832 attempts.
+    Namespace:  'onmPnVIeToa_1BxO8Y47gg' # <= FOUND IRUT beginning in 'onm' in 68364 attempts.
 
     # v1.0 core object identifiers
-    NSD:        'e544054c-be40-4130-ab2a-903c2861cc7f'
-    ASM:        'ba9c687c-860a-4f18-9b03-f6d42d0704fb'
-    RAS:        'ef0613fb-dbb0-493c-8e4f-31bdad5dbf48'
-    DAO:        'f74ea6d3-541c-432b-b925-5faa0bc8eb6e'
-    RAL:        'ab49f85e-cd32-4e27-9006-8d8e54f4a8b6'
-    RLP:        '6e064cd9-2d65-4974-8903-d9860fed85ff'
-    # ^--- 1st class onm core objects with constructors v--- Disciminating wrappers for JavaScript types
-    RIS:        '9e84b41a-7bce-4620-ad7a-b208aecabb11' # Wraps a RIS-encoded string
-    DAB:        '43e81405-722b-4c9e-8a67-c6fa82869bc0' # Wraps a DAB-encoded string
 
-    JSON:       '502b7bf1-c6f6-473c-a748-9b5d7e22d9fc' # Wraps a JSON-encoded string
-    DATA:       'b9c2634c-3497-436b-8c12-f6647de599d1' # Wraps an Object convertible to JSON
+    NSD:        'onm7f7BZTEONDSnfrSs6AA' # <= FOUND IRUT beginning in 'onm' in 77376 attempts.
+    ASM:        'onmN7AoERO-3jIhkVqkxEg' # <= FOUND IRUT beginning in 'onm' in 239709 attempts.
+    RAS:        'onmbrsKOR0iv8kZXzhXejw' # <= FOUND IRUT beginning in 'onm' in 82317 attempts.
+    DAO:        'onmP7n5uTxaLduPZF_Naig' # <= FOUND IRUT beginning in 'onm' in 69447 attempts     
+    RAL:        'onmthokETQuOMLrIDeegpw' # <= FOUND IRUT beginning in 'onm' in 30610 attempts.
+     
+    RLP:        'onmESS9lSZukNLhQmCosyQ' # <= FOUND IRUT beginning in 'onm' in 65999 attempts.
+
+    # ^--- 1st class onm core objects with constructors v--- Disciminating wrappers for JavaScript types
+
+    RIS:        'onmf5Qt2RD2g30oDtsZD1g' # <= FOUND IRUT beginning in 'onm' in 852454 attempts.   
+    DAB:        'onmCBeRAQFKhIokTJLTGfA' # <= FOUND IRUT beginning in 'onm' in 48037 attempts.    
+
+    JSON:       'onmFMpxfSCaZO943sLfuxw' # <= FOUND IRUT beginning in 'onm' in 314994 attempts.
+    DATA:       'onmVNJZMQUKjDmocj6esPA' # <= FOUND IRUT beginning in 'onm' in 457798 attempts.
+
     
 # Obtain a CNAME given its CID
 
