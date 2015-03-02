@@ -36,6 +36,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+###
+    CLUTS alerts and prevents clumsy type-related JavaScript/JSON programming
+    errors by normalizing testing of JavaScript references and free conversion
+    among several different identifier formats used through onm core and exposed
+    publicly in, for example, the ASM for NSD's.
+###
+
 'use strict'
 
 CLUTS = module.exports = {}
@@ -52,9 +59,9 @@ Object.freeze cluts
 
 ###
     request = {
-        uMoniker: string moniker of the source value (indicates its type)
-        vMoniker: string moniker of the destination value (indicates its type)
-        value: JavaScript reference expected to refer to a value of type uMoniker
+        to: string moniker of the destination value (indicates its type)
+        from: string moniker of the destination value (indicates its type)
+        value: JavaScript reference expected to refer to a value of type to
     }
     response = {
         error: null or string explaining by result is null
@@ -82,44 +89,40 @@ CLUTS.request = (request_) ->
 
         request = {}
 
-        if not (request_.uMoniker? and request_.uMoniker)
-            errors.unshift "Invalid request missing 'uMoniker' property."
+        if not (request_.from? and request_.from)
+            errors.unshift "Invalid request missing 'from' property."
             break
 
-        requestType = Object.prototype.toString.call request_.uMoniker
+        requestType = Object.prototype.toString.call request_.from
 
         if requestType != '[object String]'
-            errors.unshift "Invalid request 'uMoniker' value type. Expected reference to '[object String]'."
+            errors.unshift "Invalid request 'from' value type. Expected reference to '[object String]'."
             break
 
-        request.uMoniker = request_.uMoniker
+        request.from = request_.from
 
-        if not (request_.vMoniker? and request_.vMoniker)
-            errors.unshift "Invalid request missing 'vMoniker' property."
+        if not (request_.to? and request_.to)
+            errors.unshift "Invalid request missing 'to' property."
             break
 
-        requestType = Object.prototype.toString.call request_.vMoniker
+        requestType = Object.prototype.toString.call request_.to
 
         if requestType != '[object String]'
-            errors.unshift "Invalid request 'vMoniker' value type. Expected reference to '[object String]'."
+            errors.unshift "Invalid request 'to' value type. Expected reference to '[object String]'."
             break
 
-        request.vMoniker = request_.vMoniker
-
-        if request.uMoniker == request.vMoniker
-            errors.unshift "Conversion request to convert '#{request.uMoniker}' to reference of itself is invalid."
-            break;
+        request.to = request_.to
 
         valueType = Object.prototype.toString.call request_.value
 
         forwardLookup = true
         rewriteRequest = undefined
 
-        switch request.uMoniker
+        switch request.from
             when 'jsReference'
                 rewriteRequest =
-                    uMoniker: 'jsTypeString'
-                    vMoniker: request.vMoniker
+                    to: request.to
+                    from: 'jsTypeString'
                     value: Object.prototype.toString.call request_.value
                 forwardLookup = false
                 break
@@ -136,11 +139,12 @@ CLUTS.request = (request_) ->
                 forwardLookup = false
                 break
             else
-                errors.unshift "Invalid request 'uMoniker' value '#{request.uMoniker}' is not a recognized onm type alias string."
+                errors.unshift "[#{cluts.dimensions}]."
+                errors.unshift "Invalid request 'from' value '#{request.from}' is not a valid dimension string. Valid dimensions:"
                 break
 
          if errors.length
-             errors.unshift "In request to convert of '#{request.uMoniker}' to '#{request.vMoniker}':"
+             errors.unshift "Invalid '#{request.from}' to '#{request.to}' conversion request."
              break
 
          if not (rewriteRequest? and rewriteRequest)
@@ -148,10 +152,11 @@ CLUTS.request = (request_) ->
          else
              request = rewriteRequest
 
-         table = cluts[forwardLookup and request.vMoniker or request.uMoniker]
+         table = cluts[forwardLookup and request.to or request.from]
 
          if not (table? and table)
-             errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
+             errors.unshift "[#{cluts.dimensions}]."
+             errors.unshift "No conversion operator from '#{request.from}' to '#{request.to}'. Valid dimensions:"
              break
 
          if forwardLookup
@@ -159,21 +164,23 @@ CLUTS.request = (request_) ->
          else
              lookupResult = table.indexOf request.value # may not be valid as we cannot pre-validate request.value
              if lookupResult == -1
-                 errors.unshift "Invalid request 'value' specifies unknown #{request.uMoniker} '#{request.value}'."
+                 errors.unshift "[#{cluts.dimensions}]."
+                 errors.unshift "Invalid request 'value' specifies unknown #{request.to} '#{request.value}'. Valid dimensions:"
                  break
 
-             if request.vMoniker != 'jsCode'
+             if request.to != 'jsCode'
 
-                 table = cluts[request.vMoniker]
+                 table = cluts[request.to]
                  if not (table? and table)
-                     errors.unshift "No conversion operator from '#{request.uMoniker}' to '#{request.vMoniker}'."
+                     errors.unshift "[#{cluts.dimensions}]."
+                     errors.unshift "No conversion operator from '#{request.from}' to '#{request.to}'. Valid dimensions:"
                      break
 
                  jsCode = lookupResult
                  lookupResult = table[jsCode]
 
                  if not (lookupResult? and lookupResult)
-                     errors.unshift "Cannot convert value '#{request.value}' of type '#{request.uMoniker}' to type '#{request.vMoniker}'."
+                     errors.unshift "Cannot convert value '#{request.value}' of type '#{request.from}' to type '#{request.to}'."
                      break
 
          response.result = lookupResult

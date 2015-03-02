@@ -89,111 +89,111 @@ testCLUTS({
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: missing 'uMoniker'",
+    testName: "Invalid request object: missing 'from'",
     validConfig: false,
     request: {},
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'from\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'uMoniker' is null",
+    testName: "Invalid request object: 'from' is null",
     validConfig: false,
     request: {
-        uMoniker: null
+        from: null
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'from\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'uMoniker' is undefined",
+    testName: "Invalid request object: 'from' is undefined",
     validConfig: false,
     request: {
-        uMoniker: undefined
+        from: undefined
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'uMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'from\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'uMoniker' is not a string",
+    testName: "Invalid request object: 'from' is not a string",
     validConfig: false,
     request: {
-        uMoniker: 6
+        from: 6
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request \'uMoniker\' value type. Expected reference to \'[object String]\'.'
+        error: 'CLUTS.request failed: Invalid request \'from\' value type. Expected reference to \'[object String]\'.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: Missing 'vMoniker'",
+    testName: "Invalid request object: Missing 'to'",
     validConfig: false,
     request: {
-        uMoniker: "jsObject"
+        from: "jsObject"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'to\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'vMoniker' is null",
+    testName: "Invalid request object: 'to' is null",
     validConfig: false,
     request: {
-        uMoniker: "jsObject",
-        vMoniker: null
+        from: "jsObject",
+        to: null
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'to\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'vMoniker' is undefined",
+    testName: "Invalid request object: 'to' is undefined",
     validConfig: false,
     request: {
-        uMoniker: "jsObject",
-        vMoniker: undefined
+        from: "jsObject",
+        to: undefined
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request missing \'vMoniker\' property.'
+        error: 'CLUTS.request failed: Invalid request missing \'to\' property.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: 'vMoniker' is not a string",
+    testName: "Invalid request object: 'to' is not a string",
     validConfig: false,
     request: {
-        uMoniker: "jsObject",
-        vMoniker: { test: "YO!" }
+        from: "jsObject",
+        to: { test: "YO!" }
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request \'vMoniker\' value type. Expected reference to \'[object String]\'.'
+        error: 'CLUTS.request failed: Invalid request \'to\' value type. Expected reference to \'[object String]\'.'
     }
 });
 
 testCLUTS({
     cluts: CLUTS,
-    testName: "Invalid request object: Invalid 'uMoniker' string",
+    testName: "Invalid request object: Invalid 'from' string",
     validConfig: false,
     request: {
-        uMoniker: "ERROR",
-        vMoniker: "jsObject"
+        from: "ERROR",
+        to: "jsCode"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: In request to convert of \'ERROR\' to \'jsObject\': Invalid request \'uMoniker\' value \'ERROR\' is not a recognized onm type alias string.'
+        error: 'CLUTS.request failed: Invalid \'ERROR\' to \'jsCode\' conversion request. Invalid request \'from\' value \'ERROR\' is not a valid dimension string. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -202,11 +202,11 @@ testCLUTS({
     testName: "Invalid request object: Unity conversion doesn't make sense",
     validConfig: false,
     request: {
-        uMoniker: "whatever",
-        vMoniker: "whatever"
+        from: "whatever",
+        to: "whatever",
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Conversion request to convert \'whatever\' to reference of itself is invalid.'
+        error: 'CLUTS.request failed: Invalid \'whatever\' to \'whatever\' conversion request. Invalid request \'from\' value \'whatever\' is not a valid dimension string. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -216,12 +216,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion from 'jsCode' with invalid value type.",
     validConfig: false,
     request: {
-        uMoniker: "jsCode",
-        vMoniker: "jsMoniker",
+        from: "jsCode",
+        to: "jsMoniker",
         value: "should be a number"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: In request to convert of \'jsCode\' to \'jsMoniker\': Invalid request \'value\' type. Expected reference to \'[object Number]\'.'
+        error: 'CLUTS.request failed: Invalid \'jsCode\' to \'jsMoniker\' conversion request. Invalid request \'value\' type. Expected reference to \'[object Number]\'.'
     }
 });
 
@@ -230,12 +230,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion from 'jsCode' with numerical value out-of-range.",
     validConfig: false,
     request: {
-        uMoniker: "jsCode",
-        vMoniker: "jsMoniker",
+        from: "jsCode",
+        to: "jsMoniker",
         value: 100
     },
     expectedResults: {
-        error: 'CLUTS.request failed: In request to convert of \'jsCode\' to \'jsMoniker\': Invalid request \'value\' \'100\' is not a valid \'jsCode\' value.'
+        error: 'CLUTS.request failed: Invalid \'jsCode\' to \'jsMoniker\' conversion request. Invalid request \'value\' \'100\' is not a valid \'jsCode\' value.'
     }
 });
 
@@ -244,12 +244,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion of 'jsMoniker' to 'jsCode' w/'value' set to non-string.",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsCode",
+        from: "jsMoniker",
+        to: "jsCode",
         value: 100
     },
     expectedResults: {
-        error: 'CLUTS.request failed: In request to convert of \'jsMoniker\' to \'jsCode\': Invalid request \'value\' type. Expected reference to \'[object String]\'.'
+        error: 'CLUTS.request failed: Invalid \'jsMoniker\' to \'jsCode\' conversion request. Invalid request \'value\' type. Expected reference to \'[object String]\'.'
     }
 });
 
@@ -258,12 +258,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion of 'jsMoniker' to 'WTF_THIS'.",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "WTF-THIS",
+        from: "jsMoniker",
+        to: "WTF-THIS",
         value: "jsBoolean"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: No conversion operator from \'jsMoniker\' to \'WTF-THIS\'.'
+        error: 'CLUTS.request failed: No conversion operator from \'jsMoniker\' to \'WTF-THIS\'. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -272,12 +272,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion of 'jsMoniker' to 'jsCode' w/'value' set to bogus moniker value.",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsCode",
+        from: "jsMoniker",
+        to: "jsCode",
         value: "WTF-THIS"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
+        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsCode \'WTF-THIS\'. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -286,12 +286,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion of 'jsMoniker' to 'jsCode' w/'value' set to bogus moniker value.",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsCode",
+        from: "jsMoniker",
+        to: "jsCode",
         value: "WTF-THIS"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
+        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsCode \'WTF-THIS\'. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -300,12 +300,12 @@ testCLUTS({
     testName: "Invalid request object: Conversion of 'jsReference' to 'jsMoniker' with invalid 'value'",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsonMoniker",
+        from: "jsMoniker",
+        to: "jsonMoniker",
         value: "WTF-THIS"
     },
     expectedResults: {
-        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsMoniker \'WTF-THIS\'.'
+        error: 'CLUTS.request failed: Invalid request \'value\' specifies unknown jsonMoniker \'WTF-THIS\'. Valid dimensions: [jsReference,jsCode,jsTypeString,jsMoniker,jsonMoniker].'
     }
 });
 
@@ -314,8 +314,8 @@ testCLUTS({
     testName: "Invalid request: Convert a jsMoniker to jsonMoniker with value 'jsUndefined'",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsonMoniker",
+        from: "jsMoniker",
+        to: "jsonMoniker",
         value: "jsUndefined"
     },
     expectedResults: {
@@ -328,8 +328,8 @@ testCLUTS({
     testName: "Invalid request: Convert a jsMoniker to jsonMoniker with value 'jsFunction'",
     validConfig: false,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsonMoniker",
+        from: "jsMoniker",
+        to: "jsonMoniker",
         value: "jsFunction"
     },
     expectedResults: {
@@ -342,8 +342,8 @@ testCLUTS({
     testName: "Invlid request: Convert a jsMoniker to jsonMoniker with value 'jsArray'",
     validConfig: false,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsonMoniker",
+        from: "jsReference",
+        to: "jsonMoniker",
         value: function() { console.log("nope"); }
     },
     expectedResults: {
@@ -356,8 +356,8 @@ testCLUTS({
     testName: "Classify undefined reference with 'value' missing from request.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
     },
     expectedResults: {
         error: '',
@@ -370,8 +370,8 @@ testCLUTS({
     testName: "Classify undefined reference with 'value' set to undefined.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
         value: undefined
     },
     expectedResults: {
@@ -385,8 +385,8 @@ testCLUTS({
     testName: "Classify undefined reference with 'value' set to null.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
         value: null
     },
     expectedResults: {
@@ -400,8 +400,8 @@ testCLUTS({
     testName: "Classify boolean reference with 'value' set to true.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
         value: true
     },
     expectedResults: {
@@ -416,8 +416,8 @@ testCLUTS({
     testName: "Classify string reference with 'value' set to 'test' string.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
         value: "test"
     },
     expectedResults: {
@@ -431,8 +431,8 @@ testCLUTS({
     testName: "Classify function reference with 'value' set to function.",
     validConfig: true,
     request: {
-        uMoniker: "jsReference",
-        vMoniker: "jsCode",
+        from: "jsReference",
+        to: "jsCode",
         value: function() { x = 5 }
     },
     expectedResults: {
@@ -446,8 +446,8 @@ testCLUTS({
     testName: "Convert a jsMoniker to jsonMoniker with value 'jsArray'",
     validConfig: true,
     request: {
-        uMoniker: "jsMoniker",
-        vMoniker: "jsonMoniker",
+        from: "jsMoniker",
+        to: "jsonMoniker",
         value: "jsArray"
     },
     expectedResults: {
