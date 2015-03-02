@@ -36,8 +36,95 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-LUTS = module.exports = {}
+CLUTS = require './ntcl-cluts'
 
-LUTS.cluts = require './ntcl-cluts'
+
+LUTS = module.exports = {}
+LUTS.jsCodes = CLUTS.jsCodes
+LUTS.dimensions = CLUTS.dimensions
+LUTS.request = CLUTS.request
+
+###
+    request = {
+        ref: JavaScript reference
+        type: string or array of string values on dimension 'jsMoniker'
+    }
+    response = {
+        error: null or string explaining why result and guidance are null
+        guidance: a string explaining the false result (often used in parameter validation error messages upstream)
+        result: boolean true if ref in expected type set, false + guidance if not
+    }
+###
+LUTS.refInJsTypeSet = (request_) ->
+    errors = []
+    response = error: null, result: null
+
+    inBreakScope = false
+
+    while not inBreakScope
+
+        inBreakScope = true
+
+        if not (request_? and request_?)
+            errors = "Missing request object in-parameter."
+            break
+
+        clutsResponse = CLUTS.request({to:'jsMoniker',from:'jsReference',value:request_.ref});
+        if clutsResponse.error
+            errors.unshift clutsResponse.error
+            break
+
+        refMoniker = clutsResponse.result
+
+        clutsResponse = CLUTS.request({to:'jsMoniker',from:'jsReference',value:request_.type});
+        if clutsResponse.error
+            errors.unshift clutsResponse.error
+            break
+
+        typeMoniker = clutsResponse.result
+
+        switch typeMoniker
+            when 'jsString'
+                response.result = request_.type == refMoniker
+                break
+
+            when 'jsArray'
+                response.result = (request_.type.indexOf refMoniker) != -1
+                break
+
+            else
+                errors.unshift "Invalid request 'type' value type '#{typeMoniker}'. Expected either '[object String]' or '[object Array]' (of strings)."
+                break
+
+        if errors.length
+            break
+
+        if not response.result
+            response.guidance = "Value of type '#{refMoniker}' is not in expected set [#{request_.type}]."
+
+    if errors.length
+        response.error = errors.join ' '
+
+    response
+
+LUTS.refValidJsonType = (request_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        if not (request_? and request_?)
+            errors = "Missing request object in-parameter."
+            break
+        clutsResponse = CLUTS.request({to:'jsonMoniker',from:'jsReference',value:request_.ref});
+        if clutsResponse.error
+            response.guidance = clutsResponse.error
+            response.result = false
+            break
+        response.result = true
+    if errors.length
+        response.error = errors.join ' '
+    response
+
 
 

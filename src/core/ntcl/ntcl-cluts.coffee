@@ -45,17 +45,21 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 'use strict'
 
-CLUTS = module.exports = {}
-
-cluts = CLUTS.cluts = {}
+# Constant Lookup Tables
+cluts = {}
 cluts.jsCodes = { jsUndefined: 0, jsNull: 1, jsBoolean: 2, jsString: 3, jsNumber: 4, jsObject: 5, jsArray: 6, jsFunction: 7 }
 cluts.dimensions = [ 'jsReference', 'jsCode', 'jsTypeString', 'jsMoniker', 'jsonMoniker' ]
 cluts.jsTypeString = [ '[object Undefined]', '[object Null]', '[object Boolean]', '[object String]', '[object Number]', '[object Object]', '[object Array]', '[object Function]' ]
 cluts.jsMoniker = [ 'jsUndefined', 'jsNull', 'jsBoolean',  'jsString', 'jsNumber', 'jsObject', 'jsArray', 'jsFunction' ]
 cluts.jsonMoniker = [ null, 'jsonNull', 'jsonBoolean', 'jsonString', 'jsonNumber', 'jsonObject', 'jsonArray', null ]
 cluts.jsCodeMax = cluts.jsCodes.jsFunction + 1
-
 Object.freeze cluts
+
+CLUTS = module.exports = {}
+
+CLUTS.dimensions = cluts.dimensions
+CLUTS.jsCodes = cluts.jsCodes
+
 
 ###
     request = {
@@ -68,6 +72,7 @@ Object.freeze cluts
         result: integer in range 0 to 7 inclusive (jsCode) or string (jsStringType, jsMoniker, jsonMoniker) or null to indicate error
     }
 ###
+# ============================================================================
 CLUTS.request = (request_) ->
 
     errors = []
@@ -173,14 +178,14 @@ CLUTS.request = (request_) ->
                  table = cluts[request.to]
                  if not (table? and table)
                      errors.unshift "[#{cluts.dimensions}]."
-                     errors.unshift "No conversion operator from '#{request.from}' to '#{request.to}'. Valid dimensions:"
+                     errors.unshift "No conversion from dimension '#{request.from}' to '#{request.to}' available. Valid dimensions:"
                      break
 
                  jsCode = lookupResult
                  lookupResult = table[jsCode]
 
                  if not (lookupResult? and lookupResult)
-                     errors.unshift "Cannot convert value '#{request.value}' of type '#{request.from}' to type '#{request.to}'."
+                     errors.unshift "No coversion from dimension '#{request.from}' to '#{request.to}' for value '#{request.value}'."
                      break
 
          response.result = lookupResult
