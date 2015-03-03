@@ -82,14 +82,13 @@ CIDS.setCID = (request_) ->
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-
+        if not (request_? and request_)
+            errors.unshift "Missing request object in-parameter."
+            break
+        # Piggy-back on top of getCID's more thorough validation of request_
         innerResponse = CIDS.getCID request_.ref
         if not innerResponse.error
             errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
-            break
-
-        if innerResponse.result.cid? and innerResponse.result.cid
-            errors.unshift innerResponse.error
             break
 
         cid = cnameTable.cname2cid[request_.cname]
@@ -101,7 +100,7 @@ CIDS.setCID = (request_) ->
         response.result = request_.ref[cnameTable.reservedPropertyName] = cid
 
     if errors.length
-        errors.unshift "CIDS.setCID failed:"
+        errors.unshift "CIDS.setCID:"
         response.error = errors.join ' '
 
     response
@@ -112,37 +111,44 @@ CIDS.setCID = (request_) ->
 # CID value is not reconciled against the registry and may not
 # refer to a registered onm object class.A
 
-CIDS.getCID = (object_) ->
+CIDS.getCID = (ref_) ->
+
     errors = []
-    response = error: null, result: { cid: null, cname: null }
+    response = error: null, result: null
+
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-        if not (object_? and object_)
-            errors.unshift "Missing required object in-parameter."
+
+        refType = Object.prototype.toString.call ref_
+        if refType != '[object Object]'
+            errors.unshift "Invalid request 'object' value type '#{refType}'. Expected reference to '[object Object]'."
             break
-        objectType = Object.prototype.toString.call object_
-        if objectType != '[object Object]'
-            errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
+
+        responseCID = ref_[cnameTable.reservedPropertyName]
+        if not (responseCID? and responseCID)
+            errors.unshift "Object appears not to be CID-identified."
             break
-        response.result.cid = objectCID = object_[cnameTable.reservedPropertyName]
-        if not (objectCID? and objectCID)
-            errors.unshift "Object is not identified with a CID value."
+
+        responseCIDType = Object.prototype.toString.call responseCID
+        if responseCIDType != '[object String]'
+            errors.unshift "Object appears to be CID-identified with a value of type '#{responseCIDType}. Expected '[object String]'."
             break
-        objectCIDType = Object.prototype.toString.call objectCID
-        if objectCIDType != '[object String]'
-            errors.unshift "INTERNAL ERROR: Object CID identifier is not an '[object String]' as expected!"
+
+        if responseCID.length != 22
+            errors.unshift "Object appears to be CID-identified with an unknown, non-IRUT, string format."
             break
-        if objectCID.length != 22
-            errors.unshift "INTERNAL ERROR: Object CID identifier is not a 22-character IRUT-format string as exepected!"
-            break
-        cname = cnameTable.cid2cname[objectCID]
+
+        cname = cnameTable.cid2cname[responseCID]
+
         if not (cname? and cname)
-            errors.unshift "Object is identified with an unknown CID value '#{objectCID}'."
+            errors.unshift "Object is identified with an unknown CID value '#{responseCID}'."
             break;
+
         response.result.cname = cname
+
     if errors.length
-        errors.unshift "CIDS.getCIDInfo:"
+        errors.unshift "CIDS.getCID:"
         response.error = errors.join ' '
 
     response

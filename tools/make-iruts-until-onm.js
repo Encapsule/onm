@@ -1,4 +1,4 @@
-RISP = require('./lib/core/risp/risp');
+RISP = require('../lib/core/risp/risp');
 
 count = 0;
 keepOnTrucking = true

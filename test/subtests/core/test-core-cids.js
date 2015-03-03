@@ -45,6 +45,7 @@ describe("onm core CIDS subsystem tests.", function() {
 
             describe("Verify CIDS functions.", function() {
 
+                require('./cids/test-use-case-cids-getCID');
                 require('./cids/test-use-case-cids-setCID');
 
             });
