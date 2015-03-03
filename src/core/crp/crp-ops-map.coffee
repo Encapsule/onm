@@ -39,8 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../cids/cids'
-cids = classRegistry.ids
+cnameTable = require '../cids/cids-table'
+
 
 operationMap = module.exports = {}
 
@@ -48,116 +48,116 @@ operationDescriptorArray = [
 
     {
         name: 'nsd-to-asm'
-        inputTypes: [ cids.NSD ]
-        outputType: cids.ASM
+        inputTypes: [ cnameTable.cname2cid.NSD ]
+        outputType: cnameTable.cname2cid.ASM
     }
 
     {
         name: 'nsd-to-ras'
-        inputTypes: [ cids.NSD ]
-        outputType: cids.RAS
+        inputTypes: [ cnameTable.cname2cid.NSD ]
+        outputType: cnameTable.cname2cid.RAS
     }
 
     {
         name: 'asm-to-ras'
-        inputTypes: [ cids.ASM ]
-        outputType: cids.RAS
+        inputTypes: [ cnameTable.cname2cid.ASM ]
+        outputType: cnameTable.cname2cid.RAS
     }
 
     {
         name: 'ras-to-asm'
-        inputTypes: [ cids.RAS ]
-        outputType: cids.ASM
+        inputTypes: [ cnameTable.cname2cid.RAS ]
+        outputType: cnameTable.cname2cid.ASM
     }
 
     {
         name: 'ris-to-ral-from-ras'
-        inputTypes: [ cids.RAS, cids.RIS ]
-        outputType: cids.RAL
+        inputTypes: [ cnameTable.cname2cid.RAS, cnameTable.cname2cid.RIS ]
+        outputType: cnameTable.cname2cid.RAL
     }
 
     {
         name: 'ris-to-nsd-from-ras'
-        inputTypes: [ cids.RAS, cids.RIS ]
-        outputType: cids.NSD
+        inputTypes: [ cnameTable.cname2cid.RAS, cnameTable.cname2cid.RIS ]
+        outputType: cnameTable.cname2cid.NSD
     }
 
     {
         name: 'ral-to-ris'
-        inputTypes: [ cids.RAL ]
-        outputType: cids.RIS
+        inputTypes: [ cnameTable.cname2cid.RAL ]
+        outputType: cnameTable.cname2cid.RIS
     }
 
     {
         name: 'ral-to-nsd'
-        inputTypes: [ cids.RAL ]
-        outputType: cids.NSD
+        inputTypes: [ cnameTable.cname2cid.RAL ]
+        outputType: cnameTable.cname2cid.NSD
     }
 
     {
         name: 'ral-to-ral-from-ris'
-        inputTypes: [ cids.RAL, cids.RIS ]
-        outputType: cids.RAL
+        inputTypes: [ cnameTable.cname2cid.RAL, cnameTable.cname2cid.RIS ]
+        outputType: cnameTable.cname2cid.RAL
     }
 
     {
         name: 'json-to-dao-from-ras'
-        inputTypes: [ cids.RAS, cids.JSON ]
-        outputType: cids.DAO
+        inputTypes: [ cnameTable.cname2cid.RAS, cnameTable.cname2cid.JSON ]
+        outputType: cnameTable.cname2cid.DAO
     }
 
     {
         name: 'dab-to-dao'
-        inputTypes: [ cids.DAB ]
-        outputType: cids.DAO
+        inputTypes: [ cnameTable.cname2cid.DAB ]
+        outputType: cnameTable.cname2cid.DAO
     }
 
     {
         name: 'doa-to-dab'
-        inputTypes: [ cids.DAO ]
-        outputType: cids.DAB
+        inputTypes: [ cnameTable.cname2cid.DAO ]
+        outputType: cnameTable.cname2cid.DAB
     }
 
     {
         name: 'ris-to-ral-from-dao'
-        inputTypes: [ cids.DAO, cids.RIS ]
-        outputType: cids.RAL
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RIS ]
+        outputType: cnameTable.cname2cid.RAL
     }
 
     {
         name: 'ral-to-rlp-from-dao'
-        inputTypes: [ cids.DAO, cids.RAL ]
-        outputType: cids.RLP
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL ]
+        outputType: cnameTable.cname2cid.RLP
     }
 
     {
         name: 'ral-to-rlp-from-dao-ris'
-        inputTypes: [ cids.DAO, cids.RAL, cids.RIS ]
-        outputType: cids.RLP
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL, cnameTable.cname2cid.RIS ]
+        outputType: cnameTable.cname2cid.RLP
     }
 
     {
        name: 'ral-to-rlp-from-dao-data'
-       inputTypes: [ cids.DAO, cids.RAL, cids.DATA ]
-       outputType: cids.RLP
+       inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL, cnameTable.cname2cid.DATA ]
+       outputType: cnameTable.cname2cid.RLP
     }
 
     {
         name: 'ral-to-rlp-from-dao-json'
-        inputTypes: [ cids.DAO, cids.RAL, cids.JSON ]
-        outputType: cids.RLP
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL, cnameTable.cname2cid.JSON ]
+        outputType: cnameTable.cname2cid.RLP
     }
 
     {
         name: 'ral-to-rlp-from-doa-ris-data'
-        inputTypes: [ cids.DAO, cids.RAL, cids.RIS, cids.DATA ]
-        outputType: cids.RLP
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL, cnameTable.cname2cid.RIS, cnameTable.cname2cid.DATA ]
+        outputType: cnameTable.cname2cid.RLP
     }
 
     {
         name: 'ral-to-rlp-from-doa-ris-json'
-        inputTypes: [ cids.DAO, cids.RAL, cids.RIS, cids.JSON ]
-        outputType: cids.RLP
+        inputTypes: [ cnameTable.cname2cid.DAO, cnameTable.cname2cid.RAL, cnameTable.cname2cid.RIS, cnameTable.cname2cid.JSON ]
+        outputType: cnameTable.cname2cid.RLP
     }
 
 ];

@@ -48,9 +48,9 @@ AddressToken = require './core/rasp/onm-address-token'
 module.exports = class Address
     constructor: (model_, tokenVector_) ->
         try
-            cidsResponse = CIDS.setCID { ref: Address, cname: 'Address' }
+            cidsResponse = CIDS.setCID { ref:@, cname: 'Address' }
             if cidsResponse.error
-                throw new Error cidsResponse.error             
+                throw new Error cidsResponse.error
 
             @model = model_? and model_ or throw new Error("Missing required object model input parameter.");
             @implementation = new AddressDetails(@, model_, tokenVector_)

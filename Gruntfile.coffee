@@ -36,6 +36,7 @@ module.exports = (grunt) ->
                     # CIDS - Class Identification Subsystem
                     # ----------------------------------------------------------------------------
                     'lib/core/cids/cids.js':     'src/core/cids/cids.coffee'
+                    'lib/core/cids/cids-table.js': 'src/core/cids/cids-table.coffee'
 
                     # NTCL - Native Type Conversion Library
                     # ----------------------------------------------------------------------------

@@ -60,7 +60,7 @@ uuid = require 'node-uuid'
 module.exports = class Model
     constructor: (objectModelDeclaration_) ->
         try
-            cidsResponse = CIDS.setCID {ref:Model,cname:'Model'}
+            cidsResponse = CIDS.setCID {ref:@,cname:'Model'}
             if cidsResponse.error
                throw new Error cidsResponse.error
 

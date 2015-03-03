@@ -39,7 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './core/cids/cids'
+CIDS = require './core/cids/cids'
+
 helperFunctions = require './common/onm-util-functions'
 StoreReifier = require './core/jnsp/onm-store-reifier'
 AddressToken = require './core/rasp/onm-address-token'
@@ -106,7 +107,6 @@ class StoreDetails
 
 
 module.exports = class Store
-    onmClassType: classRegistry.ids.Store
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, data_) ->
         try
@@ -470,3 +470,7 @@ module.exports = class Store
             delete observerState[namespaceSelector_.pathId]
         return @
 
+
+cidsResponse = CIDS.setCID { ref: Store, cname: 'Store' }
+if cidsResponse.error
+   throw new Error cidsResponse.error

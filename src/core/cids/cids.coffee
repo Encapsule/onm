@@ -59,73 +59,23 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ###
 
-'use strict'
-
-
-# Obtain a CID given its CNAME
-
-cids = {}
-cids.reserved = '__cid__'
-cids.available = []
-cids.ids =
-    IRUT:       'onmRWMgVT-Gls0D99oo-9A' # <= FOUND IRUT beginning in 'onm' in 334842 attempts.
-
-    # v0.3 API object identifiers
-    Model:      'onmnqPaPSWKDsC9c8GZaEg' # <= FOUND IRUT beginning in 'onm' in 235152 attempts.
-    Address:    'onm-jxccSVSMum1pxB7-RA' # <= FOUND IRUT beginning in 'onm' in 81105 attempts.
-    Store:      'onmJ854qRVarn0zv7arr1w' # <= FOUND IRUT beginning in 'onm' in 104832 attempts.
-    Namespace:  'onmPnVIeToa_1BxO8Y47gg' # <= FOUND IRUT beginning in 'onm' in 68364 attempts.
-
-    # v1.0 core object identifiers
-
-    NSD:        'onm7f7BZTEONDSnfrSs6AA' # <= FOUND IRUT beginning in 'onm' in 77376 attempts.
-    ASM:        'onmN7AoERO-3jIhkVqkxEg' # <= FOUND IRUT beginning in 'onm' in 239709 attempts.
-    RAS:        'onmbrsKOR0iv8kZXzhXejw' # <= FOUND IRUT beginning in 'onm' in 82317 attempts.
-    DAO:        'onmP7n5uTxaLduPZF_Naig' # <= FOUND IRUT beginning in 'onm' in 69447 attempts     
-    RAL:        'onmthokETQuOMLrIDeegpw' # <= FOUND IRUT beginning in 'onm' in 30610 attempts.
-     
-    RLP:        'onmESS9lSZukNLhQmCosyQ' # <= FOUND IRUT beginning in 'onm' in 65999 attempts.
-
-    # ^--- 1st class onm core objects with constructors v--- Disciminating wrappers for JavaScript types
-
-    RIS:        'onmf5Qt2RD2g30oDtsZD1g' # <= FOUND IRUT beginning in 'onm' in 852454 attempts.   
-    DAB:        'onmCBeRAQFKhIokTJLTGfA' # <= FOUND IRUT beginning in 'onm' in 48037 attempts.    
-
-    JSON:       'onmFMpxfSCaZO943sLfuxw' # <= FOUND IRUT beginning in 'onm' in 314994 attempts.
-    DATA:       'onmVNJZMQUKjDmocj6esPA' # <= FOUND IRUT beginning in 'onm' in 457798 attempts.
-
-    
-# Obtain a CNAME given its CID
-
-cids.lookup = {}
-for cname of cids.ids
-    classid = cids.ids[cname]
-    cids.lookup[classid] = cname
-    cids.available.push cname
-
-#Object.freeze cids        
-
 CIDS = module.exports = {}
-
-# TODO: DO NOT export the CLUTS to dependent subsystems.
-
-CIDS.ids = cids.ids
-CIDS.lookup = cids.lookup
-
+cnameTable = require './cids-table'
 
 
 
 ###
+    ----------------------------------------------------------------------
     request = {
         ref: reference to an object
         cname: CIDS-registered class name string
     }
     response = {
         error: null or a string explaining why result is null
-        result: input object w/cids.reserved property set on its prototype
+        result: input object
     }
+    ----------------------------------------------------------------------
 ###
-# ============================================================================
 CIDS.setCID = (request_) ->
     errors = []
     response = error: null, result: null
@@ -142,13 +92,13 @@ CIDS.setCID = (request_) ->
             errors.unshift innerResponse.error
             break
 
-        cid = cids.ids[request_.cname]
+        cid = cnameTable.cname2cid[request_.cname]
         if not (cid? and cid)
-            errors.unshift "Unknown object class name '#{request_.cname}'. Registered in CIDS: [#{cids.available}]."
+            errors.unshift "Unknown object class name '#{request_.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
             break
 
         console.log "onm.core.cids *** assigned: cname='#{request_.cname}' cid='#{cid}' ***"
-        response.result = request_.ref.prototype[cids.reserved] = cid
+        response.result = request_.ref[cnameTable.reservedPropertyName] = cid
 
     if errors.length
         errors.unshift "CIDS.setCID failed:"
@@ -158,7 +108,7 @@ CIDS.setCID = (request_) ->
 
 # Returns a response object with the specified object's CID.
 # The routine ensures that the object is registered and that
-# the CID value is in the expected format. However, the returne
+# the CID value is in the expected format. However, the returned
 # CID value is not reconciled against the registry and may not
 # refer to a registered onm object class.A
 
@@ -175,7 +125,7 @@ CIDS.getCID = (object_) ->
         if objectType != '[object Object]'
             errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
             break
-        response.result.cid = objectCID = object_[cids.reserved]
+        response.result.cid = objectCID = object_[cnameTable.reservedPropertyName]
         if not (objectCID? and objectCID)
             errors.unshift "Object is not identified with a CID value."
             break
@@ -186,7 +136,7 @@ CIDS.getCID = (object_) ->
         if objectCID.length != 22
             errors.unshift "INTERNAL ERROR: Object CID identifier is not a 22-character IRUT-format string as exepected!"
             break
-        cname = CIDS.lookup[objectCID]
+        cname = cnameTable.cid2cname[objectCID]
         if not (cname? and cname)
             errors.unshift "Object is identified with an unknown CID value '#{objectCID}'."
             break;
@@ -208,9 +158,9 @@ CIDS.assertCID = (request_) ->
             errors.unshift getCIDResponse.error
             break
         if getCIDResponse.result.cname != request_.cname
-            cnameCheck = cids.lookup[request_.cname]
-            if not (cnameCheck? and cnameCheck)
-                errors.unshift "But, the request specifies an invalid 'cname' value '#{request_.cname}'. Registered in CIDS: [#{cids.available}]."
+            cidCheck = cnameTable.cname2cid[request_.cname]
+            if not (cidCheck? and cidCheck)
+                errors.unshift "But, the request specifies an invalid 'cname' value '#{request_.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
                 errors.unshift "Target reference is a CID-identified resource '#{getCIDResponse.result.cname}' with CID '#{getCIDResponse.result.cid}'."
                 break
             errors.unshift "Target resource is a CID-identified '#{getCIDResponse.result.cname}' not a '#{request_.cname}."

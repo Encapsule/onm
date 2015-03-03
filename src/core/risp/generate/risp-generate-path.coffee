@@ -71,8 +71,9 @@ RISP.generatePath = module.exports = (request_) ->
         if not (request_.address? and request_.address)
             errors.unshift "Invalid request object missing required property 'address'."
             break
-        if CIDS.lookup[request_.address.onmClassType] != 'Address'
-            errors.unshift "Invalid request object 'address' value type. Expected reference to onm.Address."
+        cidsResponse = CIDS.assertCID { ref: request_.address, 'Address' }
+        if cidsResponse.error
+            errors.unshift cidsResponse.error
             break
 
         pathFormat = request_.format
