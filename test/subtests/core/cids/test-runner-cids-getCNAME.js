@@ -1,4 +1,4 @@
-// test-runner-cids-getCID.js
+// test-runner-cids-getCNAME.js
 
 /*
 
@@ -20,15 +20,15 @@ var CIDS = dirRequires.CIDS;
 
 module.exports = function (vector_) {
 
-    describe("CIDS.getCID test runner: " + vector_.testName, function() {
+    describe("CIDS.getCNAME test runner: " + vector_.testName, function() {
         var response = null;
         before(function() {
             var functionUnderTest = function() {
-                response = CIDS.getCID(vector_.ref);
+                response = CIDS.getCNAME(vector_.ref);
             };
             assert.doesNotThrow(functionUnderTest, "ONM OPERATIONS SHOULD NEVER THROW!");
         });
-        it("The call to getCID is expected to have returned a response.", function() {
+        it("The call to getCNAME is expected to have returned a response.", function() {
             assert.isDefined(response);
             assert.isNotNull(response);
             assert.isObject(response);
@@ -41,6 +41,9 @@ module.exports = function (vector_) {
             });
             it("The result should be an object.", function() {
                 assert.isObject(response.result);
+            });
+            it("The result serialized to JSON should match the control value.", function() {
+                assert.equal(JSON.stringify(response.result), vector_.expectedResults.json);
             });
         } else {
             it("The call is expected to have failed.", function() {

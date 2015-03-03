@@ -1,4 +1,4 @@
-// test-use-case-cids-setCID.js
+// test-use-case-cids-getCNAME.js
 
 var assert = require('chai').assert;
 
@@ -12,44 +12,44 @@ var CIDS_TABLE = dirRequires.CIDS_TABLE;
 assert.isDefined(CIDS);
 assert.isDefined(CIDS_TABLE);
 
-var getCIDTestRunner = require('./test-runner-cids-getCID');
+var getCNAMETestRunner = require('./test-runner-cids-getCNAME');
 
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Missing request object",
     validConfig: false,
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Undefined]\'. Expected reference to \'[object Object]\'.',
         json: ''
     }
 });
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Specifiy non-object as request",
     validConfig: false,
     ref: [],
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Array]\'. Expected reference to \'[object Object]\'.',
         json: ''
     }
 });
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Specifiy empty JavaScript object as request",
     validConfig: false,
     ref: {},
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Object appears not to be CID-identified.',
         json: ''
     }
 });
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Specifiy empty JavaScript object as request",
     validConfig: false,
     ref: {},
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Object appears not to be CID-identified.',
         json: ''
     }
 });
@@ -57,12 +57,12 @@ getCIDTestRunner({
 var testObject1 = {};
 testObject1[CIDS_TABLE.reservedPropertyName] = "meow";
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Specifiy empty JavaScript object with bogus IRUT string 'meow'.",
     validConfig: false,
     ref: testObject1,
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Object appears to be CID-identified with an unknown, non-IRUT, string format.',
         json: ''
     }
 });
@@ -70,13 +70,26 @@ getCIDTestRunner({
 var testObject2 = {};
 testObject2[CIDS_TABLE.reservedPropertyName] = '0123456789012345678901'
 
-getCIDTestRunner({
+getCNAMETestRunner({
     testName: "Specifiy empty JavaScript object with bogus IRUT string '0123456789012345678901'.",
     validConfig: false,
     ref: testObject2,
     expectedResults: {
-        error: '',
+        error: 'CIDS.getCID: Object is identified with an unknown CID value \'0123456789012345678901\'.',
         json: ''
+    }
+});
+
+
+var testObject3 = {};
+testObject3[CIDS_TABLE.reservedPropertyName] = 'onmP7n5uTxaLduPZF_Naig';
+
+getCNAMETestRunner({
+    testName: "Specifiy empty JavaScript object with bogus IRUT string '0123456789012345678901'.",
+    validConfig: true,
+    ref: testObject3,
+    expectedResults: {
+        json: '{"cid":"onmP7n5uTxaLduPZF_Naig","cname":"DAO"}'
     }
 });
 

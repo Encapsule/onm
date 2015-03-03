@@ -85,8 +85,8 @@ CIDS.setCID = (request_) ->
         if not (request_? and request_)
             errors.unshift "Missing request object in-parameter."
             break
-        # Piggy-back on top of getCID's more thorough validation of request_
-        innerResponse = CIDS.getCID request_.ref
+        # Piggy-back on top of getCNAME's more thorough validation of request_
+        innerResponse = CIDS.getCNAME request_.ref
         if not innerResponse.error
             errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
             break
@@ -111,7 +111,7 @@ CIDS.setCID = (request_) ->
 # CID value is not reconciled against the registry and may not
 # refer to a registered onm object class.A
 
-CIDS.getCID = (ref_) ->
+CIDS.getCNAME = (ref_) ->
 
     errors = []
     response = error: null, result: null
@@ -139,13 +139,13 @@ CIDS.getCID = (ref_) ->
             errors.unshift "Object appears to be CID-identified with an unknown, non-IRUT, string format."
             break
 
-        cname = cnameTable.cid2cname[responseCID]
+        responseCNAME = cnameTable.cid2cname[responseCID]
 
-        if not (cname? and cname)
+        if not (responseCNAME? and responseCNAME)
             errors.unshift "Object is identified with an unknown CID value '#{responseCID}'."
             break;
 
-        response.result.cname = cname
+        response.result = cid: responseCID, cname: responseCNAME
 
     if errors.length
         errors.unshift "CIDS.getCID:"
@@ -159,21 +159,20 @@ CIDS.assertCID = (request_) ->
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-        getCIDResponse = CIDS.getCID request_.ref
-        if getCIDResponse.error
-            errors.unshift getCIDResponse.error
+        getCNAMEResponse = CIDS.getCNAME request_.ref
+        if getCNAMEResponse.error
+            errors.unshift getCNAMEResponse.error
             break
-        if getCIDResponse.result.cname != request_.cname
+        if getCNAMEResponse.result.cname != request_.cname
             cidCheck = cnameTable.cname2cid[request_.cname]
             if not (cidCheck? and cidCheck)
-                errors.unshift "But, the request specifies an invalid 'cname' value '#{request_.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
-                errors.unshift "Target reference is a CID-identified resource '#{getCIDResponse.result.cname}' with CID '#{getCIDResponse.result.cid}'."
+                errors.unshift "Invalid request 'cname' value '#{request_.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
                 break
-            errors.unshift "Target resource is a CID-identified '#{getCIDResponse.result.cname}' not a '#{request_.cname}."
+            errors.unshift "Target asserted to be a '#{request_.cname}' is actually a '#{getCNAMEResponse.result.cname}' resource."
             break          
         response.result = true
     if errors.length
-        errors.unshift "CIDS.assertCID failed:"
+        errors.unshift "CIDS.assertCID:"
         response.error = errors.join ' '
 
     response
