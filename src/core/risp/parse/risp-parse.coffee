@@ -39,7 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../../cids/cids'
+CIDS = require '../../cids/cids'
+
 Model = require '../../../onm-model'
 Address = require '../../../onm-address'
 
@@ -76,8 +77,9 @@ xRIP_Parser = module.exports = (request_) ->
         if not (request_.model? and request_.model)
             errors.unshift "Invalid request object missing required property 'model'."
             break
-        if classRegistry.lookup[request_.model.onmClassType] != 'Model'
-            errors.unshift "Invalid request object 'model' value type. Expected reference to onm.Model instance."
+        cidsResponse = CIDS.assertCID {ref: request_.model, cname: 'Model'}
+        if cidsResponse.error
+            errors.unshift cidsResponse.error
             break
         if not (request_.xri? and request_.xri)
             errors.unshift "Invalid request object missing required property 'xri'."
@@ -104,8 +106,9 @@ xRIP_Parser = module.exports = (request_) ->
             when 'path'
                 # Evaluate additional constraints on the possible values of addressBase
                 if addressBase? and addressBase
-                    if classRegistry.lookup[addressBase.onmClassType] != 'Address'
-                        errors.unshift "Invalid request object 'addressBase' value. Expected onm.Address reference."
+                    cidsResponse = CIDS.assertCID {ref: addressBase, cname: 'Address'}
+                    if cidsResponse.error
+                        errors.unshift cidsResponse.error
                         break
                 parsePathResponse = xRIP_parsePath model: model, addressBase: addressBase, xriTokens: xriTokens
                 if not parsePathResponse.error

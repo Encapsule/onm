@@ -39,16 +39,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './core/cids/cids'
+CIDS = require './core/cids/cids'
 AddressToken = require './core/rasp/onm-address-token'
 
 #
 #
 # ****************************************************************************
 module.exports = class Address
-    onmClassType: classRegistry.ids.Address
     constructor: (model_, tokenVector_) ->
         try
+            cidsResponse = CIDS.setCID { ref: Address, cname: 'Address' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error             
+
             @model = model_? and model_ or throw new Error("Missing required object model input parameter.");
             @implementation = new AddressDetails(@, model_, tokenVector_)
 
@@ -506,8 +509,6 @@ module.exports = class Address
             true # that
         catch exception
             throw new Error("visitExtensionPointAddresses failure: #{exception.message}");
-
-
 
 
 

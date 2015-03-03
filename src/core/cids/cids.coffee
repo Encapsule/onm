@@ -44,9 +44,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
     CIDS defines a simple protocol for managing classes of in-memory JavaScript object resources at runtime.
 
-    The object property name `__onmcid__` is reserved by CIDS for use as a Class Identifier (CID).
+    The object property name cids.reserverd reserved by CIDS for use as a Class Identifier (CID).
 
-    The CID value assigend to an object's '__onmcid__` property is an onm-format Internet Routable URI Token (IRUT) string.
+    The CID value assigend to an onm-format Internet Routable URI Token (IRUT) string.
 
     Comparison of the CID value of two objects for equality is the only meaningful discrimination semantic provided by CIDS.
 
@@ -65,6 +65,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 # Obtain a CID given its CNAME
 
 cids = {}
+cids.reserved = '__cid__'
+cids.available = []
 cids.ids =
     IRUT:       'onmRWMgVT-Gls0D99oo-9A' # <= FOUND IRUT beginning in 'onm' in 334842 attempts.
 
@@ -96,13 +98,17 @@ cids.ids =
 # Obtain a CNAME given its CID
 
 cids.lookup = {}
-for classname of cids.ids
-    classid = cids.ids[classname]
-    cids.lookup[classid] = classname
+for cname of cids.ids
+    classid = cids.ids[cname]
+    cids.lookup[classid] = cname
+    cids.available.push cname
 
-Object.freeze cids        
+#Object.freeze cids        
 
 CIDS = module.exports = {}
+
+# TODO: DO NOT export the CLUTS to dependent subsystems.
+
 CIDS.ids = cids.ids
 CIDS.lookup = cids.lookup
 
@@ -116,7 +122,7 @@ CIDS.lookup = cids.lookup
     }
     response = {
         error: null or a string explaining why result is null
-        result: input object w/__onmcid__ property set on its prototype
+        result: input object w/cids.reserved property set on its prototype
     }
 ###
 # ============================================================================
@@ -136,12 +142,13 @@ CIDS.setCID = (request_) ->
             errors.unshift innerResponse.error
             break
 
-        cid = CIDS.ids[request_.cname_]
+        cid = cids.ids[request_.cname]
         if not (cid? and cid)
-            errors.unshift "Unknown object class name '#{request_.cname}'."
+            errors.unshift "Unknown object class name '#{request_.cname}'. Registered in CIDS: [#{cids.available}]."
             break
 
-        response.result = request_.ref.prototype.__cid__ = cid
+        console.log "onm.core.cids *** assigned: cname='#{request_.cname}' cid='#{cid}' ***"
+        response.result = request_.ref.prototype[cids.reserved] = cid
 
     if errors.length
         errors.unshift "CIDS.setCID failed:"
@@ -168,7 +175,7 @@ CIDS.getCID = (object_) ->
         if objectType != '[object Object]'
             errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
             break
-        response.result.cid = objectCID = object_.__cid__
+        response.result.cid = objectCID = object_[cids.reserved]
         if not (objectCID? and objectCID)
             errors.unshift "Object is not identified with a CID value."
             break
@@ -181,7 +188,7 @@ CIDS.getCID = (object_) ->
             break
         cname = CIDS.lookup[objectCID]
         if not (cname? and cname)
-            errors.unshift "Object is identified with an unknown CID."
+            errors.unshift "Object is identified with an unknown CID value '#{objectCID}'."
             break;
         response.result.cname = cname
     if errors.length
@@ -190,3 +197,27 @@ CIDS.getCID = (object_) ->
 
     response
 
+CIDS.assertCID = (request_) ->
+    errors = []
+    response = error: null, result: false
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        getCIDResponse = CIDS.getCID request_.ref
+        if getCIDResponse.error
+            errors.unshift getCIDResponse.error
+            break
+        if getCIDResponse.result.cname != request_.cname
+            cnameCheck = cids.lookup[request_.cname]
+            if not (cnameCheck? and cnameCheck)
+                errors.unshift "But, the request specifies an invalid 'cname' value '#{request_.cname}'. Registered in CIDS: [#{cids.available}]."
+                errors.unshift "Target reference is a CID-identified resource '#{getCIDResponse.result.cname}' with CID '#{getCIDResponse.result.cid}'."
+                break
+            errors.unshift "Target resource is a CID-identified '#{getCIDResponse.result.cname}' not a '#{request_.cname}."
+            break          
+        response.result = true
+    if errors.length
+        errors.unshift "CIDS.assertCID failed:"
+        response.error = errors.join ' '
+
+    response

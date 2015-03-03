@@ -60,7 +60,10 @@ uuid = require 'node-uuid'
 module.exports = class Model
     constructor: (objectModelDeclaration_) ->
         try
-            CIDS.setCID {ref:@,cname:'Model'}
+            cidsResponse = CIDS.setCID {ref:Model,cname:'Model'}
+            if cidsResponse.error
+               throw new Error cidsResponse.error
+
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
 
         catch exception
@@ -162,4 +165,5 @@ module.exports = class Model
         catch exception_
             throw new Error "onm.Model.toJSON failed: #{exception_.message}"
         
+
 

@@ -23,14 +23,19 @@ describe("onm core CIDS subsystem tests.", function() {
 
         describe("Verify expected CIDS module export signature.", function() {
 
-            it("CIDS should export function 'setObjectCID'", function() {
-                assert.property(CIDS, 'setObjectCID');
-                assert.isFunction(CIDS.setObjectCID);
+            it("CIDS should export function 'setCID'", function() {
+                assert.property(CIDS, 'setCID');
+                assert.isFunction(CIDS.setCID);
             });
 
-            it("CIDS should export function 'getObjectCIDInfo'", function() {
-                assert.property(CIDS, 'getObjectCIDInfo');
-                assert.isFunction(CIDS.getObjectCIDInfo);
+            it("CIDS should export function 'getCID'", function() {
+                assert.property(CIDS, 'getCID');
+                assert.isFunction(CIDS.getCID);
+            });
+
+            it("CIDS should export function 'assertCID'", function() {
+                assert.property(CIDS, 'assertCID');
+                assert.isFunction(CIDS.assertCID);
             });
 
             describe("Verify CIDS functions.", function() {
