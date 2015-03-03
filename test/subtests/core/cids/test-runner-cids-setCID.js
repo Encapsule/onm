@@ -1,4 +1,4 @@
-// test-runner-cids-setObjectCID.js
+// test-runner-cids-setCID.js
 
 /*
 
@@ -17,7 +17,9 @@
 */
 
 var assert = require('chai').assert;
-var CIDS = require('../../../../lib/core/cids/cids');
+
+var dirRequires = require('./dir-requires');
+var CIDS = dirRequires.CIDS;
 
 module.exports = function (vector_) {
 
@@ -25,7 +27,7 @@ module.exports = function (vector_) {
         var response = null;
         before(function() {
             var functionUnderTest = function() {
-                response = CIDS.setObjectCID(vector_.request.object, vector_.request.cname);
+                response = CIDS.setCID(vector_.request.ref, vector_.request.cname);
             };
             assert.doesNotThrow(functionUnderTest, "ONM OPERATIONS SHOULD NEVER THROW!@");
         });
