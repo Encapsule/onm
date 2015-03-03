@@ -37,14 +37,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 CIDS = require '../cids/cids'
-NTCL = requrie '../ntcl/ntcl'
+NTCL = require '../ntcl/ntcl'
 
 PODS = module.exports = {}
 
 
 
 # ============================================================================
-onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
+PODS.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
@@ -57,7 +57,7 @@ onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
         if valueNativeType != constrainToJavaScriptType_
             errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{constrainToJavaScriptType_}'."
             break
-        classId = classRegistry.ids[onmClassName_]
+        classId = CIDS.ids[onmClassName_]
         if not classId? and classId
             errors.unshift "Invalid request specifies unknown wrapper type '#{onmClassName_}'."
             break
@@ -69,29 +69,29 @@ onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     response
 
 # ============================================================================
-onm.wrapDAB = (dabString_) ->
-    response = onm.wrapXPOD dabString_, '[object String]', 'DAB'
+PODS.wrapDAB = (dabString_) ->
+    response = PODS.wrapXPOD dabString_, '[object String]', 'DAB'
     if response.error
         response.error = "onm.wrapDAB: #{response.error}"
     response
 
 # ============================================================================
-onm.wrapDATA = (dataObject_) ->
-    response = onm.wrapXPOD dataObject_, '[object Object]', 'DATA'
+PODS.wrapDATA = (dataObject_) ->
+    response = PODS.wrapXPOD dataObject_, '[object Object]', 'DATA'
     if response.error
         response.error = "onm.wrapDATA: #{response.error}"
     response
 
 # ============================================================================
-onm.wrapJSON = (jsonString_) ->
-    response = onm.wrapXPOD jsonString_, '[object String]', 'JSON'
+PODS.wrapJSON = (jsonString_) ->
+    response = PODS.wrapXPOD jsonString_, '[object String]', 'JSON'
     if response.error
         response.error = "onm.wrapJSON: #{response.error}"
     response
 
 # ============================================================================
-onm.wrapRIS = (risString_) ->
-    response = onm.wrapXPOD risString_, '[object String]', 'RIS'
+PODS.wrapRIS = (risString_) ->
+    response = PODS.wrapXPOD risString_, '[object String]', 'RIS'
     if response.error
         response.error = "onm.wrapRIS: #{response.error}"
     response

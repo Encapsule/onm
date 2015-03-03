@@ -1,7 +1,7 @@
 // test-use-case-core-wrap-pods.js
 
 var assert = require('chai').assert;
-var onmcore = require('../../../../lib/core/onm-core');
+var onmcore = require('../../../../lib/core/pods/pods');
 
 /*
   vector = {
