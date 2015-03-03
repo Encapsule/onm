@@ -67,7 +67,7 @@ testCorePodWrapper({
     podref: { testProperty: "this is a test property" },
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"b9c2634c-3497-436b-8c12-f6647de599d1","value":{"testProperty":"this is a test property"}}'
+        json: ''
     }
 });
 
