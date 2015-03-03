@@ -57,14 +57,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
     CID are IRUT are globally unique so suitable for use as database indices alone, or in app-specific derived key scenarios.
 
- ###
+###
 
+'use strict'
 
-CIDS = module.exports = {}
 
 # Obtain a CID given its CNAME
 
-CIDS.ids =
+cids = {}
+cids.ids =
     IRUT:       'onmRWMgVT-Gls0D99oo-9A' # <= FOUND IRUT beginning in 'onm' in 334842 attempts.
 
     # v0.3 API object identifiers
@@ -94,17 +95,23 @@ CIDS.ids =
     
 # Obtain a CNAME given its CID
 
-CIDS.lookup = {}
-for classname of CIDS.ids
-    classid = CIDS.ids[classname]
-    CIDS.lookup[classid] = classname
+cids.lookup = {}
+for classname of cids.ids
+    classid = cids.ids[classname]
+    cids.lookup[classid] = classname
 
-        
+Object.freeze cids        
+
+CIDS = module.exports = {}
+CIDS.ids = cids.ids
+CIDS.lookup = cids.lookup
+
+
 
 
 ###
     request = {
-        object: reference to an object
+        ref: reference to an object
         cname: CIDS-registered class name string
     }
     response = {
@@ -113,15 +120,15 @@ for classname of CIDS.ids
     }
 ###
 # ============================================================================
-CIDS.setObjectCID = (object_, cname_) ->
+CIDS.setCID = (request_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
 
-        innerResponse = CIDS.getCIDInfo object_
-        if not getInfoResponse.error
+        innerResponse = CIDS.getCID request_.ref
+        if not innerResponse.error
             errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
             break
 
@@ -129,21 +136,18 @@ CIDS.setObjectCID = (object_, cname_) ->
             errors.unshift innerResponse.error
             break
 
-        cid = CIDS.ids[cname_]
+        cid = CIDS.ids[request_.cname_]
         if not (cid? and cid)
-            errors.unshift "Unknown object class name '#{cname_}'."
+            errors.unshift "Unknown object class name '#{request_.cname}'."
             break
 
-        response.result = object_.prototype.__onmcid__ = cid
+        response.result = request_.ref.prototype.__cid__ = cid
 
     if errors.length
-        errors.unshift "CIDS.setObjectCID failed:"
+        errors.unshift "CIDS.setCID failed:"
         response.error = errors.join ' '
 
     response
-
-
-
 
 # Returns a response object with the specified object's CID.
 # The routine ensures that the object is registered and that
@@ -151,20 +155,20 @@ CIDS.setObjectCID = (object_, cname_) ->
 # CID value is not reconciled against the registry and may not
 # refer to a registered onm object class.A
 
-CIDS.getObjectCIDInfo = (object_) ->
+CIDS.getCID = (object_) ->
     errors = []
     response = error: null, result: { cid: null, cname: null }
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-        if not (object_? and object)
+        if not (object_? and object_)
             errors.unshift "Missing required object in-parameter."
             break
         objectType = Object.prototype.toString.call object_
         if objectType != '[object Object]'
             errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
             break
-        response.result.cid = objectCID = object_.__onmcid__
+        response.result.cid = objectCID = object_.__cid__
         if not (objectCID? and objectCID)
             errors.unshift "Object is not identified with a CID value."
             break

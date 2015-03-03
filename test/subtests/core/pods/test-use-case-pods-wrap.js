@@ -78,7 +78,7 @@ testCorePodWrapper({
     podref: "This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned.",
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"43e81405-722b-4c9e-8a67-c6fa82869bc0","value":"This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned."}'
+        json: ''
     }
 });
 
@@ -89,7 +89,7 @@ testCorePodWrapper({
     podref: '{ "testProperty": "this is a test property." }',
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"502b7bf1-c6f6-473c-a748-9b5d7e22d9fc","value":"{ \\"testProperty\\": \\"this is a test property.\\" }"}'
+        json: ''
     }
 });
 
@@ -100,7 +100,7 @@ testCorePodWrapper({
     podref: "matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015",
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"9e84b41a-7bce-4620-ad7a-b208aecabb11","value":"matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015"}'
+        json: ''
     }
 });
 
@@ -113,7 +113,7 @@ testCorePodWrapper({
     method: 'wrapDATA',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapDATA: Invalid request value type \'[object Array]. Expected reference to \'[object Object]\'.',
+        error: '',
         json: ''
     }
 });
@@ -124,7 +124,7 @@ testCorePodWrapper({
     method: 'wrapDAB',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapDAB: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
+        error: '',
         json: ''
     }
 });
@@ -135,7 +135,7 @@ testCorePodWrapper({
     method: 'wrapJSON',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapJSON: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
+        error: '',
         json: ''
     }
 });
@@ -146,7 +146,7 @@ testCorePodWrapper({
     method: 'wrapRIS',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapRIS: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
+        error: '',
         json: ''
     }
 });

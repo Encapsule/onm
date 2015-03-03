@@ -11,7 +11,7 @@ describe("Attempt to load the onm core module.", function() {
         var moduleLoader = function() {
             onmCore = require('../lib/core/onm-core');
         };
-        assert.doesNotThrow(moduleLoader, "require('../lib/core/onm-core should not assert.");
+        assert.doesNotThrow(moduleLoader, "ONM CORE MODULE SHOULD NEVER THROW ON LOAD.");
         dab = onmCore.wrapDAB("test string");
         done_();
 
@@ -59,6 +59,8 @@ describe("Attempt to load the onm core module.", function() {
 
         require('./subtests/core/test-core-ntcl');  // Native Type Classification/Conversation Library (NTCL)
         require('./subtests/core/test-core-cids');  // Class Identification Subsystem (CIDS)
+        require('./subtests/core/test-core-pods');  // Plain-Old Data Subsystem (PODS) - depends on NTCL and CIDS
+
         require('./subtests/core/test-core-crp');   // Core Request Processor (CRP)
 
     });
