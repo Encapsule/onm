@@ -47,7 +47,6 @@ describe("onm core CIDS subsystem tests.", function() {
 
                 require('./cids/test-use-case-cids-getCNAME');
                 require('./cids/test-use-case-cids-setCID');
-                require('./cids/test-use-case-cids-setCID-class1');
                 require('./cids/test-use-case-cids-assertCNAME');
 
             });

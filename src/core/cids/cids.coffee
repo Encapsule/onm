@@ -152,7 +152,7 @@ CIDS.getCNAME = (ref_) ->
             break
 
         if responseCID.length != 22
-            errors.unshift "Object appears to be CID-identified with an unknown, non-IRUT, string format."
+            errors.unshift "Object appears to be CID-identified with an unknown string format. Expected 22-character IRUT."
             break
 
         responseCNAME = cnameTable.cid2cname[responseCID]
@@ -186,7 +186,7 @@ CIDS.getCNAME = (ref_) ->
 ###
 CIDS.assertCNAME = (request_) ->
     errors = []
-    response = error: null, result: false
+    response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true

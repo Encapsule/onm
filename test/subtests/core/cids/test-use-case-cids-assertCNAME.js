@@ -12,7 +12,70 @@ assertCNAMETestRunner({
     testName: "Missing request object",
     validConfig: false,
     expectedResults: {
-        error: ''
+        error: 'CIDS.assertCID: Missing request object in-parameter.'
+    }
+});
+
+// We don't bother with the full matrix of bad inputs here because CIDS.assertCNAME
+// shares a common request normalization path w/CIDS.setCID.
+
+assertCNAMETestRunner({
+    testName: "CNAME assertion on non-CIDS-identified object",
+    validConfig: false,
+    request: {
+        ref: {},
+        cname: 'DOA'
+    },
+    expectedResults: {
+        error: 'CIDS.assertCID: CIDS.getCNAME: Object appears not to be CID-identified.'
+    }
+});
+
+assertCNAMETestRunner({
+    testName: "CNAME assertion on CIDS-identified object but with a corrupt CID and valid CNAME",
+    validConfig: false,
+    request: {
+        ref: { __cid__: 'onmP7n5uTxaLduPZF_Nai*' },
+        cname: 'DAO'
+    },
+    expectedResults: {
+        error: 'CIDS.assertCID: CIDS.getCNAME: Object is identified with an unknown CID value \'onmP7n5uTxaLduPZF_Nai*\'.'
+    }
+});
+
+assertCNAMETestRunner({
+    testName: "CNAME assertion on CIDS-identified object but with valid CID but invalid CNAME",
+    validConfig: false,
+    request: {
+        ref: { __cid__: 'onmP7n5uTxaLduPZF_Naig' },
+        cname: 'the cat belives it necessary to sit atop the keyboard'
+    },
+    expectedResults: {
+        error: 'CIDS.assertCID: Invalid request \'cname\' value \'the cat belives it necessary to sit atop the keyboard\'. Registered in CIDS: [IRUT,Model,Address,Store,Namespace,NSD,ASM,RAS,DAO,RAL,RLP,RIS,DAB,JSON,DATA].'
+    }
+});
+
+assertCNAMETestRunner({
+    testName: "CNAME assertion on CIDS-identified object valid CID, valid CNAME, but not the same resource type (i.e. bad assert).",
+    validConfig: false,
+    request: {
+        ref: { __cid__: 'onmP7n5uTxaLduPZF_Naig' },
+        cname: 'IRUT'
+    },
+    expectedResults: {
+        error: 'CIDS.assertCID: Target asserted to be a \'IRUT\' is actually a \'DAO\' resource.'
+    }
+});
+
+assertCNAMETestRunner({
+    testName: "CNAME assertion on CIDS-identified object valid CID, valid CNAME, GOOD ASSERT.",
+    validConfig: true,
+    request: {
+        ref: { __cid__: 'onmP7n5uTxaLduPZF_Naig' },
+        cname: 'DAO'
+    },
+    expectedResults: {
+        json: '{"cid":"onmP7n5uTxaLduPZF_Naig","cname":"DAO","ref":{"__cid__":"onmP7n5uTxaLduPZF_Naig"}}'
     }
 });
 

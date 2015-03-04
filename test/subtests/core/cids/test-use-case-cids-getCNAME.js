@@ -50,7 +50,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: testObject1,
     expectedResults: {
-        error: 'CIDS.getCNAME: Object appears to be CID-identified with an unknown, non-IRUT, string format.'
+        error: 'CIDS.getCNAME: Object appears to be CID-identified with an unknown string format. Expected 22-character IRUT.'
     }
 });
 
