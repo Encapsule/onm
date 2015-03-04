@@ -77,7 +77,7 @@ xRIP_Parser = module.exports = (request_) ->
         if not (request_.model? and request_.model)
             errors.unshift "Invalid request object missing required property 'model'."
             break
-        cidsResponse = CIDS.assertCID {ref: request_.model, cname: 'Model'}
+        cidsResponse = CIDS.assertCNAME {ref: request_.model, cname: 'Model'}
         if cidsResponse.error
             errors.unshift cidsResponse.error
             break
@@ -106,7 +106,7 @@ xRIP_Parser = module.exports = (request_) ->
             when 'path'
                 # Evaluate additional constraints on the possible values of addressBase
                 if addressBase? and addressBase
-                    cidsResponse = CIDS.assertCID {ref: addressBase, cname: 'Address'}
+                    cidsResponse = CIDS.assertCNAME {ref: addressBase, cname: 'Address'}
                     if cidsResponse.error
                         errors.unshift cidsResponse.error
                         break
