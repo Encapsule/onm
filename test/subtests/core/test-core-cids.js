@@ -9,7 +9,7 @@ describe("onm core CIDS subsystem tests.", function() {
     });
 
 
-    describe("Load and verify the CIDS module, `cids`", function() {
+    describe("Load and verify the CIDS module, `./cids/cids`", function() {
 
         CIDS = null;
 
@@ -47,6 +47,7 @@ describe("onm core CIDS subsystem tests.", function() {
 
                 require('./cids/test-use-case-cids-getCNAME');
                 require('./cids/test-use-case-cids-setCID');
+                require('./cids/test-use-case-cids-setCID-class1');
 
             });
 

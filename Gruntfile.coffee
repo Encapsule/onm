@@ -94,6 +94,10 @@ module.exports = (grunt) ->
                     'lib/core/rltp/rltp-named-object-property-policy-update.js': 'src/core/rltp/rltp-named-object-property-policy-update.coffee'
 
 
+                    # TEST ASSETS
+                    'test/subtests/core/cids/test-use-case-cids-setCID-class1.js' : 'test/subtests/core/cids/test-use-case-cids-setCID-class1.coffee'
+
+
         jshint:
             options: {}
             files: [ '*.js', './lib/*.js', './lib/**/*.js' ]

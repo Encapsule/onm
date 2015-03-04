@@ -85,7 +85,22 @@ CIDS.setCID = (request_) ->
         if not (request_? and request_)
             errors.unshift "Missing request object in-parameter."
             break
-        # Piggy-back on top of getCNAME's more thorough validation of request_
+        typeCheck = Object.prototype.toString.call request_
+        if typeCheck != '[object Object]'
+            errors.unshift "Invalid 'request' type '#{typeCheck}'. Expected '[object Object]'."
+            break
+
+        typeCheck = Object.prototype.toString.call request_.ref
+        setPrototypeProperty = typeCheck == '[object Function]' or false
+        if not (typeCheck == '[object Object]' or typeCheck == '[object Function]')
+            errors.unshift "Invalid request 'ref' value type '#{typeCheck}'. Expected '[object Object]' or '[object Function]'."
+            break
+
+        typeCheck = Object.prototype.toString.call request_.cname
+        if typeCheck != '[object String]'
+            errors.unshift "Invalid request 'cname' value type '#{typeCheck}'. Expected '[object String]."
+            break
+        
         innerResponse = CIDS.getCNAME request_.ref
         if not innerResponse.error
             errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
@@ -96,8 +111,14 @@ CIDS.setCID = (request_) ->
             errors.unshift "Unknown object class name '#{request_.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
             break
 
-        console.log "onm.core.cids *** assigned: cname='#{request_.cname}' cid='#{cid}' ***"
-        response.result = request_.ref[cnameTable.reservedPropertyName] = cid
+        propertyName = cnameTable.reservedPropertyName
+
+        if not setPrototypeProperty
+            request_.ref[propertyName] = cid
+        else
+            request_.ref.prototype[propertyName] = cid
+
+        response.result = cid: cid, cname: request_.cname, ref: request_.ref
 
     if errors.length
         errors.unshift "CIDS.setCID:"
@@ -145,7 +166,7 @@ CIDS.getCNAME = (ref_) ->
             errors.unshift "Object is identified with an unknown CID value '#{responseCID}'."
             break;
 
-        response.result = cid: responseCID, cname: responseCNAME
+        response.result = cid: responseCID, cname: responseCNAME, ref: ref_
 
     if errors.length
         errors.unshift "CIDS.getCID:"
@@ -170,7 +191,8 @@ CIDS.assertCID = (request_) ->
                 break
             errors.unshift "Target asserted to be a '#{request_.cname}' is actually a '#{getCNAMEResponse.result.cname}' resource."
             break          
-        response.result = true
+        response.result = cid: getCNAMEResponse.result.cid, cname: request_.cname, ref: request_.ref
+
     if errors.length
         errors.unshift "CIDS.assertCID:"
         response.error = errors.join ' '

@@ -45,6 +45,9 @@ module.exports = function (vector_) {
             it("The result should be an object.", function() {
                 assert.isObject(response.result);
             });
+            it("The response result object should match control value.", function() {
+                assert.equal(JSON.stringify(response.result), vector_.expectedResults.json);
+            });
         } else {
             it("The call is expected to have failed.", function() {
                 assert.isDefined(response.error);

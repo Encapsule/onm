@@ -19,8 +19,7 @@ getCNAMETestRunner({
     testName: "Missing request object",
     validConfig: false,
     expectedResults: {
-        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Undefined]\'. Expected reference to \'[object Object]\'.',
-        json: ''
+        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Undefined]\'. Expected reference to \'[object Object]\'.'
     }
 });
 
@@ -29,8 +28,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: [],
     expectedResults: {
-        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Array]\'. Expected reference to \'[object Object]\'.',
-        json: ''
+        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Array]\'. Expected reference to \'[object Object]\'.'
     }
 });
 
@@ -39,8 +37,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: {},
     expectedResults: {
-        error: 'CIDS.getCID: Object appears not to be CID-identified.',
-        json: ''
+        error: 'CIDS.getCID: Object appears not to be CID-identified.'
     }
 });
 
@@ -49,8 +46,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: {},
     expectedResults: {
-        error: 'CIDS.getCID: Object appears not to be CID-identified.',
-        json: ''
+        error: 'CIDS.getCID: Object appears not to be CID-identified.'
     }
 });
 
@@ -62,8 +58,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: testObject1,
     expectedResults: {
-        error: 'CIDS.getCID: Object appears to be CID-identified with an unknown, non-IRUT, string format.',
-        json: ''
+        error: 'CIDS.getCID: Object appears to be CID-identified with an unknown, non-IRUT, string format.'
     }
 });
 
@@ -75,8 +70,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: testObject2,
     expectedResults: {
-        error: 'CIDS.getCID: Object is identified with an unknown CID value \'0123456789012345678901\'.',
-        json: ''
+        error: 'CIDS.getCID: Object is identified with an unknown CID value \'0123456789012345678901\'.'
     }
 });
 
@@ -89,7 +83,7 @@ getCNAMETestRunner({
     validConfig: true,
     ref: testObject3,
     expectedResults: {
-        json: '{"cid":"onmP7n5uTxaLduPZF_Naig","cname":"DAO"}'
+        json: '{"cid":"onmP7n5uTxaLduPZF_Naig","cname":"DAO","ref":{"__cid__":"onmP7n5uTxaLduPZF_Naig"}}'
     }
 });
 
