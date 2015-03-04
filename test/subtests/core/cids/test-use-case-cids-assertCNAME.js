@@ -12,7 +12,7 @@ assertCNAMETestRunner({
     testName: "Missing request object",
     validConfig: false,
     expectedResults: {
-        error: 'CIDS.assertCID: Missing request object in-parameter.'
+        error: 'CIDS.assertCNAME: Missing request object in-parameter.'
     }
 });
 
@@ -27,7 +27,7 @@ assertCNAMETestRunner({
         cname: 'DOA'
     },
     expectedResults: {
-        error: 'CIDS.assertCID: CIDS.getCNAME: Object appears not to be CID-identified.'
+        error: 'CIDS.assertCNAME: CIDS.getCNAME: Object appears not to be CID-identified.'
     }
 });
 
@@ -39,7 +39,7 @@ assertCNAMETestRunner({
         cname: 'DAO'
     },
     expectedResults: {
-        error: 'CIDS.assertCID: CIDS.getCNAME: Object is identified with an unknown CID value \'onmP7n5uTxaLduPZF_Nai*\'.'
+        error: 'CIDS.assertCNAME: CIDS.getCNAME: Object is identified with an unknown CID value \'onmP7n5uTxaLduPZF_Nai*\'.'
     }
 });
 
@@ -48,10 +48,10 @@ assertCNAMETestRunner({
     validConfig: false,
     request: {
         ref: { __cid__: 'onmP7n5uTxaLduPZF_Naig' },
-        cname: 'the cat belives it necessary to sit atop the keyboard'
+        cname: 'the cat believes it is necessary to sit atop the keyboard.'
     },
     expectedResults: {
-        error: 'CIDS.assertCID: Invalid request \'cname\' value \'the cat belives it necessary to sit atop the keyboard\'. Registered in CIDS: [IRUT,Model,Address,Store,Namespace,NSD,ASM,RAS,DAO,RAL,RLP,RIS,DAB,JSON,DATA].'
+        error: 'CIDS.assertCNAME: Invalid request \'cname\' value \'the cat believes it is necessary to sit atop the keyboard.\'. Registered in CIDS: [IRUT,Model,Address,Store,Namespace,NSD,ASM,RAS,DAO,RAL,RLP,RIS,DAB,JSON,DATA].'
     }
 });
 
@@ -63,7 +63,7 @@ assertCNAMETestRunner({
         cname: 'IRUT'
     },
     expectedResults: {
-        error: 'CIDS.assertCID: Target asserted to be a \'IRUT\' is actually a \'DAO\' resource.'
+        error: 'CIDS.assertCNAME: Target asserted to be a \'IRUT\' is actually a \'DAO\' resource.'
     }
 });
 

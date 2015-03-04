@@ -43,6 +43,17 @@ describe("onm core CIDS subsystem tests.", function() {
                 assert.isFunction(CIDS.assertCNAME);
             });
 
+
+            it("CIDS should export function 'CNAMEfromCID'", function() {
+                assert.property(CIDS, 'CNAMEfromCID');
+                assert.isFunction(CIDS.CNAMEfromCID);
+            });
+
+            it("CIDS should export function 'CIDfromCNAME'", function() {
+                assert.property(CIDS, 'CIDfromCNAME');
+                assert.isFunction(CIDS.CIDfromCNAME);
+            });
+
             describe("Verify CIDS functions.", function() {
 
                 require('./cids/test-use-case-cids-getCNAME');

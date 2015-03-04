@@ -208,9 +208,14 @@ CIDS.assertCNAME = (request_) ->
             break          
         response.result = cid: getCNAMEResponse.result.cid, cname: request.cname, ref: request.ref
     if errors.length
-        errors.unshift "CIDS.assertCID:"
+        errors.unshift "CIDS.assertCNAME:"
         response.error = errors.join ' '
     response
+
+
+CIDS.CNAMEfromCID = (cid_) -> cnameTable.cid2cname[cid_]
+
+CIDS.CIDfromCNAME = (cname_) -> cnameTable.cname2cid[cname_]
 
 
 
