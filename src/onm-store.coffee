@@ -56,6 +56,9 @@ class StoreDetails
 
     constructor: (store_, model_, data_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Store' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             @store = store_
             @model = model_
 
@@ -470,7 +473,3 @@ module.exports = class Store
             delete observerState[namespaceSelector_.pathId]
         return @
 
-
-cidsResponse = CIDS.setCID { ref: Store, cname: 'Store' }
-if cidsResponse.error
-   throw new Error cidsResponse.error

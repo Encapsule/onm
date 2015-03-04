@@ -65,6 +65,9 @@ class NamespaceDetails
 module.exports = class Namespace
     constructor: (store_, resolvedAddressContext_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Namespace' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
             @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
@@ -366,6 +369,3 @@ module.exports = class Namespace
             throw new Error("onm.Namespace.visitExtensionPointSubcomponents failed: #{exception.message}")
 
 
-cidsResponse = CIDS.setCID { ref: Namespace, cname: 'Namespace' }
-if cidsResponse.error
-   throw new Error cidsResponse.error

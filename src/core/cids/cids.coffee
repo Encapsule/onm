@@ -66,8 +66,7 @@ cnameTable = require './cids-table'
 
 ###
     ----------------------------------------------------------------------
-    CIDS.setCID (by CNAME) sets a CID on an in-memory JavaScript object,
-    or on the prototype of a JavaScript constructor function.
+    CIDS.setCID (on Object reference from CNAME)
 
     request = {
         ref: reference to an object
@@ -85,14 +84,16 @@ CIDS.setCID = (request_) ->
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
+
         nr = normalizeCNAMERequest request_
         if nr.error
             errors.unshift nr.error
             break
         request = nr.result
-        innerResponse = CIDS.getCNAME request.ref
-        if not innerResponse.error
-            errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
+
+        cnameResponse = CIDS.getCNAME request.ref
+        if not cnameResponse.error
+            errors.unshift "Object is already identified as '#{cnameResponse.result.cname}' with CID '#{cnameResponse.result.cid}'."
             break
 
         cid = cnameTable.cname2cid[request.cname]
@@ -101,12 +102,7 @@ CIDS.setCID = (request_) ->
             break
 
         propertyName = cnameTable.reservedPropertyName
-
-        if request.cidOnPrototype
-            request.ref.prototype[propertyName] = cid
-        else
-            request.ref[propertyName] = cid
-
+        request.ref[propertyName] = cid
         response.result = cid: cid, cname: request.cname, ref: request.ref
 
     if errors.length
@@ -118,6 +114,8 @@ CIDS.setCID = (request_) ->
 
 ###
     ----------------------------------------------------------------------
+    CIDS.getCNAME (on Object reference)
+
     ref_: reference to an object or function to inspect
     response = {
         error: null or a string explaining why result is null
@@ -161,7 +159,7 @@ CIDS.getCNAME = (ref_) ->
 
         if not (responseCNAME? and responseCNAME)
             errors.unshift "Object is identified with an unknown CID value '#{responseCID}'."
-            break;
+            break
 
         response.result = cid: responseCID, cname: responseCNAME, ref: ref_
 
@@ -172,11 +170,10 @@ CIDS.getCNAME = (ref_) ->
     response
 
 
-
-
-
 ###
     ----------------------------------------------------------------------
+    CIDS.assertCNAME (on Object reference is CNAME)
+
     request = {
         ref: reference to an object
         cname: CIDS-registered class name string
@@ -217,7 +214,7 @@ CIDS.assertCNAME = (request_) ->
 
 
 
-
+# ----------------------------------------------------------------------------
 normalizeCNAMERequest = (request_) ->
 
     errors = []
@@ -237,8 +234,8 @@ normalizeCNAMERequest = (request_) ->
             break
 
         refType = Object.prototype.toString.call request_.ref
-        if not (refType == '[object Object]' or refType == '[object Function]')
-            errors.unshift "Invalid request 'ref' value type '#{refType}'. Expected '[object Object]' or '[object Function]'."
+        if refType != '[object Object]'
+            errors.unshift "Invalid request 'ref' value type '#{refType}'. Expected '[object Object]'."
             break
 
         cnameType = Object.prototype.toString.call request_.cname
@@ -247,8 +244,6 @@ normalizeCNAMERequest = (request_) ->
             break
 
         response.result = request_
-        response.result.refType = refType
-        response.cidOnPrototype = refType == '[object Function]' or false
 
     if errors.length
         response.error = errors.join ' '

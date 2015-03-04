@@ -60,6 +60,9 @@ uuid = require 'node-uuid'
 module.exports = class Model
     constructor: (objectModelDeclaration_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname:'Model'}
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
 
         catch exception
@@ -163,7 +166,4 @@ module.exports = class Model
         
 
 
-cidsResponse = CIDS.setCID { ref: Model, cname:'Model'}
-if cidsResponse.error
-    throw new Error cidsResponse.error
 
