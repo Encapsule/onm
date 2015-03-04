@@ -30,7 +30,7 @@ setCIDTestRunner({
     validConfig: false,
     request: {},
     expectedResults: {
-        error: 'CIDS.setCID: Invalid request \'ref\' value type \'[object Undefined]\'. Expected \'[object Object]\' or \'[object Function]\'.'
+        error: 'CIDS.setCID: Invalid request \'ref\' value type \'[object Undefined]\'. Expected \'[object Object]\'.'
     }
 });
 
@@ -39,7 +39,7 @@ setCIDTestRunner({
     validConfig: false,
     request: { ref: [] },
     expectedResults: {
-        error: 'CIDS.setCID: Invalid request \'ref\' value type \'[object Array]\'. Expected \'[object Object]\' or \'[object Function]\'.'
+        error: 'CIDS.setCID: Invalid request \'ref\' value type \'[object Array]\'. Expected \'[object Object]\'.'
     }
 });
 
@@ -81,13 +81,70 @@ setCIDTestRunner({
 
 setCIDTestRunner({
     testName: "Specified request w/ref set to onm.Model constructor and cname 'Model'",
-    validConfig: true,
+    validConfig: false,
     request: { ref: onm.Model, cname: 'Model' },
     expectedResults: {
-        json: '{"cid":"onmnqPaPSWKDsC9c8GZaEg","cname":"Model"}' // Note that we do not get ref in the JSON because it's a function
+        error: 'CIDS.setCID: Invalid request \'ref\' value type \'[object Function]\'. Expected \'[object Object]\'.'
     }
 });
 
+describe("Attempt to load the CoffeeScript-generated class 'TestClass2' module.", function() {
+    var TestClass2 = null;
+    before(function() {
 
+        var moduleLoadWrapper = function() {
+            TestClass2 = require('./test-use-case-cids-setCID-class');
+        };
+        assert.doesNotThrow(moduleLoadWrapper, "Test asset module failed to load.");
 
+    });
+    it("TestClass2 should be a defined, non-null, function.", function() {
+        assert.isDefined(TestClass2);
+        assert.isNotNull(TestClass2);
+        assert.isFunction(TestClass2);
+    });
 
+    describe("Attempt to instantiate a new instance of 'TestClass2'.", function() {
+
+        var testClass2 = null;
+
+        before(function() {
+            var createInstance = function() {
+                testClass2 = new TestClass2();
+            };
+            assert.doesNotThrow(createInstance, "The 'TestClass2' constructor function is not expected to throw.");
+        });
+
+        it("We should not have a new instance of TestClass2.", function() {
+            assert.isDefined(testClass2);
+            assert.isNotNull(testClass2);
+            assert.instanceOf(testClass2, TestClass2);
+        });
+
+        describe("Read the new instance's CNAME with CIDS.", function() {
+            response = null;
+            before(function() {
+                assert.isDefined(testClass2);
+                assert.isNotNull(testClass2);
+                var getCNAMEWrapper = function() {
+                    response = CIDS.getCNAME(testClass2);
+                };
+                assert.doesNotThrow(getCNAMEWrapper, "ONM OPERATIONS SHOULD NOT THROW!");
+            });
+            it("The calls to CIDS.getCNAME should have returned a response object.", function() {
+                assert.isDefined(response);
+                assert.isNotNull(response);
+                assert.isObject(response);
+            });
+            it("There should not have been an error.", function() {
+                assert.isNull(response.error);
+            });
+            it("The response result should match control value.", function() {
+                expectedJSON = '{"error":null,"result":{"cid":"onmbrsKOR0iv8kZXzhXejw","cname":"RAS","ref":{"__cid__":"onmbrsKOR0iv8kZXzhXejw"}}}';
+                assert.equal(JSON.stringify(response), expectedJSON);
+            });
+        });
+
+    });
+
+});
