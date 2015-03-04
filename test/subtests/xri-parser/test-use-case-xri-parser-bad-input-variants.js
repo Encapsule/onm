@@ -36,7 +36,7 @@ xriParserUseCase({
     validConfig: false,
     model: "WAT",
     expectedResults: {
-        error: 'xRIP.parse failed: Invalid request object \'model\' value type. Expected reference to onm.Model instance.'
+        error: 'xRIP.parse failed: CIDS.assertCNAME: Invalid request \'ref\' value type \'[object String]\'. Expected \'[object Object]\'.'
     }
 });
 
@@ -97,7 +97,7 @@ xriParserUseCase({
     addressBase: [],
     xri: 'shouldNotEvenBeEvaluated',
     expectedResults: {
-        error: 'xRIP.parse \'shouldNotEvenBeEvaluated\' failed: Invalid request object \'addressBase\' value. Expected onm.Address reference.'
+        error: 'xRIP.parse \'shouldNotEvenBeEvaluated\' failed: CIDS.assertCNAME: Invalid request \'ref\' value type \'[object Array]\'. Expected \'[object Object]\'.'
     }
 });
 

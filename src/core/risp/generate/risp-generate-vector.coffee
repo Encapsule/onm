@@ -71,7 +71,7 @@ RISP.generateVector = module.exports = (request_) ->
             errors.unshift "Invalid request object missing required property 'address'."
             break
 
-        cidsResponse = CIDS.assertCID { ref: request_.address, cname: 'Address' }
+        cidsResponse = CIDS.assertCNAME { ref: request_.address, cname: 'Address' }
         if cidsResponse.error
             errors.unshift cidsResponse.error
             break

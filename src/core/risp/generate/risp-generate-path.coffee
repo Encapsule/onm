@@ -71,7 +71,7 @@ RISP.generatePath = module.exports = (request_) ->
         if not (request_.address? and request_.address)
             errors.unshift "Invalid request object missing required property 'address'."
             break
-        cidsResponse = CIDS.assertCID { ref: request_.address, 'Address' }
+        cidsResponse = CIDS.assertCNAME { ref: request_.address, 'Address' }
         if cidsResponse.error
             errors.unshift cidsResponse.error
             break
