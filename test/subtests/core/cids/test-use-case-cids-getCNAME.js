@@ -19,7 +19,7 @@ getCNAMETestRunner({
     testName: "Missing request object",
     validConfig: false,
     expectedResults: {
-        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Undefined]\'. Expected reference to \'[object Object]\'.'
+        error: 'CIDS.getCNAME: Bad request missing required JavaScript reference in-parameter.'
     }
 });
 
@@ -28,7 +28,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: [],
     expectedResults: {
-        error: 'CIDS.getCID: Invalid request \'object\' value type \'[object Array]\'. Expected reference to \'[object Object]\'.'
+        error: 'CIDS.getCNAME: Invalid request \'object\' value type \'[object Array]\'. Expected reference to \'[object Object]\'.'
     }
 });
 
@@ -37,18 +37,10 @@ getCNAMETestRunner({
     validConfig: false,
     ref: {},
     expectedResults: {
-        error: 'CIDS.getCID: Object appears not to be CID-identified.'
+        error: 'CIDS.getCNAME: Object appears not to be CID-identified.'
     }
 });
 
-getCNAMETestRunner({
-    testName: "Specifiy empty JavaScript object as request",
-    validConfig: false,
-    ref: {},
-    expectedResults: {
-        error: 'CIDS.getCID: Object appears not to be CID-identified.'
-    }
-});
 
 var testObject1 = {};
 testObject1[CIDS_TABLE.reservedPropertyName] = "meow";
@@ -58,7 +50,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: testObject1,
     expectedResults: {
-        error: 'CIDS.getCID: Object appears to be CID-identified with an unknown, non-IRUT, string format.'
+        error: 'CIDS.getCNAME: Object appears to be CID-identified with an unknown, non-IRUT, string format.'
     }
 });
 
@@ -70,7 +62,7 @@ getCNAMETestRunner({
     validConfig: false,
     ref: testObject2,
     expectedResults: {
-        error: 'CIDS.getCID: Object is identified with an unknown CID value \'0123456789012345678901\'.'
+        error: 'CIDS.getCNAME: Object is identified with an unknown CID value \'0123456789012345678901\'.'
     }
 });
 
