@@ -33,14 +33,14 @@ describe("onm core CIDS subsystem tests.", function() {
                 assert.isFunction(CIDS.setCID);
             });
 
-            it("CIDS should export function 'getCID'", function() {
+            it("CIDS should export function 'getCNAME'", function() {
                 assert.property(CIDS, 'getCNAME');
                 assert.isFunction(CIDS.getCNAME);
             });
 
-            it("CIDS should export function 'assertCID'", function() {
-                assert.property(CIDS, 'assertCID');
-                assert.isFunction(CIDS.assertCID);
+            it("CIDS should export function 'assertCNAME'", function() {
+                assert.property(CIDS, 'assertCNAME');
+                assert.isFunction(CIDS.assertCNAME);
             });
 
             describe("Verify CIDS functions.", function() {
@@ -48,6 +48,7 @@ describe("onm core CIDS subsystem tests.", function() {
                 require('./cids/test-use-case-cids-getCNAME');
                 require('./cids/test-use-case-cids-setCID');
                 require('./cids/test-use-case-cids-setCID-class1');
+                require('./cids/test-use-case-cids-assertCNAME');
 
             });
 
