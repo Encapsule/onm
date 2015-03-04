@@ -37,7 +37,7 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
 #
 #
 
-CIDS = require '../../cids/cids'
+CIDS_TABLE = require '../../cids/cids-table'
 
 uuid = require 'node-uuid'
 
@@ -74,7 +74,7 @@ RISP.generateIRUT = module.exports = ->
     response =
         error: null
         result:
-            __onmcid__: CIDS.ids.IRUT
+            __onmcid__: CIDS_TABLE.cname2cid.IRUT
             value: r5
 
 
