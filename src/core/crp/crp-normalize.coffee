@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../cids/cids'
+CIDS = require '../cids/cids'
 
 crp = {}
 
@@ -90,7 +90,7 @@ crp.normalize = module.exports = (request_) ->
             break
 
         # The output type specification must be a registered onm class.
-        outputClassType = classRegistry.ids[request_.outputType]
+        outputClassType = CIDS.CIDfromCNAME request_.outputType
         if not (outputClassType? and outputClassType)
             errors.unshift "Invalid request object 'outputType' value '#{request_.outputType}' is invalid."
             break
