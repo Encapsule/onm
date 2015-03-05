@@ -6,7 +6,7 @@
 //
 
 module.exports = {
-    onm: require('../../../../../index'),
-    dataModelDeclaration: require('../../../../fixture/named-object-resolve-test-data-model'),
+    onm: require('../../../../index'),
+    dataModelDeclaration: require('../../../fixture/named-object-resolve-test-data-model'),
     testComponentResolverUseCase: require('./test-core-component-resolver')
 };

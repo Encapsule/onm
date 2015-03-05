@@ -4,8 +4,7 @@ var testModuleDependencies = require('./requires-dependencies');
 
 var assert = require('chai').assert;
 
-
-var componentResolver = require('../../../../../lib/core/rltp/rltp-component-resolver');
+var componentResolver = require('../../../../lib/core/rltp/rltp-component-resolver');
 
 /*
   testOptions: {

@@ -1,14 +1,13 @@
 // test-impl-onm-component-resolver.js
 //
 
-var assert = require('chai').assert;
-var expect = require('chai').expect;
-var should = require('chai').should;
-var withData = require('leche').withData;
+var dirRequires = require('./dir-requires');
 
-var uuid = require('node-uuid');
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var assert = dirRequires.assert;
+var withData = dirRequires.withData;
+var uuid = dirRequires.uuid;
+var onm = dirRequires.onm;
+var testData = dirRequires.testData;
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.address("*");
@@ -27,7 +26,7 @@ module.exports = describe("Component resolver module test suite.", function() {
 
     before(function(done_) {
         var loadModuleUnderTest = function() {
-            componentResolver = require('../lib/core/rltp/rltp-component-resolver');
+            componentResolver = require('../../../lib/core/rltp/rltp-component-resolver');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
@@ -49,54 +48,54 @@ module.exports = describe("Component resolver module test suite.", function() {
     describe("Component resolver implementation tests.", function() {
 
         describe("Open strategy with no data operation tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-noop-root');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-noop-subnamespace-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-noop-subnamespace-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-noop-subnamespace-N');
+            require('./cr/test-use-case-component-resolver-open-noop-root');
+            require('./cr/test-use-case-component-resolver-open-noop-subnamespace-1');
+            require('./cr/test-use-case-component-resolver-open-noop-subnamespace-2');
+            require('./cr/test-use-case-component-resolver-open-noop-subnamespace-N');
         });
 
         describe("Open strategy with data-over operation tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-root-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-root-data-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-root-data-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-root-data-N');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-open-apply-subnamespace-N-data-0');
+            require('./cr/test-use-case-component-resolver-open-apply-root-data-0');
+            require('./cr/test-use-case-component-resolver-open-apply-root-data-1');
+            require('./cr/test-use-case-component-resolver-open-apply-root-data-2');
+            require('./cr/test-use-case-component-resolver-open-apply-root-data-N');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-0');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-1');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-1-data-2');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-0');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-1');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-2-data-2');
+            require('./cr/test-use-case-component-resolver-open-apply-subnamespace-N-data-0');
         });
 
         describe("Create strategy with no data operation tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-noop-root');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-noop-subnamespace-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-noop-subnamespace-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-noop-subnamespace-N');
+            require('./cr/test-use-case-component-resolver-create-noop-root');
+            require('./cr/test-use-case-component-resolver-create-noop-subnamespace-1');
+            require('./cr/test-use-case-component-resolver-create-noop-subnamespace-2');
+            require('./cr/test-use-case-component-resolver-create-noop-subnamespace-N');
         });
 
         describe("Create strategy with data-over operation tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-root-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-root-data-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-root-data-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-root-data-N');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-1');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-2');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-subnamespace-2-data-0');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-create-apply-subnamespace-2-data-1');
+            require('./cr/test-use-case-component-resolver-create-apply-root-data-0');
+            require('./cr/test-use-case-component-resolver-create-apply-root-data-1');
+            require('./cr/test-use-case-component-resolver-create-apply-root-data-2');
+            require('./cr/test-use-case-component-resolver-create-apply-root-data-N');
+            require('./cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-0');
+            require('./cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-1');
+            require('./cr/test-use-case-component-resolver-create-apply-subnamespace-1-data-2');
+            require('./cr/test-use-case-component-resolver-create-apply-subnamespace-2-data-0');
+            require('./cr/test-use-case-component-resolver-create-apply-subnamespace-2-data-1');
         });
 
         describe("Negotiate strategy tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-negotiate-noop-root-exist');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-negotiate-noop-root-notexist');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-negotiate-apply-root-exist');
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-negotiate-apply-root-notexist');
+            require('./cr/test-use-case-component-resolver-negotiate-noop-root-exist');
+            require('./cr/test-use-case-component-resolver-negotiate-noop-root-notexist');
+            require('./cr/test-use-case-component-resolver-negotiate-apply-root-exist');
+            require('./cr/test-use-case-component-resolver-negotiate-apply-root-notexist');
         });
 
         describe("Bad options tests.", function() {
-            require('./subtests/core/rltp/cr/test-use-case-component-resolver-bogus-strategy');
+            require('./cr/test-use-case-component-resolver-bogus-strategy');
         });
 
     });
