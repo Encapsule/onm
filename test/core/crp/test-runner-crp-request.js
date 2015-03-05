@@ -14,7 +14,7 @@ var assert = require('chai').assert;
   }
 */
 
-var onmCore = require('../../../../lib/core/onm-core');
+var onmCore = require('../../../lib/core/onm-core');
 
 
 module.exports = function (testVector_) {

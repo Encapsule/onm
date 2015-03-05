@@ -1,10 +1,6 @@
 // test-use-case-core-bad-requests.js
 
-var onmcore = require('../../../../lib/core/onm-core');
 var testOnmCoreRequest = require('./test-runner-crp-request');
-
-
-
 
 testOnmCoreRequest({
     testName: "bad request: undefined request object",
