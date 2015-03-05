@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Object Namespace Mananager (onm) : jbus core JSON processor for Node.js.",
   "scripts": {
     "test": "mocha -R spec --recursive"
