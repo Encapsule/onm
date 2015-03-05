@@ -1,13 +1,13 @@
 {
   "name": "onm",
   "version": "1.0.7",
-  "description": "Object Namespace Manager (onm): data modeling, storage, URI addressing, type-introspection, CRUD normalization, serialization, and change observation framework for in-memory JSON data.",
+  "description": "Object Namespace Mananager (onm) : jbus core JSON processor for Node.js.",
   "scripts": {
     "test": "mocha -R spec --recursive"
   },
   "main": "index.js",
   "author": {
-    "name": "Encapsule Project",
+    "name": "ChrisRus",
     "url": "https://github.com/Encapsule"
   },
   "repository": {
