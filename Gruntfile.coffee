@@ -95,7 +95,7 @@ module.exports = (grunt) ->
 
 
                     # TEST ASSETS
-                    'test/subtests/core/cids/test-use-case-cids-setCID-class.js' : 'test/subtests/core/cids/test-use-case-cids-setCID-class.coffee'
+                    'test/core/cids/test-use-case-cids-setCID-class.js' : 'test/core/cids/test-use-case-cids-setCID-class.coffee'
 
 
         jshint:
