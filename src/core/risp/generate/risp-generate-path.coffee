@@ -39,7 +39,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-xRIP_PathGenerators =
+CIDS = require '../../cids/cids'
+
+RISP = {}
+
+PathGenerators =
     readable: require './risp-generate-path-readable'
     hash: require './risp-generate-path-hash'
 
@@ -56,14 +60,24 @@ xRIP_PathGenerators =
 
 ###
 
-xRIP_PathGenerator = module.exports = (request_) ->
+RISP.generatePath = module.exports = (request_) ->
+
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
+
+        if not (request_.address? and request_.address)
+            errors.unshift "Invalid request object missing required property 'address'."
+            break
+        cidsResponse = CIDS.assertCNAME { ref: request_.address, 'Address' }
+        if cidsResponse.error
+            errors.unshift cidsResponse.error
+            break
+
         pathFormat = request_.format
-        selectedPathGenerator = xRIP_PathGenerators[pathFormat]
+        selectedPathGenerator = PathGenerators[pathFormat]
         if not (selectedPathGenerator? and selectedPathGenerator)
             errors.unshift "Internal error. No registered path generator for format '#{pathFormat}'."
             break
@@ -72,7 +86,9 @@ xRIP_PathGenerator = module.exports = (request_) ->
             response.result = generatorResponse.result
         else
             errors.unshift generatorResponse.error
+
     if errors.length
-        errors.unshift "xRIP_PathGenerator failed:"
+        errors.unshift "Path generate failed:"
         response.error = errors.join ' '
+
     response

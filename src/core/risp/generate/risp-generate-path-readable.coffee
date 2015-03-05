@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../../cids/cids'
+CIDS = require '../../cids/cids'
 
 ###
     request = {
@@ -67,8 +67,9 @@ xRIP_ReadablePathGenerator = module.exports = (request_) ->
         if not (request_.address? and request_.address)
             errors.unshift = "Invalid request object missing required property 'address'."
             break
-        if classRegistry.lookup[request_.address.onmClassType] != 'Address'
-            errors.unshift = "Invalid request object 'address' value. Expected reference to onm.Address."
+        cidsResponse = CIDS.assertCNAME { ref: request_.address, cname: 'Address' }
+        if cidsResponse.error
+            errors.unshift cidsResponse.error
             break
         uriFormat = request_.uriFormat? and request_.uriFormat or false
         index = 0

@@ -39,7 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './core/cids/cids'
+CIDS = require './core/cids/cids'
+
 helperFunctions = require './common/onm-util-functions'
 StoreReifier = require './core/jnsp/onm-store-reifier'
 AddressToken = require './core/rasp/onm-address-token'
@@ -55,6 +56,9 @@ class StoreDetails
 
     constructor: (store_, model_, data_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Store' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             @store = store_
             @model = model_
 
@@ -106,7 +110,6 @@ class StoreDetails
 
 
 module.exports = class Store
-    onmClassType: classRegistry.ids.Store
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, data_) ->
         try

@@ -39,10 +39,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+### Resource Identifier String Processor (RISP) ###
 
-xRIProcessor = module.exports =
+RISP = module.exports =
 
+    ###
+        request = {
+            address: reference to onm.Address to convert or undefined for 'irut' request
+            format: string (one of 'readable', 'hash', 'lri', or 'uri', 'irut')
+        }
+        response = {
+            error: null or string explaining why result === null
+            result: onm-format path xRI string
+        }
+    ###
     generate: require './generate/risp-generate'
+
 
     ###
         request = {
@@ -55,7 +67,6 @@ xRIProcessor = module.exports =
             result: reference to onm.Address or null
         }
     ###
-
     parse: require './parse/risp-parse'
 
 

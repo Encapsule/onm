@@ -36,12 +36,17 @@ module.exports = (grunt) ->
                     # CIDS - Class Identification Subsystem
                     # ----------------------------------------------------------------------------
                     'lib/core/cids/cids.js':     'src/core/cids/cids.coffee'
+                    'lib/core/cids/cids-table.js': 'src/core/cids/cids-table.coffee'
 
                     # NTCL - Native Type Conversion Library
                     # ----------------------------------------------------------------------------
                     'lib/core/ntcl/ntcl.js': 'src/core/ntcl/ntcl.coffee'
                     'lib/core/ntcl/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
                     'lib/core/ntcl/ntcl-cluts.js': 'src/core/ntcl/ntcl-cluts.coffee'
+
+                    # PODS - Plain Old Data Subsystem
+                    # ----------------------------------------------------------------------------
+                    'lib/core/pods/pods.js': 'src/core/pods/pods.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
@@ -66,6 +71,8 @@ module.exports = (grunt) ->
                     'lib/core/risp/generate/risp-generate-vector.js': 'src/core/risp/generate/risp-generate-vector.coffee'
                     'lib/core/risp/generate/risp-generate-vector-uri.js': 'src/core/risp/generate/risp-generate-vector-uri.coffee'
                     'lib/core/risp/generate/risp-generate-vector-lri.js': 'src/core/risp/generate/risp-generate-vector-lri.coffee'
+                    'lib/core/risp/generate/risp-generate-irut.js': 'src/core/risp/generate/risp-generate-irut.coffee'
+
                     'lib/core/risp/parse/risp-parse.js': 'src/core/risp/parse/risp-parse.coffee'
                     'lib/core/risp/parse/risp-parse-path.js': 'src/core/risp/parse/risp-parse-path.coffee'
                     'lib/core/risp/parse/risp-parse-path-readable.js': 'src/core/risp/parse/risp-parse-path-readable.coffee'
@@ -85,6 +92,10 @@ module.exports = (grunt) ->
                     'lib/core/rltp/rltp-named-object-property-policy-common.js': 'src/core/rltp/rltp-named-object-property-policy-common.coffee'
                     'lib/core/rltp/rltp-named-object-property-policy-initialize.js': 'src/core/rltp/rltp-named-object-property-policy-initialize.coffee'
                     'lib/core/rltp/rltp-named-object-property-policy-update.js': 'src/core/rltp/rltp-named-object-property-policy-update.coffee'
+
+
+                    # TEST ASSETS
+                    'test/subtests/core/cids/test-use-case-cids-setCID-class.js' : 'test/subtests/core/cids/test-use-case-cids-setCID-class.coffee'
 
 
         jshint:

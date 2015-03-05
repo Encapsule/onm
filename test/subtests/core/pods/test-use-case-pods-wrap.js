@@ -1,7 +1,7 @@
 // test-use-case-core-wrap-pods.js
 
 var assert = require('chai').assert;
-var onmcore = require('../../../../lib/core/onm-core');
+var onmcore = require('../../../../lib/core/pods/pods');
 
 /*
   vector = {
@@ -67,7 +67,7 @@ testCorePodWrapper({
     podref: { testProperty: "this is a test property" },
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"b9c2634c-3497-436b-8c12-f6647de599d1","value":{"testProperty":"this is a test property"}}'
+        json: '{"cid":"onmVNJZMQUKjDmocj6esPA","cname":"DATA","ref":{"value":{"testProperty":"this is a test property"},"__cid__":"onmVNJZMQUKjDmocj6esPA"}}'
     }
 });
 
@@ -78,7 +78,7 @@ testCorePodWrapper({
     podref: "This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned.",
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"43e81405-722b-4c9e-8a67-c6fa82869bc0","value":"This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned."}'
+        json: '{"cid":"onmCBeRAQFKhIokTJLTGfA","cname":"DAB","ref":{"value":"This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned.","__cid__":"onmCBeRAQFKhIokTJLTGfA"}}'
     }
 });
 
@@ -89,7 +89,7 @@ testCorePodWrapper({
     podref: '{ "testProperty": "this is a test property." }',
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"502b7bf1-c6f6-473c-a748-9b5d7e22d9fc","value":"{ \\"testProperty\\": \\"this is a test property.\\" }"}'
+        json: '{"cid":"onmFMpxfSCaZO943sLfuxw","cname":"JSON","ref":{"value":"{ \\"testProperty\\": \\"this is a test property.\\" }","__cid__":"onmFMpxfSCaZO943sLfuxw"}}'
     }
 });
 
@@ -100,7 +100,7 @@ testCorePodWrapper({
     podref: "matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015",
     expectedResults: {
         error: null,
-        json: '{"onmClassType":"9e84b41a-7bce-4620-ad7a-b208aecabb11","value":"matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015"}'
+        json: '{"cid":"onmf5Qt2RD2g30oDtsZD1g","cname":"RIS","ref":{"value":"matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015","__cid__":"onmf5Qt2RD2g30oDtsZD1g"}}'
     }
 });
 
@@ -113,41 +113,37 @@ testCorePodWrapper({
     method: 'wrapDATA',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapDATA: Invalid request value type \'[object Array]. Expected reference to \'[object Object]\'.',
-        json: ''
+        error: 'onm.wrapDATA: Invalid request value type \'[object Array]. Expected reference to \'[object Object]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a DAB wrapper.",
+    testName: "Wrap a valid JavaScript string in a DATA wrapper.",
     validConfig: false,
-    method: 'wrapDAB',
-    podref: [ "these are not the droids you're looking for." ],
+    method: 'wrapDATA',
+    podref: "these are not the droids you're looking for.",
     expectedResults: {
-        error: 'onm.wrapDAB: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
-        json: ''
+        error: 'onm.wrapDATA: Invalid request value type \'[object String]. Expected reference to \'[object Object]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a JSON wrapper.",
+    testName: "Wrap a valid JavaScript object in a JSON wrapper.",
     validConfig: false,
     method: 'wrapJSON',
-    podref: [ "these are not the droids you're looking for." ],
+    podref: { test: "these are not the droids you're looking for." },
     expectedResults: {
-        error: 'onm.wrapJSON: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
-        json: ''
+        error: 'onm.wrapJSON: Invalid request value type \'[object Object]. Expected reference to \'[object String]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a RIS wrapper.",
+    testName: "Wrap a valid JavaScript array in a RIS wrapper.",
     validConfig: false,
     method: 'wrapRIS',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: 'onm.wrapRIS: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.',
-        json: ''
+        error: 'onm.wrapRIS: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.'
     }
 });
 

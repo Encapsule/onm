@@ -39,7 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-classRegistry = require './core/cids/cids'
+CIDS = require './core/cids/cids'
+
 helperFunctions = require './common/onm-util-functions'
 intrinsicDataModels = require './common/onm-intrinsic-data-models'
 
@@ -57,9 +58,11 @@ uuid = require 'node-uuid'
 #
 # ****************************************************************************
 module.exports = class Model
-    onmClassType: classRegistry.ids.Model
     constructor: (objectModelDeclaration_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname:'Model'}
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             @implementation = new ModelDetails @, (objectModelDeclaration_? and objectModelDeclaration_ or intrinsicDataModels.jsonObject)
 
         catch exception
@@ -161,4 +164,6 @@ module.exports = class Model
         catch exception_
             throw new Error "onm.Model.toJSON failed: #{exception_.message}"
         
+
+
 

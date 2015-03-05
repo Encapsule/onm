@@ -1,4 +1,4 @@
-// test-runner-cids-setObjectCID.js
+// test-runner-cids-assert-CNAME.js
 
 /*
 
@@ -6,7 +6,7 @@
       testName: string
       validConfig: boolean
       request: {
-          object: object
+          ref: we will see
           cname: string
       }
       expectedResults: {
@@ -17,19 +17,21 @@
 */
 
 var assert = require('chai').assert;
-var CIDS = require('../../../../lib/core/cids/cids');
+
+var dirRequires = require('./dir-requires');
+var CIDS = dirRequires.CIDS;
 
 module.exports = function (vector_) {
 
-    describe("CIDS.setObjectCID test runner: " + vector_.testName, function() {
+    describe("CIDS.assertCNAME test runner: " + vector_.testName, function() {
         var response = null;
         before(function() {
             var functionUnderTest = function() {
-                response = CIDS.setObjectCID(vector_.request.object, vector_.request.cname);
+                response = CIDS.assertCNAME(vector_.request);
             };
-            assert.doesNotThrow(functionUnderTest, "ONM OPERATIONS SHOULD NEVER THROW!@");
+            assert.doesNotThrow(functionUnderTest, "ONM OPERATIONS SHOULD NEVER THROW!");
         });
-        it("The call to setObjectCID is expected to have returned a response.", function() {
+        it("The call to assertCNAME is expected to have returned a response.", function() {
             assert.isDefined(response);
             assert.isNotNull(response);
             assert.isObject(response);
@@ -42,6 +44,9 @@ module.exports = function (vector_) {
             });
             it("The result should be an object.", function() {
                 assert.isObject(response.result);
+            });
+            it("The response result object should match control value.", function() {
+                assert.equal(JSON.stringify(response.result), vector_.expectedResults.json);
             });
         } else {
             it("The call is expected to have failed.", function() {

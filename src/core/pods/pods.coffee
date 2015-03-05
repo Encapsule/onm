@@ -29,9 +29,6 @@ OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
 BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ------------------------------------------------------------------------------
-
-
-
 ------------------------------------------------------------------------------
 
 ###
@@ -39,56 +36,65 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require '../../cids/cids'
+CIDS = require '../cids/cids'
+NTCL = require '../ntcl/ntcl'
 
-RISP = {}
-
-VectorGenerators = 
-    lri: require './risp-generate-vector-lri'
-    uri: require './risp-generate-vector-uri'
+PODS = module.exports = {}
 
 
-###
-    request = {
-        address: onm.Address reference
-        format: string (one of "lri" or "uri")
-    }
-    response = {
-        error: null or string explaining why result === null
-        result: onm-format path xRI string
-    }
 
-###
-
-RISP.generateVector = module.exports = (request_) ->
+# ============================================================================
+PODS.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-
-        if not (request_.address? and request_.address)
-            errors.unshift "Invalid request object missing required property 'address'."
+        if not (value_? and value_)
+            errors.unshift "Missing required value in-parameter."
             break
 
-        cidsResponse = CIDS.assertCNAME { ref: request_.address, cname: 'Address' }
+        valueNativeType = Object.prototype.toString.call value_
+        if valueNativeType != constrainToJavaScriptType_
+            errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{constrainToJavaScriptType_}'."
+            break
+
+        cidsResponse = CIDS.setCID { ref: { value: value_ }, cname: onmClassName_ }
         if cidsResponse.error
             errors.unshift cidsResponse.error
             break
 
-        pathFormat = request_.format
-        selectedVectorGenerator = VectorGenerators[pathFormat]
-        if not (selectedVectorGenerator? and selectedVectorGenerator)
-            errors.unshift "Internal error. No registered vector generator for format '#{pathFormat}'."
-            break
-        generatorResponse = selectedVectorGenerator request_
-        if not generatorResponse.error
-            response.result = generatorResponse.result
-        else
-            errors.unshift generatorResponse.error
-
     if errors.length
-        errors.unshift "Vector generate failed:"
         response.error = errors.join ' '
+    else
+        response.result = cidsResponse.result
 
+    response
+
+# ============================================================================
+PODS.wrapDAB = (dabString_) ->
+    response = PODS.wrapXPOD dabString_, '[object String]', 'DAB'
+    if response.error
+        response.error = "onm.wrapDAB: #{response.error}"
+    response
+
+# ============================================================================
+PODS.wrapDATA = (dataObject_) ->
+    response = PODS.wrapXPOD dataObject_, '[object Object]', 'DATA'
+    if response.error
+        response.error = "onm.wrapDATA: #{response.error}"
+    response
+
+# ============================================================================
+PODS.wrapJSON = (jsonString_) ->
+    response = PODS.wrapXPOD jsonString_, '[object String]', 'JSON'
+    if response.error
+        response.error = "onm.wrapJSON: #{response.error}"
+    response
+
+# ============================================================================
+PODS.wrapRIS = (risString_) ->
+    response = PODS.wrapXPOD risString_, '[object String]', 'RIS'
+    if response.error
+        response.error = "onm.wrapRIS: #{response.error}"
     response

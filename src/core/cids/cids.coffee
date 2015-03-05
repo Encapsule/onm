@@ -39,124 +39,218 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+### 
+    Class Identification Subsystem (CIDS)
+
+    CIDS defines a simple protocol for managing classes of in-memory JavaScript object resources at runtime.
+
+    The object property name cids.reserverd reserved by CIDS for use as a Class Identifier (CID).
+
+    The CID value assigend to an onm-format Internet Routable URI Token (IRUT) string.
+
+    Comparison of the CID value of two objects for equality is the only meaningful discrimination semantic provided by CIDS.
+
+    This is still useful however. Data (e.g. objects created by derived client code) that do not participate in CIDS will
+    generally not be tagged with CID values. Internally, onm wraps just about every meaningful piece of client state
+    in a CID-tagged object as it crosses the onm API surface and is validated. Additionally, all object generators within
+    onm produce CID-tagged objects.
+
+    CID are IRUT are globally unique so suitable for use as database indices alone, or in app-specific derived key scenarios.
+
+###
+
 CIDS = module.exports = {}
+cnameTable = require './cids-table'
 
-# Obtain a CID given its CNAME
-
-CIDS.ids =
-    IRUT: 'NX_zU3FeRDublNx6WSQTog'
-
-    # v0.3 public API object identifiers
-    Model:      '57347d22-cefb-4b5d-a2ed-1732a764fe6b'
-    Address:    '075d9b07-c612-416e-a0b2-e839c8677de7'
-    Store:      'a5fc2cff-a105-4750-b2ed-8b7b11f73af5'
-    Namespace:  '62286994-befa-4ef5-8f39-8eaaf890fabf'
-
-    # v1.0 core object identifiers
-    NSD:        'e544054c-be40-4130-ab2a-903c2861cc7f'
-    ASM:        'ba9c687c-860a-4f18-9b03-f6d42d0704fb'
-    RAS:        'ef0613fb-dbb0-493c-8e4f-31bdad5dbf48'
-    DAO:        'f74ea6d3-541c-432b-b925-5faa0bc8eb6e'
-    RAL:        'ab49f85e-cd32-4e27-9006-8d8e54f4a8b6'
-    RLP:        '6e064cd9-2d65-4974-8903-d9860fed85ff'
-    # ^--- 1st class onm core objects with constructors v--- Disciminating wrappers for JavaScript types
-    RIS:        '9e84b41a-7bce-4620-ad7a-b208aecabb11' # Wraps a RIS-encoded string
-    DAB:        '43e81405-722b-4c9e-8a67-c6fa82869bc0' # Wraps a DAB-encoded string
-
-    JSON:       '502b7bf1-c6f6-473c-a748-9b5d7e22d9fc' # Wraps a JSON-encoded string
-    DATA:       'b9c2634c-3497-436b-8c12-f6647de599d1' # Wraps an Object convertible to JSON
-    
-# Obtain a CNAME given its CID
-
-CIDS.lookup = {}
-for classname of CIDS.ids
-    classid = CIDS.ids[classname]
-    CIDS.lookup[classid] = classname
-
-        
 
 
 ###
+    ----------------------------------------------------------------------
+    CIDS.setCID (on Object reference from CNAME)
+
     request = {
-        object: reference to an object
+        ref: reference to an object
         cname: CIDS-registered class name string
     }
     response = {
         error: null or a string explaining why result is null
-        result: input object w/__onmcid__ property set on its prototype
+        result: { cid: string, cname: string: ref: request_.ref } or null to indicate error
     }
+    ----------------------------------------------------------------------
 ###
-# ============================================================================
-CIDS.setObjectCID = (object_, cname_) ->
+CIDS.setCID = (request_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
 
-        innerResponse = CIDS.getCIDInfo object_
-        if not getInfoResponse.error
-            errors.unshift "Object is already identified as '#{innerResponse.result.cname}' with CID '#{innerResponse.result.cid}'."
+        nr = normalizeCNAMERequest request_
+        if nr.error
+            errors.unshift nr.error
+            break
+        request = nr.result
+
+        cnameResponse = CIDS.getCNAME request.ref
+        if not cnameResponse.error
+            errors.unshift "Object is already identified as '#{cnameResponse.result.cname}' with CID '#{cnameResponse.result.cid}'."
             break
 
-        if innerResponse.result.cid? and innerResponse.result.cid
-            errors.unshift innerResponse.error
-            break
-
-        cid = CIDS.ids[cname_]
+        cid = cnameTable.cname2cid[request.cname]
         if not (cid? and cid)
-            errors.unshift "Unknown object class name '#{cname_}'."
+            errors.unshift "Unknown object class name '#{request.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
             break
 
-        response.result = object_.prototype.__onmcid__ = cid
+        propertyName = cnameTable.reservedPropertyName
+        request.ref[propertyName] = cid
+        response.result = cid: cid, cname: request.cname, ref: request.ref
 
     if errors.length
-        errors.unshift "CIDS.setObjectCID failed:"
+        errors.unshift "CIDS.setCID:"
         response.error = errors.join ' '
 
     response
 
 
+###
+    ----------------------------------------------------------------------
+    CIDS.getCNAME (on Object reference)
 
+    ref_: reference to an object or function to inspect
+    response = {
+        error: null or a string explaining why result is null
+        result: { cid: string, cname: string: ref: request_.ref } or null to indicate error
+    }
+    ----------------------------------------------------------------------
+###
+CIDS.getCNAME = (ref_) ->
 
-# Returns a response object with the specified object's CID.
-# The routine ensures that the object is registered and that
-# the CID value is in the expected format. However, the returne
-# CID value is not reconciled against the registry and may not
-# refer to a registered onm object class.A
-
-CIDS.getObjectCIDInfo = (object_) ->
     errors = []
-    response = error: null, result: { cid: null, cname: null }
+    response = error: null, result: null
+
     inBreakScope = false
     while not inBreakScope
         inBreakScope = true
-        if not (object_? and object)
-            errors.unshift "Missing required object in-parameter."
+
+        if not (ref_? and ref_)
+            errors.unshift "Bad request missing required JavaScript reference in-parameter."
             break
-        objectType = Object.prototype.toString.call object_
-        if objectType != '[object Object]'
-            errors.unshift "Invalid request 'object' value type. Expected reference to '[object Object]'."
+
+        refType = Object.prototype.toString.call ref_
+        if refType != '[object Object]'
+            errors.unshift "Invalid request 'object' value type '#{refType}'. Expected reference to '[object Object]'."
             break
-        response.result.cid = objectCID = object_.__onmcid__
-        if not (objectCID? and objectCID)
-            errors.unshift "Object is not identified with a CID value."
+
+        responseCID = ref_[cnameTable.reservedPropertyName]
+        if not (responseCID? and responseCID)
+            errors.unshift "Object appears not to be CID-identified."
             break
-        objectCIDType = Object.prototype.toString.call objectCID
-        if objectCIDType != '[object String]'
-            errors.unshift "INTERNAL ERROR: Object CID identifier is not an '[object String]' as expected!"
+
+        responseCIDType = Object.prototype.toString.call responseCID
+        if responseCIDType != '[object String]'
+            errors.unshift "Object appears to be CID-identified with a value of type '#{responseCIDType}. Expected '[object String]'."
             break
-        if objectCID.length != 22
-            errors.unshift "INTERNAL ERROR: Object CID identifier is not a 22-character IRUT-format string as exepected!"
+
+        if responseCID.length != 22
+            errors.unshift "Object appears to be CID-identified with an unknown string format. Expected 22-character IRUT."
             break
-        cname = CIDS.lookup[objectCID]
-        if not (cname? and cname)
-            errors.unshift "Object is identified with an unknown CID."
-            break;
-        response.result.cname = cname
+
+        responseCNAME = cnameTable.cid2cname[responseCID]
+
+        if not (responseCNAME? and responseCNAME)
+            errors.unshift "Object is identified with an unknown CID value '#{responseCID}'."
+            break
+
+        response.result = cid: responseCID, cname: responseCNAME, ref: ref_
+
     if errors.length
-        errors.unshift "CIDS.getCIDInfo:"
+        errors.unshift "CIDS.getCNAME:"
         response.error = errors.join ' '
 
     response
 
+
+###
+    ----------------------------------------------------------------------
+    CIDS.assertCNAME (on Object reference is CNAME)
+
+    request = {
+        ref: reference to an object
+        cname: CIDS-registered class name string
+    }
+    response = {
+        error: null or a string explaining why result is null
+        result: { cid: string, cname: string: ref: request_.ref } or null to indicate error
+    }
+    ----------------------------------------------------------------------
+###
+CIDS.assertCNAME = (request_) ->
+    errors = []
+    response = error: null, result: null
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+        nr = normalizeCNAMERequest request_
+        if nr.error
+            errors.unshift nr.error
+            break
+        request = nr.result
+        getCNAMEResponse = CIDS.getCNAME request.ref
+        if getCNAMEResponse.error
+            errors.unshift getCNAMEResponse.error
+            break
+        if getCNAMEResponse.result.cname != request.cname
+            cidCheck = cnameTable.cname2cid[request.cname]
+            if not (cidCheck? and cidCheck)
+                errors.unshift "Invalid request 'cname' value '#{request.cname}'. Registered in CIDS: [#{cnameTable.cnames}]."
+                break
+            errors.unshift "Target asserted to be a '#{request.cname}' is actually a '#{getCNAMEResponse.result.cname}' resource."
+            break          
+        response.result = cid: getCNAMEResponse.result.cid, cname: request.cname, ref: request.ref
+    if errors.length
+        errors.unshift "CIDS.assertCNAME:"
+        response.error = errors.join ' '
+    response
+
+
+CIDS.CNAMEfromCID = (cid_) -> cnameTable.cid2cname[cid_]
+
+CIDS.CIDfromCNAME = (cname_) -> cnameTable.cname2cid[cname_]
+
+
+
+# ----------------------------------------------------------------------------
+normalizeCNAMERequest = (request_) ->
+
+    errors = []
+    response = error: null, result: null
+
+    inBreakScope = false
+    while not inBreakScope
+        inBreakScope = true
+
+        if not (request_? and request_)
+            errors.unshift "Missing request object in-parameter."
+            break
+
+        reqType = Object.prototype.toString.call request_
+        if reqType != '[object Object]'
+            errors.unshift "Invalid 'request' type '#{reqType}'. Expected '[object Object]'."
+            break
+
+        refType = Object.prototype.toString.call request_.ref
+        if refType != '[object Object]'
+            errors.unshift "Invalid request 'ref' value type '#{refType}'. Expected '[object Object]'."
+            break
+
+        cnameType = Object.prototype.toString.call request_.cname
+        if cnameType != '[object String]'
+            errors.unshift "Invalid request 'cname' value type '#{cnameType}'. Expected '[object String]."
+            break
+
+        response.result = request_
+
+    if errors.length
+        response.error = errors.join ' '
+
+    response

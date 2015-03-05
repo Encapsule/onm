@@ -29,9 +29,6 @@ OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
 BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ------------------------------------------------------------------------------
-
-
-
 ------------------------------------------------------------------------------
 
 ###
@@ -102,57 +99,3 @@ onm.request = (request_) ->
     response
 
 
-
-
-# ============================================================================
-onm.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
-    errors = []
-    response = error: null, result: null
-    inBreakScope = false
-    while not inBreakScope
-        inBreakScope = true
-        if not (value_? and value_)
-            errors.unshift "Missing required value in-parameter."
-            break
-        valueNativeType = Object.prototype.toString.call value_
-        if valueNativeType != constrainToJavaScriptType_
-            errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{constrainToJavaScriptType_}'."
-            break
-        classId = classRegistry.ids[onmClassName_]
-        if not classId? and classId
-            errors.unshift "Invalid request specifies unknown wrapper type '#{onmClassName_}'."
-            break
-        response.result =
-            onmClassType: classId
-            value: value_
-    if errors.length
-        response.error = errors.join ' '
-    response
-
-# ============================================================================
-onm.wrapDAB = (dabString_) ->
-    response = onm.wrapXPOD dabString_, '[object String]', 'DAB'
-    if response.error
-        response.error = "onm.wrapDAB: #{response.error}"
-    response
-
-# ============================================================================
-onm.wrapDATA = (dataObject_) ->
-    response = onm.wrapXPOD dataObject_, '[object Object]', 'DATA'
-    if response.error
-        response.error = "onm.wrapDATA: #{response.error}"
-    response
-
-# ============================================================================
-onm.wrapJSON = (jsonString_) ->
-    response = onm.wrapXPOD jsonString_, '[object String]', 'JSON'
-    if response.error
-        response.error = "onm.wrapJSON: #{response.error}"
-    response
-
-# ============================================================================
-onm.wrapRIS = (risString_) ->
-    response = onm.wrapXPOD risString_, '[object String]', 'RIS'
-    if response.error
-        response.error = "onm.wrapRIS: #{response.error}"
-    response

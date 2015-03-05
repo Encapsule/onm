@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require '../cids/cids'
+CIDS = require '../cids/cids'
 operationMap = require './crp-ops-map'
 
 crp = {}
@@ -55,9 +55,16 @@ crp.bindop = module.exports = (request_) ->
 
         inputsClassNameVector = []
         for someObject in request_.inputs
-            cid = someObject? and someObject? and someObject.onmClassType or undefined
-            cname = classRegistry.lookup[cid]? or Object.prototype.toString.call someObject
-            inputClassNameVector.push cname
+
+            cidsResponse = CIDS.getCNAME someObject
+            if cidsResponse.error
+                errors.unshift cidsResponse.error
+                break
+            inputClassNameVector.push cidsResponse.result.cname
+
+        if errors.length
+            break
+
         inputsClassNameVector.sort (a_, b_) -> a_.compareLocale b_
 
         bindKeyTokens = []

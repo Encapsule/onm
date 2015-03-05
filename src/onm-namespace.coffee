@@ -39,7 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-classRegistry = require './core/cids/cids'
+CIDS = require './core/cids/cids'
+
 AddressToken = require './core/rasp/onm-address-token'
 Address = require './onm-address'
 addressResolver = require './core/rltp/rltp-address-resolver'
@@ -62,9 +63,11 @@ class NamespaceDetails
 #
 # ****************************************************************************
 module.exports = class Namespace
-    onmClassType: classRegistry.ids.Namespace
     constructor: (store_, resolvedAddressContext_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Namespace' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
             @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
