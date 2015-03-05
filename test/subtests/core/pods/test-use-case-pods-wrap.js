@@ -67,7 +67,7 @@ testCorePodWrapper({
     podref: { testProperty: "this is a test property" },
     expectedResults: {
         error: null,
-        json: ''
+        json: '{"cid":"onmVNJZMQUKjDmocj6esPA","cname":"DATA","ref":{"value":{"testProperty":"this is a test property"},"__cid__":"onmVNJZMQUKjDmocj6esPA"}}'
     }
 });
 
@@ -78,7 +78,7 @@ testCorePodWrapper({
     podref: "This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned.",
     expectedResults: {
         error: null,
-        json: ''
+        json: '{"cid":"onmCBeRAQFKhIokTJLTGfA","cname":"DAB","ref":{"value":"This is not a valid DAB-format JSON string. But any string is fine as far as a DAB wrapper is concerned.","__cid__":"onmCBeRAQFKhIokTJLTGfA"}}'
     }
 });
 
@@ -89,7 +89,7 @@ testCorePodWrapper({
     podref: '{ "testProperty": "this is a test property." }',
     expectedResults: {
         error: null,
-        json: ''
+        json: '{"cid":"onmFMpxfSCaZO943sLfuxw","cname":"JSON","ref":{"value":"{ \\"testProperty\\": \\"this is a test property.\\" }","__cid__":"onmFMpxfSCaZO943sLfuxw"}}'
     }
 });
 
@@ -100,7 +100,7 @@ testCorePodWrapper({
     podref: "matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015",
     expectedResults: {
         error: null,
-        json: ''
+        json: '{"cid":"onmf5Qt2RD2g30oDtsZD1g","cname":"RIS","ref":{"value":"matrixcorp.employees.joesmith.hr.infractions.internet.blockedSites.2015","__cid__":"onmf5Qt2RD2g30oDtsZD1g"}}'
     }
 });
 
@@ -113,41 +113,37 @@ testCorePodWrapper({
     method: 'wrapDATA',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: '',
-        json: ''
+        error: 'onm.wrapDATA: Invalid request value type \'[object Array]. Expected reference to \'[object Object]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a DAB wrapper.",
+    testName: "Wrap a valid JavaScript string in a DATA wrapper.",
     validConfig: false,
-    method: 'wrapDAB',
-    podref: [ "these are not the droids you're looking for." ],
+    method: 'wrapDATA',
+    podref: "these are not the droids you're looking for.",
     expectedResults: {
-        error: '',
-        json: ''
+        error: 'onm.wrapDATA: Invalid request value type \'[object String]. Expected reference to \'[object Object]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a JSON wrapper.",
+    testName: "Wrap a valid JavaScript object in a JSON wrapper.",
     validConfig: false,
     method: 'wrapJSON',
-    podref: [ "these are not the droids you're looking for." ],
+    podref: { test: "these are not the droids you're looking for." },
     expectedResults: {
-        error: '',
-        json: ''
+        error: 'onm.wrapJSON: Invalid request value type \'[object Object]. Expected reference to \'[object String]\'.'
     }
 });
 
 testCorePodWrapper({
-    testName: "Wrap a valid JavaScript string in a RIS wrapper.",
+    testName: "Wrap a valid JavaScript array in a RIS wrapper.",
     validConfig: false,
     method: 'wrapRIS',
     podref: [ "these are not the droids you're looking for." ],
     expectedResults: {
-        error: '',
-        json: ''
+        error: 'onm.wrapRIS: Invalid request value type \'[object Array]. Expected reference to \'[object String]\'.'
     }
 });
 

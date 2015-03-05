@@ -140,7 +140,7 @@ describe("Attempt to load the CoffeeScript-generated class 'TestClass2' module."
                 assert.isNull(response.error);
             });
             it("The response result should match control value.", function() {
-                expectedJSON = '{"error":null,"result":{"cid":"onmbrsKOR0iv8kZXzhXejw","cname":"RAS","ref":{"__cid__":"onmbrsKOR0iv8kZXzhXejw"}}}';
+                var expectedJSON = '{"error":null,"result":{"cid":"onmbrsKOR0iv8kZXzhXejw","cname":"RAS","ref":{"__cid__":"onmbrsKOR0iv8kZXzhXejw"}}}';
                 assert.equal(JSON.stringify(response), expectedJSON);
             });
         });

@@ -53,19 +53,22 @@ PODS.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
         if not (value_? and value_)
             errors.unshift "Missing required value in-parameter."
             break
+
         valueNativeType = Object.prototype.toString.call value_
         if valueNativeType != constrainToJavaScriptType_
             errors.unshift "Invalid request value type '#{valueNativeType}. Expected reference to '#{constrainToJavaScriptType_}'."
             break
-        classId = CIDS.ids[onmClassName_]
-        if not classId? and classId
-            errors.unshift "Invalid request specifies unknown wrapper type '#{onmClassName_}'."
+
+        cidsResponse = CIDS.setCID { ref: { value: value_ }, cname: onmClassName_ }
+        if cidsResponse.error
+            errors.unshift cidsResponse.error
             break
-        response.result =
-            onmClassType: classId
-            value: value_
+
     if errors.length
         response.error = errors.join ' '
+    else
+        response.result = cidsResponse.result
+
     response
 
 # ============================================================================
