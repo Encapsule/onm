@@ -6,14 +6,13 @@ var Chai = require('chai');
 var assert = Chai.assert;
 var withData = require('leche').withData;
 
-var packageMeta = require('../package.json');
-var onm = require('../index');
+var onm = require('../../index');
 
 // Dynamic test suite for generically testing onm data model declarations.
 var validateDataModelDeclaration = require('onm-data-model-tests').validateDataModelDeclaration
 
 
-describe("onm v" + packageMeta.version + " test fixture regression test suite.", function() {
+describe("Verify the onm data models leveraged by this test suite.", function() {
     it("The onm module should be defined.", function() {
         assert.isDefined(onm);
     });
@@ -36,17 +35,17 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
         before(function(done_) {
 
             var loadAddressBookDataModelDeclaration = function() {
-                var addressBookDataModelDeclaration = require('./fixture/address-book-data-model').modelDeclaration;
+                var addressBookDataModelDeclaration = require('./address-book-data-model').modelDeclaration;
                 addDataModelToTestSuite("Data model declaration '" + addressBookDataModelDeclaration.jsonTag + "'.", addressBookDataModelDeclaration);
             };
 
             var loadSemanticBindingsDataModelDeclaration = function() {
-                var semanticBindingsDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
+                var semanticBindingsDataModelDeclaration = require('./semantic-bindings-test-data-model');
                 addDataModelToTestSuite("Data model declaration '" + semanticBindingsDataModelDeclaration.jsonTag + "'.", semanticBindingsDataModelDeclaration);
             };
 
             var loadDescriptorResolveDataModelDeclaration = function() {
-                var descriptorResolveTestDataModelDeclaration = require('./fixture/named-object-resolve-test-data-model');
+                var descriptorResolveTestDataModelDeclaration = require('./named-object-resolve-test-data-model');
                 addDataModelToTestSuite("Data model declaration '" + descriptorResolveTestDataModelDeclaration.jsonTag + "'.", descriptorResolveTestDataModelDeclaration);
             };
 

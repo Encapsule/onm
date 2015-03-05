@@ -7,10 +7,15 @@ var should = require('chai').should;
 
 var packageMeta = require('../package.json');
 
-describe("Object Namespace Manager v" + packageMeta.version + " (onm) module test suite.", function() {
+describe("**** " + packageMeta.author.org + " " + packageMeta.name + " v" + packageMeta.version + " TEST SUITE ****", function() {
+
+    before(function() {
+        console.log("package.description = " + packageMeta.description + "'");
+        console.log("package.repository.url = '" + packageMeta.repository.url + "'");
+    });
 
     // Validate data models used by these tests.
-    require('./test-fixture-data-models');
+    require('./fixture/test-fixture-data-models');
 
     // Validate the v1 onm core
     require('./test-onm-core');
