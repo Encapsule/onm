@@ -1,13 +1,16 @@
 // generate-named-object-create-strategy-vectors.js
 //
 
-var onm = require('../../index')
-var testDataModelDeclaration = require('../fixture/named-object-resolve-test-data-model');
+var dirRequires = require('./dir-requires');
+
+var onm = dirRequires.onm;
+var testDataModelDeclaration = dirRequires.testDataModelDeclaration;
+
 var testDataModel = new onm.Model(testDataModelDeclaration);
 
-var dimensionNamespaceType = require('./named-object-resolve/vector-dimension-create-namespace-type');
-var dimensionNamespaceKey = require('./named-object-resolve/vector-dimension-create-namespace-key');
-var dimensionPropertyAssignment = require('./named-object-resolve/vector-dimension-create-property-assignment');
+var dimensionNamespaceType = require('./vector-dimension-create-namespace-type');
+var dimensionNamespaceKey = require('./vector-dimension-create-namespace-key');
+var dimensionPropertyAssignment = require('./vector-dimension-create-property-assignment');
 
 var generateTestVectors = module.exports = function() {
     var testVectors = {};

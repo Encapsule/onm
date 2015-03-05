@@ -1,12 +1,14 @@
 // test-impl-onm-named-object-resolver.js
 //
 
-var assert = require('chai').assert;
-var withData = require('leche').withData;
+var dirRequires = require('./dir-requires');
 
-var uuid = require('node-uuid');
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var assert = dirRequires.assert;
+var withData = dirRequires.withData;
+
+var uuid = dirRequires.uuid;
+var onm = dirRequires.onm;
+var testData = dirRequires.testData;
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.address("*");
@@ -20,8 +22,8 @@ module.exports = describe("Named object resolver module test suite.", function()
 
     before(function(done_) {
         var loadModuleUnderTest = function() {
-            namedObjectResolver = require('../lib/core/rltp/rltp-named-object-resolver');
-            namedObjectContext = require('../lib/core/rltp/rltp-named-object-context');
+            namedObjectResolver = require('../../../lib/core/rltp/rltp-named-object-resolver');
+            namedObjectContext = require('../../../lib/core/rltp/rltp-named-object-context');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
@@ -62,11 +64,11 @@ module.exports = describe("Named object resolver module test suite.", function()
     });
 
     describe("Named object resolver implementation test suite.", function() {
-        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-context-input');
-        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-context-output');
-        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-open');
-        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-create');
-        require('./subtests/core/rltp/nr/test-use-case-named-object-resolver-negotiate');
+        require('./nr/test-use-case-named-object-resolver-context-input');
+        require('./nr/test-use-case-named-object-resolver-context-output');
+        require('./nr/test-use-case-named-object-resolver-open');
+        require('./nr/test-use-case-named-object-resolver-create');
+        require('./nr/test-use-case-named-object-resolver-negotiate');
     });
 
 });

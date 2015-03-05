@@ -1,8 +1,11 @@
 // vector-dimension-create-subcomponent-assignment.js
 //
 
-var onm = require('../../../index');
-var testDataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
+var dirRequires = require('./dir-requires');
+
+var onm = dirRequires.onm;
+var testDataModelDeclaration = dirRequires.testDataModelDeclaration;
+
 var testDataModel = new onm.Model(testDataModelDeclaration);
 var rootAddress = testDataModel.createRootAddress();
 var extensionPointDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath('namespaceExtensionPointA');

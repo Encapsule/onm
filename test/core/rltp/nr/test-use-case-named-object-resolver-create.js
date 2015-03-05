@@ -13,8 +13,8 @@ var onm = testModuleDependencies.onm;
 var namedObjectResolver = testModuleDependencies.namedObjectResolver;
 var namedObjectContext = testModuleDependencies.namedObjectContext;
 
-var namespaceDescriptorResolveCreateVectors = require('../../../../vectors/named-object-create-strategy-vectors')();
-var subcomponentCreationTestVectors = require('../../../../vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
+var namespaceDescriptorResolveCreateVectors = require('./vectors/named-object-create-strategy-vectors')();
+var subcomponentCreationTestVectors = require('./vectors/vector-dimension-create-subcomponent-assignment')();
 
 describe("resolveNamespaceDescriptorCreate internal function whitebox test matrix:", function () {
     withData(namespaceDescriptorResolveCreateVectors, function(testData) {

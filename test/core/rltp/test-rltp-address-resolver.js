@@ -1,9 +1,11 @@
 // test-impl-onm-address-resolver.js
 //
 
+var dirRequires = require('./dir-requires');
+
 var assert = require('chai').assert;
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var onm = dirRequires.onm;
+var testData = dirRequires.testData;
 
 var testDataModel = testData.createModel();
 var rootAddress = testDataModel.address("*");
@@ -15,7 +17,7 @@ describe("Validate the behavior of the onm address resolver.", function() {
 
     before(function() {
         var loadModule = function() {
-            addressResolver = require('../lib/core/rltp/rltp-address-resolver');
+            addressResolver = require('../../../lib/core/rltp/rltp-address-resolver');
         };
         assert.doesNotThrow(loadModule);
     });
