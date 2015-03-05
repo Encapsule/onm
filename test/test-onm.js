@@ -18,8 +18,7 @@ describe("**** " + packageMeta.author.org + " " + packageMeta.name + " v" + pack
     require('./fixture/test-fixture-data-models');
 
     // Validate the v1 onm core
-    // require('./test-onm-core');
-
+    require('./test-onm-core');
 
     // LEGACY API MODULE TESTS
     require('./legacy/test-onm.Model');
