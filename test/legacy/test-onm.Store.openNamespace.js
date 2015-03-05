@@ -6,9 +6,9 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
+var onm = require('../../index');
 
-var testData = require('./fixture/address-book-data-model');
+var testData = require('../fixture/address-book-data-model');
 
 module.exports = describe("onm.Store.nsOpen method tests", function() {
     var store, addressRoot, namespaceRoot, addressNewContact, addressContact, namespaceContact = null

@@ -6,11 +6,11 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
+var onm = require('../../index');
 
 module.exports = describe("onm.Address.address (subpath) tests.", function() {
 
-    var testData = require('./fixture/address-book-data-model');
+    var testData = require('../fixture/address-book-data-model');
     var model, response, addressRoot;
 
     before(function() {

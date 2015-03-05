@@ -7,8 +7,8 @@ var assert = Chai.assert;
 var Leche = require('leche');
 var withData = Leche.withData;
 
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var onm = require('../../index');
+var testData = require('../fixture/address-book-data-model');
 var addressBookDataModel = testData.createModel();
 
 var inputTestDataVector = {

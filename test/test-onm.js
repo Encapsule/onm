@@ -18,17 +18,16 @@ describe("**** " + packageMeta.author.org + " " + packageMeta.name + " v" + pack
     require('./fixture/test-fixture-data-models');
 
     // Validate the v1 onm core
-    require('./test-onm-core');
+    // require('./test-onm-core');
 
-    // Base level onm export object API test suites.
-    require('./test-onm.Model');
-    require('./test-onm.Address');
-    require('./test-onm-xri-parser');
-    require('./test-onm.Store');
-    require('./test-onm.Namespace');
 
-    // Advanced white box, and functional test suites.
-    require('./test-onm.Model-intrinsic-semantic-bindings');
+    // LEGACY API MODULE TESTS
+    require('./legacy/test-onm.Model');
+    require('./legacy/test-onm.Address');
+    require('./legacy/test-onm.Store');
+    require('./legacy/test-onm.Namespace');
+    require('./legacy/test-onm.Model-intrinsic-semantic-bindings');
+
 });
 
 

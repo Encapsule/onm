@@ -16,13 +16,13 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
+var onm = require('../../index');
 
 // remove this
-var semanticBindingTestDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
+var semanticBindingTestDataModelDeclaration = require('../fixture/semantic-bindings-test-data-model');
 
 // returns a leche.withData-style test input data vector
-var testInputDataVector = require('./fixture/semantic-binding-variants');
+var testInputDataVector = require('../fixture/semantic-binding-variants');
 
 var testKeys = {
     key1: '7f7c1925-48a1-4e98-a2d5-095db94aea29',

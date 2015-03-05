@@ -6,9 +6,9 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
+var onm = require('../../index');
 
-var testData = require('./fixture/address-book-data-model');
+var testData = require('../fixture/address-book-data-model');
 
 module.exports = describe("onm.Address.isParent tests", function() {
     var store, address1, address2;
