@@ -55,7 +55,7 @@ var testCLUTS = function(test_) {
     });
 }
 
-CLUTS = require('../../../../lib/core/ntcl/ntcl-cluts');
+CLUTS = require('../../../lib/core/ntcl/ntcl-cluts');
 
 testCLUTS({
     cluts: CLUTS,
