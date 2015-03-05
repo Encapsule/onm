@@ -6,7 +6,7 @@
 //
 
 module.exports = {
-    onm: require('../../../../../index'),
-    addressResolver: require('../../../../../lib/core/rltp/rltp-address-resolver'),
-    dataModelDeclaration: require('../../../../fixture/named-object-resolve-test-data-model')
+    onm: require('../../../../index'),
+    addressResolver: require('../../../../lib/core/rltp/rltp-address-resolver'),
+    dataModelDeclaration: require('../../../fixture/named-object-resolve-test-data-model')
 };

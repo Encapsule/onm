@@ -1,5 +1,5 @@
 // test-core-rltp.js
 
-require('./core/test-rltp-named-object-resolver');
-require('./core/test-rltp-component-resolver');
-require('./core/test-rltp-address-resolver');
+require('./rltp/test-rltp-named-object-resolver');
+require('./rltp/test-rltp-component-resolver');
+require('./rltp/test-rltp-address-resolver');

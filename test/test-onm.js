@@ -15,17 +15,13 @@ describe("**** " + packageMeta.author.org + " " + packageMeta.name + " v" + pack
     });
 
     // Validate data models used by these tests.
-    require('./fixture/test-fixture-data-models');
+    require('./test-fixtures');
 
-    // Validate the v1 onm core
+    // Validate v1 onm core
     require('./test-onm-core');
 
-    // LEGACY API MODULE TESTS
-    require('./legacy/test-onm.Model');
-    require('./legacy/test-onm.Address');
-    require('./legacy/test-onm.Store');
-    require('./legacy/test-onm.Namespace');
-    require('./legacy/test-onm.Model-intrinsic-semantic-bindings');
+    // Validate v0.2/v0.3 API (Model/Address/Store/Namespace)
+    require('./test-legacy');
 
 });
 
