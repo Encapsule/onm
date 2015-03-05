@@ -6,53 +6,69 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../onm');
+var onm = require('../index');
 
-module.exports = describe("onm.Address.createSubpathAddress tests.", function() {
+module.exports = describe("onm.Address.address (subpath) tests.", function() {
 
-    var testData = require('./fixture/test-data');
-    var model, addressRoot;
+    var testData = require('./fixture/address-book-data-model');
+    var model, response, addressRoot;
 
     before(function() {
-        testData.resetLuid();
         model = testData.createModel();
-        addressRoot = model.createRootAddress();
+        addressRoot = model.address("*");
     });
 
-    it("Verify test setup", function() {
+    it("The onm.Model instance should be defined and not null.", function() {
+        assert.isDefined(model);
         assert.isNotNull(model);
+        assert.instanceOf(model, onm.Model);
+    });
+
+
+    it("Verify that the model returned an onm.Address instance", function() {
+        assert.isDefined(model)
+        assert.isNotNull(model);
+        assert.instanceOf(model, onm.Model);
+        assert.isDefined(addressRoot);
         assert.isNotNull(addressRoot);
+        assert.instanceOf(addressRoot, onm.Address);
+        assert.isTrue(addressRoot.isRoot());
     });
 
     describe("Create a subpath address one level above the root namespace.", function() {
         var addressActual, addressExpected;
         before(function() {
-            addressActual = addressRoot.createSubpathAddress("contacts");
-            addressExpected = model.createPathAddress("addressBook.contacts");
+            addressActual = addressRoot.address("contacts");
+            addressExpected = model.address("addressBook.contacts");
         });
-        it("createPath/SubpathAddress paths should be equal", function() {
-            if (!addressActual.isEqual(addressExpected)) {
-                console.log("actual .... " + addressActual.getHumanReadableString());
-                console.log("expected .. " + addressExpected.getHumanReadableString());
-            }
+        it("Actual and expected address URI's should match.", function() {
+            assert.equal(addressActual.uri(), addressExpected.uri());
+        });
+        it("Actual and expected address LRI's should match.", function() {
+            assert.equal(addressActual.lri(), addressExpected.lri());
+        });
+        it("Actual and expected address should be equal via onm.Address.isEqual operator.", function() {
             assert.isTrue(addressActual.isEqual(addressExpected));
+            assert.isTrue(addressExpected.isEqual(addressActual));
         });
     });
 
     describe("Create a subpath address two levels above the root namespace.", function() {
         var addressActual, addressExpected;
         before(function() {
-            addressActual = addressRoot.createSubpathAddress("contacts.contact");
-            addressExpected = model.createPathAddress("addressBook.contacts.contact");
+            addressActual = addressRoot.address("contacts.contact");
+            addressExpected = model.address("addressBook.contacts.contact");
         });
-        it("createPath/SubpathAddress paths should be equal", function() {
-            if (!addressActual.isEqual(addressExpected)) {
-                console.log("actual .... " + addressActual.getHumanReadableString());
-                console.log("expected .. " + addressExpected.getHumanReadableString());
-            }
+        it("Actual and expected address URI's should match.", function() {
+            assert.equal(addressActual.uri(), addressExpected.uri());
+        });
+        it("Actual and expected address LRI's should match.", function() {
+            assert.equal(addressActual.lri(), addressExpected.lri());
+        });
+        it("Actual and expected address should be equal via onm.Address.isEqual operator.", function() {
             assert.isTrue(addressActual.isEqual(addressExpected));
+            assert.isTrue(addressExpected.isEqual(addressActual));
         });
-
     });
 
     describe("Create a component and use it as the base to create a subpath address.", function() {
@@ -62,30 +78,26 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
         var addressContact, addressContactAddresses;
 
         before(function() {
-            testData.resetLuid();
             store = testData.createStore();
-            var addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
-            var namespace = store.createComponent(addressNewContact);
-            addressContact = namespace.getResolvedAddress();
-            addressContactAddresses = addressContact.createSubpathAddress("addresses");
-            console.log(addressContactAddresses.getHumanReadableString());
-            actualResult = addressContactAddresses.getHumanReadableString();
-            expectedResult = 'addressBook.contacts.1.contact.addresses';
+            var addressNewContact = addressRoot.address("contacts.contact");
+            var namespace = store.nsCreate(addressNewContact);
+            addressContact = namespace.address();
+            addressContactAddresses = addressContact.address("addresses");
+            actualResult = addressContactAddresses.uri();
+            expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses';
         });
 
         it("The actual result should match the expected result", function() {
             assert.equal(actualResult, expectedResult);
-            assert.isTrue(addressContactAddresses.isResolvable());
         });
-
 
 
         describe("Go another level deeper.", function() {
 
             before(function() {
-                var addressTest = addressContactAddresses.createSubpathAddress('address');
-                actualResult = addressTest.getHumanReadableString();
-                expectedResult = 'addressBook.contacts.1.contact.addresses.-.address';
+                var addressTest = addressContactAddresses.address('address');
+                actualResult = addressTest.uri();
+                expectedResult = 'onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.address';
             });
 
             it("The actual result should match the expected result", function() {

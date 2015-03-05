@@ -1,7 +1,16 @@
 # Encapsule Project onm
 
+Around the office "onm" stands for "Oh never mind." and all but a few generally hate it for reasons I admit to be valid.
 
-Encapsule Project Object Namespace Manager (onm) library is a data-model-driven JavaScript data object/JSON factory and in-memory subsystem communication bus for building complex data-driven Node.js/HTML 5 client applications in JavaScript based on the the Model-Store-Observe-Feedback-Signal design pattern.
+So I've taken onm on a walk and we've been talking. We converse in tests; I ask questions and onm tells me 'fuck you.' But I am winning slowly.
+
+Unless you already know onm, don't bother trying to learn it right now. The docs are horrible, and betray a functional but cumbersome API surface atop a challenging set of concepts not so skillfully caged in code (my first JavaScript project ever so give me a break).
+
+The Wiki docs are still online for the few of you using onm currently. For the rest, v1 is coming in the not-so-distant future. And, I think it will be worth taking the time to get to know v1: [v1 onm core notes](https://github.com/Encapsule/onm/blob/chris/v1.0-core-refactor/src/core/README.md)
+
+#### Tests
+
+[![Build Status](https://travis-ci.org/Encapsule/onm.svg?branch=chris%2Fv1.0-core-refactor)](https://travis-ci.org/Encapsule/onm)
 
 #### Package
 

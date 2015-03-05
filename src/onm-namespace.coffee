@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Encapsule Project
+Copyright (c) 2015 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,232 +39,251 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./implementation/onm-address-token')
-AddressTokenBinder = require('./implementation/onm-address-binder')
-Address = require('./onm-address')
+CIDS = require './core/cids/cids'
+
+AddressToken = require './core/rasp/onm-address-token'
+Address = require './onm-address'
+addressResolver = require './core/rltp/rltp-address-resolver'
 
 #
 #
 # ****************************************************************************
 class NamespaceDetails
-    constructor: (namespace_, store_, address_, mode_) ->
+    constructor: (namespace_, store_, resolvedAddressContext_) ->
         try
-            @dataReference = store_.implementation.dataReference? and store_.implementation.dataReference or throw new Error("Cannot resolve object store's root data reference.")
-            @resolvedTokenArray = []
+            # Extract the context we need to retain from the resolved address context object.
+            @dataReference = addressResolver.getResolvedNamedObjectReference resolvedAddressContext_
+            @resolvedTokenArray = addressResolver.getResolvedTokenVector resolvedAddressContext_
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
             @resolvedAddress = undefined
-
         catch exception
             throw new Error("NamespaceDetails failure: #{exception.message}")
 
 #
 #
 # ****************************************************************************
-# optional parameters passed by onm.Store.createComponent (i.e. mode="new")
-# keyArray_ --- to be applied in order, tail-justified, to the component token vector key array
-# propertyAssignmentObject_ --- options object of property assignments to be cherry-picked and transcribed to newly-contructed components _prior_ to observer signal
-
 module.exports = class Namespace
-    constructor: (store_, address_, mode_, keyArray_, propertyAssignmentObject_) ->
+    constructor: (store_, resolvedAddressContext_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Namespace' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
-
-            @implementation = new NamespaceDetails(@, store_, address_, mode_)
-
-            # As a matter of policy, if no address is specified or if a zero-length address is specified, open the root namespace.
-            address = undefined
-            if not (address_? and address_ and address_.implementation.tokenVector.length)
-                objectModel = store_.model
-                address = new Address(objectModel, [ new AddressToken(objectModel, undefined, undefined, 0) ] )
-            else
-                address = address_
-            
-            # Ensure that address and store objects were both created using the same model.
-            objectModelNameStore = store_.model.jsonTag
-            objectModelNameKeys = address.model.jsonTag
-            if objectModelNameStore != objectModelNameKeys
-                throw new Error("You cannot access a '#{objectModelNameStore}' store namespace with a '#{objectModelNameKeys}' object model address!")
-
-            # Token in the address specifies a root component namespace?
-            if not address.isComplete() then throw new Error("Specified address is invalid because the first address token does not specify the object store's root component.")
-
-            mode = mode_? and mode_ or "bypass"
-
-            if (mode != "new") and not address.isResolvable()
-                throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
-
-
-            # Let's try to do some address manipulation here based on the keyArray_ and propertyAssignmentObject_ params
-            #
-
-            keyArrayCount = keyArray_? and keyArray_.length or 0
-            tokenArrayCount = address.implementation.tokenVector.length
-
-            if keyArrayCount
-                if keyArrayCount > (tokenArrayCount - 1)
-                    throw new Error("Too many component keys specified in optional key array parameter for address '#{address_.getHumanReadableString()}'.");
-                # Clone the address
-                address = address.clone();
-                # Overwrite overlapping keys
-                keyIndex = 0
-                while keyIndex < keyArrayCount
-                    key = keyArray_[keyIndex]
-                    tokenIndex = tokenArrayCount - keyArrayCount + keyIndex
-                    address.implementation.tokenVector[tokenIndex].key = key
-                    keyIndex++
-
-            # The actual store data.
-            tokenCount = 0
-            for addressToken in address.implementation.tokenVector
-                constructionOptions = ((tokenArrayCount - 1) == tokenCount++) and propertyAssignmentObject_ or undefined;
-                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
-                @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
-                @implementation.dataReference = tokenBinder.dataReference
-
-                if mode == "new"
-                    if addressToken.idComponent 
-                        if not (addressToken.key? and addressToken.key)
-                            resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
-                            componentAddress = resolvedAddress.createComponentAddress()
-                            @store.implementation.reifier.reifyStoreComponent(componentAddress)
-                            extensionPointAddress = componentAddress.createParentAddress()
-                            extensionPointNamespace = @store.openNamespace(extensionPointAddress)
-                            extensionPointNamespace.update()
-                true
+            @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
 
         catch exception
-            throw new Error("Namespace failure: #{exception.message}")
+            throw new Error("onm.Namespace constructor failed: #{exception.message}")
 
     #
     # ============================================================================
-    getResolvedAddress: =>
+    # Returns the namespace model's 'jsonTag' value.
+    name: =>
         try
-            if @implementation.resolvedAddress? and @implementation.resolvedAddress
-                return @implementation.resolvedAddress
-            @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
-            return @implementation.resolvedAddress
+            @implementation.getResolvedToken().namespaceDescriptor.jsonTag
         catch exception
-            throw new Error("getResolvedAddress failure: #{exception.message}")
+            throw new Error("onm.Namespace.name failed: #{exception.message}")
 
+    #
+    # ============================================================================
+    # TODO: Think about this some more...
+    # This is a good backwards-compatible improvement to allow writes
+    # to the namespace if data is specified. Specifically, I want to work with
+    # some client code with the new API's to decide how best to smooth over
+    # the round-trip of reading from onm, changing some stuff, and writing it
+    # back. Currently reads are assumed to be directly against store data reference
+    # as returned by this function (w/no argument). 
+    data: (data_) =>
+        try
+            if data_? and data_
+                @namespace { operation: 'access', rl: @address(), data: data_ }
+            @implementation.dataReference
+        catch exception_
+            throw new Error "onm.Namespace.data failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # Returns a reference to namespace's associated model descriptor object.
+    model: =>
+        try
+            @address().getModel()
+        catch exception_
+            throw new Error "onm.Namespace.model failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # Returns this namespace component's assigned key value.
+    ckey: =>
+        try
+            @implementation.getResolvedToken().key
+        catch exception_
+            throw new Error "onm.Namespace.ckey failed: #{exception_.message}"
 
     #
     # ============================================================================
     getComponentKey: =>
-        try
-            return @implementation.getResolvedToken().key
-
-        catch exception
-            throw new Error("getComponentKey failure: #{exception.message}")
-
+        console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use v0.3 onm.Namespace.ckey API."
+        @key()
 
     #
     # ============================================================================
-    getResolvedLabel: =>
+    getResolvedAddress: =>
+        console.log "onm v0.3: onm.Namespace.getResolvedAddress has been deprecated. Use v0.3 onm.Namespace.address API."
+        @address()
+
+    #
+    # ============================================================================
+    # rprls = relative path resource locator string
+    # If ommitted, address returns onm.Address of this namespace.
+    address: (rprls_) =>
         try
-            resolvedDescriptor = @implementation.getResolvedToken().namespaceDescriptor
-            semanticBindings = @store.model.getSemanticBindings()
-            getLabelBinding = semanticBindings? and semanticBindings and semanticBindings.getLabel? and semanticBindings.getLabel or undefined
-            resolvedLabel = undefined
-            if getLabelBinding? and getLabelBinding
-                resolvedLabel = getLabelBinding(@data(), @getResolvedAddress())
+            targetAddress = @implementation.resolvedAddress
+            if not (targetAddress? and targetAddress)
+                targetAddress = @implementation.resolvedAddress = new Address @store.model, @implementation.resolvedTokenArray
+            if not (rprls_? and rprls_)
+                return targetAddress
+            rprlsType = Object.prototype.toString.call rprls_
+            if rprlsType != '[object String]'
+                throw new Error "Invalid type '#{rprsType}'. Expected '[object String]'."
+            rprlsTokens = rprls_.split '.'
+            descendGenerations = 0
+            for prlsToken in rprlsTokens
+                if prlsToken == '//'
+                    descendGenerations++
+                else
+                    break
+            rprlsAscend = rprlsTokens.join descendGenerations, rprlsTokens.length, '.'
+            if descendGenerations
+                targetAddress = targetAddress.createParentAddress descendGenerations
+            targetAddress.createSubpathAddress rprlsAscend
+        catch exception_
+            throw new Error "onm.Namespace.address failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    caddress: =>
+        try
+            @address().createComponentAddress()
+        catch exception_
+            throw new Error "onm.Namespace.caddress failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # Returns onm.Address of the store's root namespace.
+    raddress: =>
+        try
+            @store.address()
+        catch exception_
+            throw new Error "onm.Namespace.raddress faled: #{exception_.message}"
+
+    #
+    # ============================================================================
+    uri: =>
+        try
+            @address().uri();
+        catch exception_
+            throw new Error "onm.Namespace.uri failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    lri: =>
+        try
+            @address().lri();
+        catch exception_
+            throw new Error "onm.Namespace.lri failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # request_ = {
+    #     operation: string one of "open", "create", or "access"
+    #     rl: typically a relative path resource locator string, but may also
+    #         be an onm.Address, or onm-format URI or LRI string assessed
+    #         relative to the store container namespace, not the namespace.
+    #     data: optional JavaScript object or JSON convertible to a JavaScript object
+    # }
+    namespace: (request_) =>
+        try
+            if not (request_? and request_)
+                return @
+            request =
+                operation: request_.operation? and request_.operation or 'access'
+                address: undefined
+                data: request_.data? and request_.data
+
+            if not (request_.rl? and request_.rl)
+                request.address = @address()
             else
-                resolvedLabel = resolvedDescriptor.label
+                if request_.rl instanceof Address
+                    request.address = request_.rl
+                else
+                    try
+                        request.address = @address request_.rl
+                    catch exception_
+                        try
+                            request.address = @store.address request_.rl
+                        catch exception_
+                            rlType = Object.prototype.toString.call request_.rl
+                            switch rlType
+                                when '[object String]'
+                                    message = "Invalid resource locator '#{request_.rl}'. Not in model address space."
+                                    break
+                                else
+                                    message = "Unrecognized resource locator type '#{typeof request_.rl}'."
+                                    break
+                            throw new Error message
+            @store.namespace {
+                operation: request.operation
+                rl: request.rl
+                data: request.data
+            }
 
-            return resolvedLabel
-            
-        catch exception
-            throw new Error("getResolvedLabel failure: #{exception.message}")
+        catch exception_
+            throw new Error "onm.Namespace.namespace failed: #{exception_.message}"
 
     #
     # ============================================================================
-    data: => @implementation.dataReference
+    nsAccess: (rl_, data_) =>
+        try
+            @namespace { operaton: 'access', rl: rl_, data: data_ }
+        catch exception_
+            throw new Error "onm.Namespace.nsAccess failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    nsCreate: (rl_, data_) =>
+        try
+            @namespace { operation: 'create', rl: rl_, data: data_ }
+        catch exception_
+            throw new Error "onm.Namespace.nsCreate failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    nsOpen: (rl_, data_) =>
+        try
+            @namespace { operation: 'open', rl: rl_, data: data_ }
+        catch
+            throw new Error "onm.Namespace.nsOpen failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    nsComponent: (data_) =>
+        try
+            @namespace { operation: 'open', rl: @caddress(), data: data_ }
+        catch exception_
+            throw new Error "onm.Namespace.nsComponent failed: #{exception_.message}"
 
 
     #
     # ============================================================================
     toJSON: (replacer_, space_) =>
         try
-            namespaceDescriptor = @implementation.getResolvedToken().namespaceDescriptor
-            resultObject = {}
-            resultObject[namespaceDescriptor.jsonTag] = @data()
             space = space_? and space_ or 0
-            resultJSON = JSON.stringify(resultObject, replacer_, space)
+            resultJSON = JSON.stringify(@implementation.dataReference, replacer_, space)
             if not (resultJSON? and resultJSON)
-                throw new Error("Cannot serialize Javascript object to JSON!")
+                throw new Error "Namespace data is corrupt. Unable to serialize to JSON."
             return resultJSON
-
-        catch exception
-            throw new Error("toJSON failure: #{exception.message}")
-
-
-    #
-    # ============================================================================
-    fromData: (data_) =>
-        try
-            address = @getResolvedAddress()
-            model = address.getModel()
-
-            # Validate request.
-            if not ((model.namespaceType == "root") or (model.namespaceType == "component"))
-                throw new Error("Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace.")
-
-            if (model.namespaceType == "component")
-                newComponentKey = @store.model.getSemanticBindings().getUniqueKey(data_)
-                namespaceComponentKey = address.implementation.getLastToken().key
-                if (newComponentKey != namespaceComponentKey)
-                    throw new Error("Unexpected input data missing or unexpected component key value.")
-
-            namespaceData = @implementation.dataReference
-
-            # Notify registered observers that we're about to remove the specified data component.
-            @store.implementation.reifier.unreifyStoreComponent(address)
-
-            # Remove the contents of the addressed component.
-            for property, value of @implementation.dataReference
-                delete namespaceData[property]
-
-            # Replace the contents of the new data object.
-            for property, value of data_
-                namespaceData[property] = value
-
-            # Notify registered observers that we're replaced the contents of the specified data component.
-            @store.implementation.reifier.reifyStoreComponent(address)
-
-            return address
-
-        catch exception
-            throw new Error("fromData failure: #{exception.message}")
-
-
-
-    #
-    # ============================================================================
-    fromJSON: (json_) =>
-        try
-            # Attempt to deserialize the specified JSON.
-            data = undefined
-            try
-                parsedData = JSON.parse(json_)
-            catch exception
-                throw new Error("Unable to deserialize the specified JSON data: #{exception.message}")
-
-            # Unwrap and verify the request before delegating to the fromData method.
-            resolvedAddress = @getResolvedAddress()
-            model = resolvedAddress.getModel()
-            dataPayload = parsedData[model.jsonTag]
-            if not (dataPayload? and dataPayload)
-                throw new Error("JSON data is missing expeced top-level object '#{model.jsonTag}'.")
-
-            # Delegate to the fromData method:
-            try
-                resolvedAddress = @fromData(dataPayload)
-            catch exception
-                throw new Error("After successful JSON parse, namespace data update failed: #{exception.message}")
-            return resolvedAddress
-            
-        catch exception
-            throw new Error("fromJSON failure: #{exception.message}")
+        catch exception_
+            throw new Error "onm.Namespace.toJSON serialization failed on address '#{@address().uri()}' with detail: #{exception_.message}"
 
 
     #
@@ -278,13 +297,13 @@ module.exports = class Namespace
             # Note the search direction is fixed but the callback is defined in the
             # object model declaration (or not).
 
-            address = @getResolvedAddress()
+            address = @address()
             semanticBindings = @store.model.getSemanticBindings()
             updateAction = semanticBindings? and semanticBindings and semanticBindings.update? and semanticBindings.update or undefined
 
             # Update all the parent namespaces. (may mutate store data depending on updateAction implementation)
             if updateAction? and updateAction
-                updateAction(@data())
+                updateAction(@implementation.dataReference)
                 address.visitParentAddressesDescending( (address__) =>
                     dataReference = @store.openNamespace(address__).data()
                     updateAction(dataReference))
@@ -311,9 +330,7 @@ module.exports = class Namespace
                 count++
             
         catch exception
-            throw new Error("update failure: #{exception.message}")
-
-
+            throw new Error("onm.Namespace.update failed: #{exception.message}")
 
     #
     # ============================================================================
@@ -323,13 +340,10 @@ module.exports = class Namespace
             if not (resolvedToken? and resolvedToken) then throw new Error("Internal error: unable to resolve token.")
             componentCount = 0
             if resolvedToken.namespaceDescriptor.namespaceType == "extensionPoint"
-                componentCount = Object.keys(@data()).length
+                componentCount = Object.keys(@implementation.dataReference).length
             return componentCount
-
-        catch exception
-            throw new Error("getExtensionPointSubcomponentCount failure: #{exception: message}")
-
-
+        catch exception_
+            throw new Error("onm.Namespace.getExtensionPointSubcomponentCount failed: #{exception_.message}")
 
     #
     # ============================================================================
@@ -341,18 +355,17 @@ module.exports = class Namespace
             if resolvedToken.namespaceDescriptor.namespaceType != "extensionPoint"
                 throw new Error("You may only visit the subcomponents of an extension point namespace.")
 
-            for key, object of @data()
-                address = @getResolvedAddress().clone()
+            for key, object of @implementation.dataReference
+                address = @address().clone()
                 token = new AddressToken(@store.model, resolvedToken.idNamespace, key, resolvedToken.namespaceDescriptor.archetypePathId)
                 address.implementation.pushToken(token)
                 try
                     callback_(address)
                 catch exception
                     throw new Error("Failure occurred inside your callback function implementation: #{exception.message}")
-
             true
 
         catch exception
-            throw new Error("visitExtensionPointSubcomponents failure: #{exception.message}")
+            throw new Error("onm.Namespace.visitExtensionPointSubcomponents failed: #{exception.message}")
 
 

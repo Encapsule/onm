@@ -1,41 +1,14 @@
 {
   "name": "onm",
-  "version": "0.2.8",
-  "description": "Object Namespace Manager (onm) data model, schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
-  "keywords": [
-    "JSON",
-    "object factory",
-    "data model",
-    "data",
-    "design pattern",
-    "model",
-    "store",
-    "observe",
-    "observer",
-    "feedback",
-    "signal",
-    "visitor",
-    "factory",
-    "bus",
-    "channel",
-    "delegate",
-    "proxy",
-    "encapsule",
-    "protocols",
-    "addressing",
-    "router",
-    "routing",
-    "uri",
-    "oh never mind..."
-  ],
+  "version": "1.0.6",
+  "description": "Object Namespace Manager (onm): data modeling, storage, URI addressing, type-introspection, CRUD normalization, serialization, and change observation framework for in-memory JSON data.",
   "scripts": {
-    "test": "mocha -R spec ./test/test-onm.js"
-  },  
-  "main": "onm.js",
+    "test": "mocha -R spec --recursive"
+  },
+  "main": "index.js",
   "author": {
-    "name": "Chris Russell",
-    "email": "chrisrus@encapsule.org",
-    "url": "https://github.com/ChrisRus"
+    "name": "Encapsule Project",
+    "url": "https://github.com/Encapsule"
   },
   "repository": {
     "type": "git",
@@ -46,14 +19,19 @@
   },
   "homepage": "https://github.com/Encapsule/onm",
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-jshint": "~0.8.0",
-    "grunt-contrib-coffee": "~0.8.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-mocha-test": "^0.11.0",
-    "chai": "^1.9.1"
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-mocha-test": "^0.12.2",
+    "chai": "^1.9.2",
+    "mocha": "^2.0.1",
+    "leche": "~1.0.1",
+    "lodash": "^2.4.1",
+    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v1.0"
   },
   "dependencies": {
-    "node-uuid": "*"
+    "jsgraph": "^0.1.4",
+    "node-uuid": "~1.4.2"
   }
 }

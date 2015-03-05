@@ -6,9 +6,9 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../onm');
+var onm = require('../index');
 
-var testData = require('./fixture/test-data');
+var testData = require('./fixture/address-book-data-model');
 
 module.exports = describe("onm.Address.visitChildAddresses tests", function() {
     describe("enumerate children of 'addressBook'", function() {
@@ -17,15 +17,13 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult;
         var expectedResult;
         before( function() {
-            testData.resetLuid();
-            expectedResult = '["addressBook.properties","addressBook.contacts"]';
+            expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts"]';
             store = testData.createStore();
-            address = store.model.createRootAddress();
+            address = store.model.address("*");
             address.visitChildAddresses( function(childAddress_) {
-                childAddresses.push(childAddress_.getHumanReadableString());
+                childAddresses.push(childAddress_.uri());
             });
             actualResult = JSON.stringify(childAddresses);
-            console.log(actualResult);
         });
         it("expecting the actual result to match the expected result", function() {
             assert.equal(actualResult, expectedResult);
@@ -37,14 +35,13 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult;
         var expectedResult;
         before( function() {
-            expectedResult = '["addressBook.properties.subproperties"]';
+            expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties"]';
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
             address.visitChildAddresses( function(childAddress_) {
-                childAddresses.push(childAddress_.getHumanReadableString());
+                childAddresses.push(childAddress_.uri());
             });
             actualResult = JSON.stringify(childAddresses);
-            console.log(actualResult);
         });
         it("expecting the actual result to match the expected result", function() {
             assert.equal(actualResult, expectedResult);
@@ -60,10 +57,9 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.contacts");
             address.visitChildAddresses( function(addressChild_) {
-                childAddresses.push(addressChild_.getHumanReadableString());
+                childAddresses.push(addressChild_.uri());
             });
             actualResult = JSON.stringify(childAddresses);
-            console.log(actualResult);
         });
         it("expecting actual result to matach expected result", function() {
             assert.equal(actualResult, expectedResult);
@@ -78,14 +74,13 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult = null;
         var expectedResult;
         before(function() {
-            expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses","addressBook.contacts.-.contact.phoneNumbers"]';
+            expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.contact.phoneNumbers"]';
             model = testData.createModel();
             address = model.createPathAddress("addressBook.contacts.contact");
             address.visitChildAddresses( function (addressChild_) {
-                childAddresses.push(addressChild_.getHumanReadableString());
+                childAddresses.push(addressChild_.uri());
             });
             actualResult = JSON.stringify(childAddresses);
-            console.log(actualResult);
         });
         it("expecting actual result to match the expected result", function() {
             assert.equal(actualResult, expectedResult);
@@ -99,20 +94,18 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             var expectedResult;
 
             before(function() {
-                expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
+                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.phoneNumbers"]',
                 store = testData.createStore();
-                var namespace = store.createComponent(address);
-                addressContact = namespace.getResolvedAddress();
-                console.log(addressContact.getHumanReadableString());
+                var namespace = store.nsCreate(address);
+                addressContact = namespace.address();
                 addressContact.visitChildAddresses( function (addressChild_) {
-                    childAddresses.push(addressChild_.getHumanReadableString());
+                    childAddresses.push(addressChild_.uri());
                 });
                 actualResult = JSON.stringify(childAddresses);
-                console.log(actualResult);
             });
 
             it("expecting actual result to match the expected result", function() {
-                assert.notEqual(actualResult, expectedResult);
+                assert.equal(actualResult, expectedResult);
             });
 
             it("expecting 'addressContact' to be resolvable", function() {
@@ -124,17 +117,15 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
 
                 var childAddresses = [];
                 var actualResult = null;
-                var expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
+                var expectedResult;
 
                 before(function() {
-                    var address = addressContact.createSubpathAddress("addresses.address");
-                    console.log("target address " + address.getHumanReadableString());
+                    expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.1.addresses.address.notes"]';
+                    var address = addressContact.address("addresses.address");
                     address.visitChildAddresses( function (addressChild_) {
-                        childAddresses.push(addressChild_.getHumanReadableString());
+                        childAddresses.push(addressChild_.uri());
                     })
                     actualResult = JSON.stringify(childAddresses);
-                    console.log(actualResult);
-
                 });
 
                 it("expecting actual result to match the expected result", function() {

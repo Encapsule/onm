@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Encapsule Project
+Copyright (c) 2015 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,187 +39,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./implementation/onm-address-token')
-
-#
-#
-# ****************************************************************************
-class AddressDetails
-    constructor: (address_, model_, tokenVector_) ->
-        try
-            @address = (address_? and address_) or throw new Error("Internal error missing address input parameter.");
-            @model = (model_? and model_) or throw new Error("Internal error missing model input paramter.");
-
-            # --------------------------------------------------------------------------
-            @getModelPath = =>
-                try
-                    if not @tokenVector.length then throw new Error("Invalid address contains no address tokens.");
-                    lastToken = @getLastToken()
-                    return lastToken.namespaceDescriptor.path
-                catch exception
-                    throw new Error("getModelPath failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @getModelDescriptorFromSubpath = (subpath_) =>
-
-                try
-
-                    currentModelPath = @getModelPath()
-
-                    currentDescriptor = @getLastToken().namespaceDescriptor
-
-                    subpathTokens = subpath_.split('.')
-
-                    for token in subpathTokens
-                        if currentDescriptor.namespaceType != "extensionPoint" or currentDescriptor.children.length
-                            # Should be able to resolve normally.
-                            currentModelPath += ".#{token}"
-                            currentDescriptor = @model.implementation.getNamespaceDescriptorFromPath(currentModelPath)
-                        else
-                            # We cannot resolve normally because there are no subnamespaces declared in the model.
-                            archetypePathId = currentDescriptor.archetypePathId? and currentDescriptor.archetypePathId or throw new Error('WAT');
-                            archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
-                            if token != archetypeDescriptor.jsonTag
-                                throw new Error("Expected component name of '#{token}' but instead found '#{archetypeDescriptor.jsonTag}'.");
-                            currentModelPath = archetypeDescriptor.path
-                            currentDescriptor = archetypeDescriptor
-
-
-                        # end of loop
-
-                    console.log currentModelPath
-                    return currentDescriptor
-
-
-                catch exception
-                    throw new Error("getModelDescriptorFromSubpath failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @createSubpathIdAddress = (pathId_) =>
-                try
-                    if not (pathId_?  and pathId_ > -1) then throw new Error("Missing namespace path ID input parameter.");
-                    addressedComponentToken = @getLastToken()
-                    addressedComponentDescriptor = addressedComponentToken.componentDescriptor
-                    targetNamespaceDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(pathId_)
-                    if targetNamespaceDescriptor.idComponent != addressedComponentDescriptor.id
-                        throw new Error("Invalid path ID specified does not resolve to a namespace in the same component as the source address.");
-                    newToken = new AddressToken(@model, addressedComponentToken.idExtensionPoint, addressedComponentToken.key, pathId_)
-                    newTokenVector = @tokenVector.length > 0 and @tokenVector.slice(0, @tokenVector.length - 1) or []
-                    newTokenVector.push newToken
-                    newAddress = new Address(@model, newTokenVector)
-                    return newAddress
-                catch exception
-                    throw new Error("createSubpathIdAddress failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @pushToken = (token_) =>
-                try
-                    if @tokenVector.length
-                        parentToken = @tokenVector[@tokenVector.length - 1]
-                        @validateTokenPair(parentToken, token_)
-
-                    @tokenVector.push token_.clone()
-
-                    if token_.componentDescriptor.id == 0
-                        @complete = true
-
-                    if token_.keyRequired
-                        @keysRequired = true
-
-                    if not token_.isQualified()
-                        @keysSpecified = false
-
-                    # Pushing a token changes the address so we must clear any per-address cached data.
-                    @humanReadableString = undefined
-                    @hashString = undefined
-                    @address
-
-                catch exception
-                    throw new Error("pushToken failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @validateTokenPair = (parentToken_, childToken_) ->
-                try
-                    if not (parentToken_? and parentToken_ and childToken_? and childToken_)
-                        throw new Error("Internal error: input parameters are not correct.");
-
-                    if not childToken_.keyRequired
-                        throw new Error("Child token is invalid because it specifies a namespace in the root component.");
-
-                    if parentToken_.namespaceDescriptor.id != childToken_.extensionPointDescriptor.id
-                        throw new Error("Child token is invalid because the parent token does not select the required extension point namespace.");
-
-                    if not parentToken_.isQualified() and childToken_.isQualified()
-                        throw new Error("Child token is invalid because the parent token is unqualified and the child is qualified.");
-                    true
-
-                catch exception
-                    throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @getLastToken = =>
-                try
-                    if not @tokenVector.length
-                        throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
-                    @tokenVector[@tokenVector.length - 1]
-                catch exception
-                    throw new Error("getLastToken failure: #{exception.message}");
-
-            # --------------------------------------------------------------------------
-            @getDescriptor = =>
-                try
-                    return @getLastToken().namespaceDescriptor
-                catch exception
-                    throw new Error("getDescriptor failure: #{exception.message}");
-
-
-            # --------------------------------------------------------------------------
-            # CONSTRUCTOR
-            # --------------------------------------------------------------------------
-
-            @tokenVector = []
-            @parentExtensionPointId = -1
-
-            # Addresses are said to be either complete or partial.
-            # A complete address has one or more tokens and the first token refers to the root component.
-            # A partial address has one or more tokens and the first token refers to a non-root component.
-            @complete = false # set true iff first token refers to the root component
-
-            # Addresses are said to be either complete or partial.
-            # A complete address has one or more tokens and the first token refers to the root component.
-            # A partial address has one or more tokens and the first token refers to a non-root component.
-            @keysRequired = false
-            @keysSpecified = true
-
-            # Performs cloning and validation
-            for token in tokenVector_? and tokenVector_ or []
-                @pushToken token
-
-            # The following globals are used to cache namesapce traversal paths
-            # on the first call to the related vistor function. Subsequent calls
-            # on the same address object do not incur the overhead of recalculation.
-            @parentAddressesAscending = undefined
-            @parentAddressesDescending = undefined
-            @subnamespaceAddressesAscending = undefined
-            @subnamespaceAddressesDescending = undefined
-            @subcomponentAddressesAscending = undefined
-            @subcomponentsAddressesDescending = undefined
-
-            @humanReadableString = undefined
-            @hashString = undefined
-
-        catch exception
-            throw new Error("AddressDetails failure: #{exception.message}");
-
-
+CIDS = require './core/cids/cids'
+AddressToken = require './core/rasp/onm-address-token'
 
 #
 #
 # ****************************************************************************
 module.exports = class Address
-
     constructor: (model_, tokenVector_) ->
         try
+            cidsResponse = CIDS.setCID { ref: @, cname: 'Address' }
+            if cidsResponse.error
+                throw new Error cidsResponse.error
+
             @model = model_? and model_ or throw new Error("Missing required object model input parameter.");
             @implementation = new AddressDetails(@, model_, tokenVector_)
 
@@ -249,80 +81,101 @@ module.exports = class Address
         catch exception
             throw new Error("Address error: #{exception.message}");
 
+
+    ###
+        request: {
+            xri: onm-format resource identifier string variant (path, LRI, URI)
+        }
+        response: {
+            error: null or string explaining why result === null
+            address: onm.Address reference or null to indicate error
+        }
+        Note: paths are parsed relative to the namespace addressed by this.
+        LRI and URI resource identifier string variants are always evaluated
+        relative to model's anonymous namespace.
+    ###
+    # ============================================================================
+    address: (xri_) => 
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            if not (xri_? and xri_)
+                response.result = @
+                break
+            parseResponse = xRIP.parse model: @model, addressBase: @, xri: xri_
+            if parseResponse.error
+                errors.unshift parseResponse.error
+                break
+            response.result = parseResponse.result
+        if errors.length
+            errors.unshift "onm.Address.address failed:"
+            response.error = errors.join ' '
+
+        # TODO: FIX THE EXCEPTION INTERFACE
+        if response.error
+            throw new Error response.error
+        response.result
+
     #
     # ============================================================================
     getHumanReadableString: =>
-        try
-            if @implementation.humanReadableString? and @implementation.humanReadableString
-                return @implementation.humanReadableString
+        console.log "onm v0.3: onm.Address.getHumanReadableString is deprecated. Use v0.3 onm.Address.uri API."
+        @uri()
 
-            index = 0
-            humanReadableString = ""
+    #
+    # ============================================================================
+    # Returns this address' onm-format universal resource locator string (URI).
+    # Note that an onm URI can be converted back to an onm.Address via method
+    # onm.Model.addressFromURI.
+    uri: =>
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            generatorResponse = xRIP.generate address: @, format: 'uri'
+            if generatorResponse.error
+                errors.unshift generatorResponse.error
+                break
+            response.result = generatorResponse.result
+        if errors.length
+            errors.unshift "onm.Address.uri failed:"
+            response.error = errors.join ' '
 
-            addStringToken = (address_) =>
-                model = address_.getModel();
-                if model.namespaceType == 'component'
-                    key = address_.implementation.getLastToken().key or "-"
-                    humanReadableString += ".#{key}"
-                humanReadableString += humanReadableString and ".#{model.jsonTag}" or "#{model.jsonTag}"
-
-            @visitParentAddressesAscending( (addressParent_) =>
-                addStringToken(addressParent_)
-            )
-
-            addStringToken(@)
-
-            @implementation.humanReadableString = humanReadableString
-            return humanReadableString
-
-        catch exception
-            throw new Error("getHumanReadableString failure: #{exception.message}");
-
-
+        # TODO: REMOVE EXCEPTION INTERFACE
+        if errors.length
+            throw new Error response.error
+        response.result
 
     #
     # ============================================================================
     getHashString: =>
-        try
-            if @implementation.hashString? and @implementation.hashString
-                return @implementation.hashString
+        console.log "onm v0.3: onm.Address.getHashString is deprecated. Use v0.3 onm.Address.lri API."
+        @lri()
 
-            index = 0
-            hashSource = ""
+    #
+    # ============================================================================
+    lri: =>
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            generatorResponse = xRIP.generate address: @, format: 'lri'
+            if generatorResponse.error
+                errors.unshift generatorResponse.error
+                break
+            response.result = generatorResponse.result
+        if errors.length
+            errors.unshift "onm.Address.lri failed:"
+            response.error = errors.join ' '
 
-            for token in @implementation.tokenVector
-                if not index
-                    hashSource += "#{token.model.jsonTag}"
-                if token.key? and token.key
-                    hashSource += ".#{token.key}"
-                else
-                    if token.idExtensionPoint > 0
-                        hashSource += ".-"
-                if token.idNamespace
-                    hashSource += ".#{token.idNamespace}"
-                index++
-
-            # Given that an ONM object model is a singly-rooted tree structure, the raw
-            # hash strings of different addresses created for the same object model all share
-            # a common string prefix. All the information in the hash string is required to
-            # reconstruct the address if the hash is used as a URN. However, for local in-app
-            # processing, address hash strings are used as dictionary keys typically (e.g.
-            # to open observer state). Speed equality/relational operations on hash string
-            # by reversing the raw string (so that the common prefix appears at the tail
-            # and does not need to evaluated typically). Note that WE DO NOT CARE if we break
-            # Unicode character encoding here; the string is base64 encoded anyway and is
-            # generally meaningless to humans, and the original string may be recovered
-            # by reversing the process. https://github.com/mathiasbynens/esrever is a good
-            # sample of how one should reverse a string if maintaining Unicode is important.
-
-            @implementation.hashString = encodeURIComponent(hashSource).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
-            #reversedHashString = humanReadableString.split('').reverse().join('')
-            #@implementation.hashString = window.btoa(reversedHashString)
-            return @implementation.hashString
-            
-        catch exception
-            throw new Error("getHashString failure: #{exception.message}");
-
+        # TODO: REMOVE EXCEPTION INTERFACE
+        if errors.length
+            throw new Error response.error
+        response.result
 
     #
     # ============================================================================
@@ -459,65 +312,24 @@ module.exports = class Address
     #
     # ============================================================================
     createSubpathAddress: (subpath_) =>
-        try
-            if not (subpath_? and subpath_) then throw new Error("Missing subpath input parameter.");
+        console.log "onm.Address.createSubpathAddress is deprecated in v0.3. Use onm.Address.address API."
+        errors = []
+        response = error: null, result: null
+        inBreakScope = false
+        while not inBreakScope
+            inBreakScope = true
+            parseResponse = xRIP.parse model: @model, addressBase: @, xri: subpath_
+            if parseResponse.error
+                errors.unshift parseResponse.error
+                break
+            response.result = parseResponse.result
+        if errors.length
+            errors.unshift "onm.Address.createSubpathAddress failed:"
+            response.error = errors.join ' '
 
-            newTokenVector = [];
-
-            if (@implementation.tokenVector.length > 1)
-                # The base address token vector has two more more tokens. Clone the first through penultimate token(s).
-                newTokenVector = @implementation.tokenVector.slice(0, (@implementation.tokenVector.length - 1))
-
-            currentToken = @implementation.getLastToken()
-
-            subpathTokens = subpath_.split('.')
-
-            for subpathToken in subpathTokens
-
-                # begin loop
-
-                nd = currentToken.namespaceDescriptor
-
-                ndNew = undefined
-
-                if nd.namespaceType != 'extensionPoint'
-
-                    for child in nd.children
-                        if subpathToken == child.jsonTag
-                            ndNew = child
-                            break
-                    if not (ndNew? and ndNew)
-                        throw new Error("Invalid address token '#{subpathToken}'.");
-
-                    if ndNew.namespaceType == 'component'
-                        throw new Error("Internal error: components must be created within extension point namespaces. How did this happen?");
-
-                    currentToken = new AddressToken(currentToken.model, currentToken.idExtensionPoint, currentToken.key, ndNew.id)
-
-                else
-
-                    archetypePathId = nd.archetypePathId
-
-                    archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
-
-                    if subpathToken != archetypeDescriptor.jsonTag
-                        throw new Error("Expected component name '#{archetypeDescriptor.jsonTag}' but was given '#{subpathToken}'.");
-
-                    newTokenVector.push currentToken
-
-                    currentToken = new AddressToken(currentToken.model, currentToken.idNamespace, undefined, archetypePathId);
-
-
-                # end loop
-
-            #
-            newTokenVector.push currentToken
-            newAddress = new Address(@model, newTokenVector)
-
-            return newAddress
-
-        catch exception
-            throw new Error("createSubpathAddress failure: #{exception.message}");
+        if response.error
+            throw new Error response.error
+        response.result
 
 
     #
@@ -668,7 +480,6 @@ module.exports = class Address
             if not (callback_? and callback_) then return false
             namespaceDescriptor = @implementation.getDescriptor()
             if namespaceDescriptor.namespaceType == 'extensionPoint'
-                console.warn("onm.Address.visitChildAddresses on extension point namespace '#{@getHumanReadableString()}' doesn't make sense. Use onm.Namespace.visitExtensionPointSubcomponents API instead.")
                 return false
             for childDescriptor in namespaceDescriptor.children
                 childAddress = @implementation.createSubpathIdAddress(childDescriptor.id)
@@ -699,3 +510,11 @@ module.exports = class Address
         catch exception
             throw new Error("visitExtensionPointAddresses failure: #{exception.message}");
 
+
+
+# AddressDetails must be in module scope for Address constructor. But has dependency
+# on this module. So, last. Otherwise, AddressDetails will resolve its in-module scope
+# reference to the Address constructor before it's defined. Never a good thing.
+
+AddressDetails = require './core/rasp/onm-address-details'
+xRIP = require './core/risp/risp'
