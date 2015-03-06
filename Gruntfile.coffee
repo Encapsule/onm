@@ -4,6 +4,12 @@ module.exports = (grunt) ->
     configObject =
         pkg: grunt.file.readJSON("package.json")
 
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+            '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+            '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
+            ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n'
+
         coffee:
             compile:
                 files:
@@ -100,7 +106,7 @@ module.exports = (grunt) ->
 
         jshint:
             options: {}
-            files: [ '*.js', './lib/*.js',  ]
+            files: [ '*.js', './lib/*.js'  ]
 
 
         mochaTest:
@@ -109,20 +115,22 @@ module.exports = (grunt) ->
                 checkLeaks: true
                 captureFile: "./logs/mocha-spec-results.log" # git ignored
  
-            src: [ './test/**/*.js' ]
+            src: [ './test/test-onm.js' ]
 
         clean: [ 'lib', 'build' ]
 
 
 
         browserify:
-            dist:
-                browserifyOptions:
-                    bundleExternal: false
-                    bundleBuildins: undefined
+            all:
+                src: [ 'index.js', 'lib/*.js' ]
+                # dest: 'build/<%= pkg.name %>-<%= pkg.version %>-debug-bundle.js'
+                dest: 'build/onm-bundle.js'
+                options:
                     standalone: 'onm'
-                files: [ 'build/browserify.js': 'index.js' ]
-                external: [ 'node-uuid' ]
+                    excludeExternal: true
+                    noBuiltIns: true
+
 
 
 

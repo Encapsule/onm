@@ -9,7 +9,21 @@ The core runtime implementation for Node.js and HTML 5 clients provides normaliz
 - Introspection back to "address space map" meta-data by URI.
 - Observing changes to JSON resources by URI and filter predicate.
 
-Used consistently and together, these facilities provide a holistic conceptual and runtime framework for dealing with complex, heterogeneous, distributed JSON data sets in just a few lines of JavaScript. That's not exactly easy to do well right now. So, I hope this helps you out.
+v1.0 onm exports a single, synchrounous function, `request` that handles _all_ client interactions with onm core.
+
+This decission was taken in order to:
+
+- establish a simple protocol that can be easily extended without breaking derived clients.
+- decrease the liklihood of untested code paths in onm core.
+- improve the quality and consistency of result and error reporting.
+- reduce the overall size of onm core.
+- improve the execution speed of performance-critical onm core code paths.
+
+`onm.request` is designed for use by the new [Encapsule/jbus](https://github.com/Encapsule/jbus).
+
+Clients currently using onm v0.2/v0.3 will need to move to jbus.
+
+jbus will provide suitable replacements for the deprecated-in-v1-onm objects: onm.Model, onm.Address, onm.Store, and onm.Namespace and a feature set untouchable by v0.2/v0.3 releases.
 
 ## Overview
 
