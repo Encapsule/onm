@@ -63,9 +63,9 @@ CLUTS.jsCodes = cluts.jsCodes
 
 ###
     request = {
-        to: string moniker of the destination value (indicates its type)
-        from: string moniker of the destination value (indicates its type)
-        value: JavaScript reference expected to refer to a value of type to
+        to: dimension string used to select the result set
+        from: dimension string used to interpret the reference of value
+        value: JavaScript reference to a value taken as a 'from' to be converted to a 'to'
     }
     response = {
         error: null or string explaining by result is null
