@@ -1,43 +1,31 @@
 # Encapsule Project onm
 
-Around the office "onm" stands for "Oh never mind." and all but a few generally hate it for reasons I admit to be valid.
-
-So I've taken onm on a walk and we've been talking. We converse in tests; I ask questions and onm tells me 'fuck you.' But I am winning slowly.
-
-Unless you already know onm, don't bother trying to learn it right now. The docs are horrible, and betray a functional but cumbersome API surface atop a challenging set of concepts not so skillfully caged in code (my first JavaScript project ever so give me a break).
-
-The Wiki docs are still online for the few of you using onm currently. For the rest, v1 is coming in the not-so-distant future. And, I think it will be worth taking the time to get to know v1: [v1 onm core notes](https://github.com/Encapsule/onm/blob/chris/v1.0-core-refactor/src/core/README.md)
-
-#### Tests
+## v1.0 onm Test Status
 
 [![Build Status](https://travis-ci.org/Encapsule/onm.svg?branch=chris%2Fv1.0-core-refactor)](https://travis-ci.org/Encapsule/onm)
 
-#### Package
+## v0.2 onm Status
 
-The latest onm package is available via npm:
+Currently, [onm v0.2 is published on npm](https://www.npmjs.com/package/onm). If you're using onm now, keep using v0.2. It's stable, and does what it does well.
 
-        npm install onm
+If you're not already using onm, then odds are that even if you spend time here you're going to go away and BBN based on the docs... So, don't bother because onm is **changing** dramatically.
 
-See also: [https://www.npmjs.org/package/onm](https://www.npmjs.org/package/onm)
+## v1.0 onm Status
 
-onm is distributed in [CommonJS ](http://en.wikipedia.org/wiki/CommonJS) format for easiy use in node:
+[v1 Object Namespace Manager (onm)](./src/core/README.md) has been under development for several months. It's intended to power a new module called [Encapsule/jbus](https://github.com/Encapsule/jbus).
 
-        var onm = requrie('onm');
-        // onm blah blah blah...
+jbus will provide suitable replacements for onm v0.2 onm.Model, onm.Address, onm.Store, and onm.Namespace API objects that are (a) simpler to use (b) much more powerful than v0.2/v0.3 onm.
 
-onm is extremely useful in the client as well and is fully compatible. However, you will have to transform onm's CommonJS source for use in the browser using a build tool such as [browserify](http://browserify.org/).
+Please follow [@Encapsule](https://www.twitter.com/Encapsule] for [onm](https://www.npmjs.com/package/onm), [jbus](https://www.npmjs.com/package/jbus), and [jsgraph](https://www.npmjs.com/package/jsgraph)-related Node.js package announcements.
 
-I've been writing _everything_ in CommonJS and using the [grunt-browserify](https://www.npmjs.org/package/grunt-browserify) plug-in for [Grunt](http://gruntjs.com/) to pack up everything I need for my HTML5 SPA (including onm), and it's been working well so far.
+Please direct questions, feedback, etc. to [ChrisRus](https://www.github.com/ChrisRus)
 
-There are few related packages you might be interested in as well: [onm-server-rest-routes](https://www.npmjs.org/package/onm-server-rest-routes), [onm-client-rest-api](https://www.npmjs.org/package/onm-client-rest-api), [onmd-scdl](https://www.npmjs.org/package/onmd-scdl)...
-
-#### Sources
-
-Sources are available under [MIT license](http://opensource.org/licenses/MIT) on GitHub: [Encapsule/onm](https://github.com/Encapsule/onm)
 
 #### Documentation
 
-onm's small API surface belies its power: [Encapsule/onm/wiki](https://github.com/Encapsule/onm/wiki)
+_sorry_
+
+v0.2 onm release docs: [Encapsule/onm/wiki](https://github.com/Encapsule/onm/wiki)
 
 
 
