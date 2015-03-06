@@ -17,7 +17,7 @@ describe("Validate the behavior of the onm address resolver.", function() {
 
     before(function() {
         var loadModule = function() {
-            addressResolver = require('../../../lib/core/rltp/rltp-address-resolver');
+            addressResolver = require('../../../lib/rltp-address-resolver');
         };
         assert.doesNotThrow(loadModule);
     });

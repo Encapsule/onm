@@ -8,7 +8,7 @@ describe("Attempt to load the cids-table module.", function() {
 
     before(function() {
         var moduleLoader = function() {
-            cnameTable = require('../../../lib/core/cids/cids-table');
+            cnameTable = require('../../../lib/cids-table');
         };
         assert.doesNotThrow(moduleLoader, "ATTEMPT TO LOAD cid-table MODULE SHOULD NOT THROW");
     });

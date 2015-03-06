@@ -9,7 +9,7 @@ describe("Attempt to load the onm core module.", function() {
 
     before(function(done_) {
         var moduleLoader = function() {
-            onmCore = require('../lib/core/onm-core');
+            onmCore = require('../lib/onm-core');
         };
         assert.doesNotThrow(moduleLoader, "ONM CORE MODULE SHOULD NEVER THROW ON LOAD.");
         done_();

@@ -172,9 +172,10 @@ for operationDescriptor in operationDescriptorArray
     operationMap[opId] = operationDescriptor
 
 
-console.log "============================================================================"
-console.log "There are currently #{(Object.keys operationMap).length} onm core operations defined."
-console.log JSON.stringify operationMap, undefined, 4
+
+#console.log "============================================================================"
+#console.log "There are currently #{(Object.keys operationMap).length} onm core operations defined."
+#console.log JSON.stringify operationMap, undefined, 4
 
     
 

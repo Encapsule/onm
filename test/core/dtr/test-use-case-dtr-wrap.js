@@ -1,7 +1,7 @@
 // test-use-case-core-wrap-pods.js
 
 var assert = require('chai').assert;
-var onmcore = require('../../../lib/core/dtr/dtr');
+var DTR = require('../../../lib/dtr');
 
 /*
   vector = {
@@ -21,7 +21,7 @@ var testCorePodWrapper = function (vector_) {
         response = null;
         before(function() {
             var requestRunner = function() {
-                response = onmcore[vector_.method](vector_.podref);
+                response = DTR[vector_.method](vector_.podref);
             };
             assert.doesNotThrow(requestRunner, "Call to onm." + vector_.method + " should not throw.");
         });

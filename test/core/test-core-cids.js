@@ -15,7 +15,7 @@ describe("onm core CIDS subsystem tests.", function() {
 
         before(function() {
             var loadModuleWrapper = function() {
-                CIDS = require('../../lib/core/cids/cids');
+                CIDS = require('../../lib/cids');
             };
             assert.doesNotThrow(loadModuleWrapper, "Attempt to load module ./lib/core/cids/cids should succeed.");
         });

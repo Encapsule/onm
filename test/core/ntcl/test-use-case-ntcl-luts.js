@@ -11,7 +11,7 @@ describe("Attempt to load the ntcl-luts module.", function() {
 
     before(function() {
         var moduleLoader = function() {
-            LUTS = require('../../../lib/core/ntcl/ntcl-luts');
+            LUTS = require('../../../lib/ntcl-luts');
         };
         error = assert.doesNotThrow(moduleLoader, "The ntcl-luts module should be located and should load.");
     });

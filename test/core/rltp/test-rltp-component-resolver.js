@@ -26,7 +26,7 @@ module.exports = describe("Component resolver module test suite.", function() {
 
     before(function(done_) {
         var loadModuleUnderTest = function() {
-            componentResolver = require('../../../lib/core/rltp/rltp-component-resolver');
+            componentResolver = require('../../../lib/rltp-component-resolver');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
