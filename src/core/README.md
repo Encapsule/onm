@@ -90,6 +90,7 @@ DOA containers support a new JSON ingress/outgress format called a Data-Addressa
 ## Terms
 
 - NSD - Namespace Descriptor - user, or machine generated namespace declaration
+- NSM - Namespace Map - a compiled NSD available to client code, from RAS, at runtime
 - ASM - Address Space Map - a compiled NSD
 - RAS - Runtime Address Space - an in-memory ASM
 - DAO - Data-Addressable Object - generic in-memory JSON document store
@@ -178,17 +179,33 @@ A Resource Location Proxy (RLP) can be queried to return the NSD in the ASM asso
 
 ## Subsystems
 
-#### CRP ####
+#### CIDS
+
+Class Identification System (CIDS)
+
+#### CRP
 
 Core Request Processor (CRP)
 
 #### DAOS
 
-Data-Addressable Object Store (DAOS)
+Data-Addressable Object Subsystem (DAOS)
+
+#### DTR
+
+Data Type Registry (DTR)
+
+#### DXR
+
+Data Transform Registry (DXR)
 
 #### JNSP 
 
 Journal Notification Stream Processor (JNSP)
+
+### NTCL
+
+Native Type Conversion Library (NTCL)
 
 #### RASP 
 

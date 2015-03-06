@@ -18,7 +18,7 @@ describe("**** " + packageMeta.author.org + " " + packageMeta.name + " v" + pack
     require('./test-fixtures');
 
     // Validate v1 onm core
-    require('./test-onm-core');
+    require('./test-core');
 
     // Validate v0.2/v0.3 API (Model/Address/Store/Namespace)
     require('./test-legacy');

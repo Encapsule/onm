@@ -40,8 +40,8 @@ describe("Attempt to load the onm core module.", function() {
             require('./core/test-core-cids');  // Class Identification Subsystem (CIDS)
         });
 
-        describe("Plain-Old Data Subsystem (PODS) subsystem test suite.", function() {
-            require('./core/test-core-pods');  // Plain-Old Data Subsystem (PODS) - depends on NTCL and CIDS
+        describe("Data Type Registry (DTR) subsystem test suite.", function() {
+            require('./core/test-core-dtr');
         });
 
         describe("Resource Address Space Processor (RASP) subsystem test suite.", function() {

@@ -39,12 +39,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 CIDS = require '../cids/cids'
 NTCL = require '../ntcl/ntcl'
 
-PODS = module.exports = {}
+DTR = module.exports = {}
 
 
 
 # ============================================================================
-PODS.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
+DTR.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     errors = []
     response = error: null, result: null
     inBreakScope = false
@@ -72,29 +72,29 @@ PODS.wrapXPOD = (value_, constrainToJavaScriptType_, onmClassName_) ->
     response
 
 # ============================================================================
-PODS.wrapDAB = (dabString_) ->
-    response = PODS.wrapXPOD dabString_, '[object String]', 'DAB'
+DTR.wrapDAB = (dabString_) ->
+    response = DTR.wrapXPOD dabString_, '[object String]', 'DAB'
     if response.error
         response.error = "onm.wrapDAB: #{response.error}"
     response
 
 # ============================================================================
-PODS.wrapDATA = (dataObject_) ->
-    response = PODS.wrapXPOD dataObject_, '[object Object]', 'DATA'
+DTR.wrapDATA = (dataObject_) ->
+    response = DTR.wrapXPOD dataObject_, '[object Object]', 'DATA'
     if response.error
         response.error = "onm.wrapDATA: #{response.error}"
     response
 
 # ============================================================================
-PODS.wrapJSON = (jsonString_) ->
-    response = PODS.wrapXPOD jsonString_, '[object String]', 'JSON'
+DTR.wrapJSON = (jsonString_) ->
+    response = DTR.wrapXPOD jsonString_, '[object String]', 'JSON'
     if response.error
         response.error = "onm.wrapJSON: #{response.error}"
     response
 
 # ============================================================================
-PODS.wrapRIS = (risString_) ->
-    response = PODS.wrapXPOD risString_, '[object String]', 'RIS'
+DTR.wrapRIS = (risString_) ->
+    response = DTR.wrapXPOD risString_, '[object String]', 'RIS'
     if response.error
         response.error = "onm.wrapRIS: #{response.error}"
     response

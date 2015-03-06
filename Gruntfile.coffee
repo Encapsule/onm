@@ -44,9 +44,9 @@ module.exports = (grunt) ->
                     'lib/core/ntcl/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
                     'lib/core/ntcl/ntcl-cluts.js': 'src/core/ntcl/ntcl-cluts.coffee'
 
-                    # PODS - Plain Old Data Subsystem
+                    # DTR - Data Type Registry
                     # ----------------------------------------------------------------------------
-                    'lib/core/pods/pods.js': 'src/core/pods/pods.coffee'
+                    'lib/core/dtr/dtr.js': 'src/core/dtr/dtr.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
