@@ -43,11 +43,11 @@ classRegistry = require './cids/cids'
 CRP = require './crp/crp'
 
 ###
-DAOS = require './doas/doas'
-JNSP = require './jnsp/jnsp'
-RASP = require './rasp/rasp'
-RISP = require './risp/risp'
-RLTP = require './rltp/rltp'
+DAOS = require './doas'
+JNSP = require './jnsp'
+RASP = require './rasp'
+RISP = require './risp'
+RLTP = require './rltp'
 ###
 
 

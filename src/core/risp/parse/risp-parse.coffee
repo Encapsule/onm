@@ -39,10 +39,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require '../../cids/cids'
+CIDS = require './cids'
 
-Model = require '../../../onm-model'
-Address = require '../../../onm-address'
+Model = require './onm-model'
+Address = require './onm-address'
 
 xRIP_parsePath = require './risp-parse-path'
 xRIP_parseVector = require './risp-parse-vector'

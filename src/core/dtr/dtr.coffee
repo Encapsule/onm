@@ -36,8 +36,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require '../cids/cids'
-NTCL = require '../ntcl/ntcl'
+CIDS = require './cids'
+NTCL = require './ntcl'
 
 DTR = module.exports = {}
 

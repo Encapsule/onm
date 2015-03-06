@@ -45,7 +45,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 AddressToken = require './onm-address-token'
 
 # TODO: Break this cycle. We're not going to use this pattern in v1.0 core.
-Address = require '../../onm-address'
+Address = require './onm-address'
 
 #
 #

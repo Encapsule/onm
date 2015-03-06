@@ -39,8 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-Address = require '../../../onm-address'             
-AddressToken = require '../../rasp/onm-address-token'
+Address = require './onm-address'             
+AddressToken = require './onm-address-token'
 
 ###
     request = {

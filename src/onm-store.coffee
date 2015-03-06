@@ -39,13 +39,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require './core/cids/cids'
+CIDS = require './cids'
 
-helperFunctions = require './common/onm-util-functions'
-StoreReifier = require './core/jnsp/onm-store-reifier'
-AddressToken = require './core/rasp/onm-address-token'
+helperFunctions = require './onm-util-functions'
+StoreReifier = require './onm-store-reifier'
+AddressToken = require './onm-address-token'
 Address = require './onm-address'
-addressResolver = require './core/rltp/rltp-address-resolver'
+addressResolver = require './rltp-address-resolver'
 Model = require './onm-model'
 Namespace = require './onm-namespace'
 uuid = require 'node-uuid'

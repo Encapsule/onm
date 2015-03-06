@@ -39,11 +39,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require './core/cids/cids'
+CIDS = require './cids'
 
-AddressToken = require './core/rasp/onm-address-token'
+AddressToken = require './onm-address-token'
 Address = require './onm-address'
-addressResolver = require './core/rltp/rltp-address-resolver'
+addressResolver = require './rltp-address-resolver'
 
 #
 #

@@ -39,16 +39,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-CIDS = require './core/cids/cids'
+CIDS = require './cids'
 
-helperFunctions = require './common/onm-util-functions'
-intrinsicDataModels = require './common/onm-intrinsic-data-models'
+helperFunctions = require './onm-util-functions'
+intrinsicDataModels = require './onm-intrinsic-data-models'
 
 Address = require './onm-address'
-AddressToken = require './core/rasp/onm-address-token'
-ModelDetails = require './core/rasp/onm-model-details'
+AddressToken = require './onm-address-token'
+ModelDetails = require './onm-model-details'
 
-xRIP = require './core/risp/risp'
+xRIP = require './risp'
 
 uuid = require 'node-uuid'
 

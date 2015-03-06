@@ -19,79 +19,79 @@ module.exports = (grunt) ->
                     # Common modules
                     # ============================================================================
 
-                    'lib/common/onm-util-functions.js': 'src/common/onm-util-functions.coffee'
-                    'lib/common/onm-intrinsic-data-models.js': 'src/common/onm-intrinsic-data-models.coffee'
+                    'lib/onm-util-functions.js': 'src/common/onm-util-functions.coffee'
+                    'lib/onm-intrinsic-data-models.js': 'src/common/onm-intrinsic-data-models.coffee'
 
                     # onm core modules
                     # ============================================================================
                     
                     # onm core request processor
-                    'lib/core/onm-core.js': 'src/core/onm-core.coffee'
-                    'lib/core/crp/crp.js': 'src/core/crp/crp.coffee'
-                    'lib/core/crp/crp-normalize.js': 'src/core/crp/crp-normalize.coffee'
-                    'lib/core/crp/crp-bind.js': 'src/core/crp/crp-bind.coffee'
-                    'lib/core/crp/crp-dispatch.js': 'src/core/crp/crp-dispatch.coffee'
-                    'lib/core/crp/crp-ops-map.js' : 'src/core/crp/crp-ops-map.coffee'
+                    'lib/onm-core.js': 'src/core/onm-core.coffee'
+                    'lib/crp.js': 'src/core/crp/crp.coffee'
+                    'lib/crp-normalize.js': 'src/core/crp/crp-normalize.coffee'
+                    'lib/crp-bind.js': 'src/core/crp/crp-bind.coffee'
+                    'lib/crp-dispatch.js': 'src/core/crp/crp-dispatch.coffee'
+                    'lib/crp-ops-map.js' : 'src/core/crp/crp-ops-map.coffee'
 
                     # CIDS - Class Identification Subsystem
                     # ----------------------------------------------------------------------------
-                    'lib/core/cids/cids.js':     'src/core/cids/cids.coffee'
-                    'lib/core/cids/cids-table.js': 'src/core/cids/cids-table.coffee'
+                    'lib/cids.js':     'src/core/cids/cids.coffee'
+                    'lib/cids-table.js': 'src/core/cids/cids-table.coffee'
 
                     # NTCL - Native Type Conversion Library
                     # ----------------------------------------------------------------------------
-                    'lib/core/ntcl/ntcl.js': 'src/core/ntcl/ntcl.coffee'
-                    'lib/core/ntcl/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
-                    'lib/core/ntcl/ntcl-cluts.js': 'src/core/ntcl/ntcl-cluts.coffee'
+                    'lib/ntcl.js': 'src/core/ntcl/ntcl.coffee'
+                    'lib/ntcl-luts.js': 'src/core/ntcl/ntcl-luts.coffee'
+                    'lib/ntcl-cluts.js': 'src/core/ntcl/ntcl-cluts.coffee'
 
                     # DTR - Data Type Registry
                     # ----------------------------------------------------------------------------
-                    'lib/core/dtr/dtr.js': 'src/core/dtr/dtr.coffee'
+                    'lib/dtr.js': 'src/core/dtr/dtr.coffee'
 
                     # DAOS - Data-Addressable Object Store
                     # ----------------------------------------------------------------------------
 
                     # JNSP - Journal Notification Stream Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/jnsp/onm-store-reifier.js': 'src/core/jnsp/onm-store-reifier.coffee'
+                    'lib/onm-store-reifier.js': 'src/core/jnsp/onm-store-reifier.coffee'
 
                     # RASP - Resource Address Space Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/rasp/onm-model-details.js': 'src/core/rasp/onm-model-details.coffee'
-                    'lib/core/rasp/onm-address-token.js': 'src/core/rasp/onm-address-token.coffee'
-                    'lib/core/rasp/onm-address-details.js': 'src/core/rasp/onm-address-details.coffee'
+                    'lib/onm-model-details.js': 'src/core/rasp/onm-model-details.coffee'
+                    'lib/onm-address-token.js': 'src/core/rasp/onm-address-token.coffee'
+                    'lib/onm-address-details.js': 'src/core/rasp/onm-address-details.coffee'
 
                     # RISP - Resource Identifier String Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/risp/risp.js': 'src/core/risp/risp.coffee'
-                    'lib/core/risp/generate/risp-generate.js': 'src/core/risp/generate/risp-generate.coffee'
-                    'lib/core/risp/generate/risp-generate-path.js': 'src/core/risp/generate/risp-generate-path.coffee'
-                    'lib/core/risp/generate/risp-generate-path-readable.js': 'src/core/risp/generate/risp-generate-path-readable.coffee'
-                    'lib/core/risp/generate/risp-generate-path-hash.js': 'src/core/risp/generate/risp-generate-path-hash.coffee'
-                    'lib/core/risp/generate/risp-generate-vector.js': 'src/core/risp/generate/risp-generate-vector.coffee'
-                    'lib/core/risp/generate/risp-generate-vector-uri.js': 'src/core/risp/generate/risp-generate-vector-uri.coffee'
-                    'lib/core/risp/generate/risp-generate-vector-lri.js': 'src/core/risp/generate/risp-generate-vector-lri.coffee'
-                    'lib/core/risp/generate/risp-generate-irut.js': 'src/core/risp/generate/risp-generate-irut.coffee'
+                    'lib/risp.js': 'src/core/risp/risp.coffee'
+                    'lib/risp-generate.js': 'src/core/risp/generate/risp-generate.coffee'
+                    'lib/risp-generate-path.js': 'src/core/risp/generate/risp-generate-path.coffee'
+                    'lib/risp-generate-path-readable.js': 'src/core/risp/generate/risp-generate-path-readable.coffee'
+                    'lib/risp-generate-path-hash.js': 'src/core/risp/generate/risp-generate-path-hash.coffee'
+                    'lib/risp-generate-vector.js': 'src/core/risp/generate/risp-generate-vector.coffee'
+                    'lib/risp-generate-vector-uri.js': 'src/core/risp/generate/risp-generate-vector-uri.coffee'
+                    'lib/risp-generate-vector-lri.js': 'src/core/risp/generate/risp-generate-vector-lri.coffee'
+                    'lib/risp-generate-irut.js': 'src/core/risp/generate/risp-generate-irut.coffee'
 
-                    'lib/core/risp/parse/risp-parse.js': 'src/core/risp/parse/risp-parse.coffee'
-                    'lib/core/risp/parse/risp-parse-path.js': 'src/core/risp/parse/risp-parse-path.coffee'
-                    'lib/core/risp/parse/risp-parse-path-readable.js': 'src/core/risp/parse/risp-parse-path-readable.coffee'
-                    'lib/core/risp/parse/risp-parse-path-hash.js': 'src/core/risp/parse/risp-parse-path-hash.coffee'
-                    'lib/core/risp/parse/risp-parse-vector.js': 'src/core/risp/parse/risp-parse-vector.coffee'
-                    'lib/core/risp/parse/risp-parse-vector-uri.js': 'src/core/risp/parse/risp-parse-vector-uri.coffee'
-                    'lib/core/risp/parse/risp-parse-vector-lri.js': 'src/core/risp/parse/risp-parse-vector-lri.coffee'
+                    'lib/risp-parse.js': 'src/core/risp/parse/risp-parse.coffee'
+                    'lib/risp-parse-path.js': 'src/core/risp/parse/risp-parse-path.coffee'
+                    'lib/risp-parse-path-readable.js': 'src/core/risp/parse/risp-parse-path-readable.coffee'
+                    'lib/risp-parse-path-hash.js': 'src/core/risp/parse/risp-parse-path-hash.coffee'
+                    'lib/risp-parse-vector.js': 'src/core/risp/parse/risp-parse-vector.coffee'
+                    'lib/risp-parse-vector-uri.js': 'src/core/risp/parse/risp-parse-vector-uri.coffee'
+                    'lib/risp-parse-vector-lri.js': 'src/core/risp/parse/risp-parse-vector-lri.coffee'
 
                     # RLTP - Resource Location Transformation Processor
                     # ----------------------------------------------------------------------------
-                    'lib/core/rltp/rltp-address-resolver.js': 'src/core/rltp/rltp-address-resolver.coffee'
-                    'lib/core/rltp/rltp-component-resolver.js': 'src/core/rltp/rltp-component-resolver.coffee'
-                    'lib/core/rltp/rltp-component-context.js': 'src/core/rltp/rltp-component-context.coffee'
-                    'lib/core/rltp/rltp-named-object-resolver.js': 'src/core/rltp/rltp-named-object-resolver.coffee'
-                    'lib/core/rltp/rltp-named-object-context.js': 'src/core/rltp/rltp-named-object-context.coffee'
-                    'lib/core/rltp/rltp-named-object-property-visitor.js': 'src/core/rltp/rltp-named-object-property-visitor.coffee'
-                    'lib/core/rltp/rltp-named-object-property-policy-common.js': 'src/core/rltp/rltp-named-object-property-policy-common.coffee'
-                    'lib/core/rltp/rltp-named-object-property-policy-initialize.js': 'src/core/rltp/rltp-named-object-property-policy-initialize.coffee'
-                    'lib/core/rltp/rltp-named-object-property-policy-update.js': 'src/core/rltp/rltp-named-object-property-policy-update.coffee'
+                    'lib/rltp-address-resolver.js': 'src/core/rltp/rltp-address-resolver.coffee'
+                    'lib/rltp-component-resolver.js': 'src/core/rltp/rltp-component-resolver.coffee'
+                    'lib/rltp-component-context.js': 'src/core/rltp/rltp-component-context.coffee'
+                    'lib/rltp-named-object-resolver.js': 'src/core/rltp/rltp-named-object-resolver.coffee'
+                    'lib/rltp-named-object-context.js': 'src/core/rltp/rltp-named-object-context.coffee'
+                    'lib/rltp-named-object-property-visitor.js': 'src/core/rltp/rltp-named-object-property-visitor.coffee'
+                    'lib/rltp-named-object-property-policy-common.js': 'src/core/rltp/rltp-named-object-property-policy-common.coffee'
+                    'lib/rltp-named-object-property-policy-initialize.js': 'src/core/rltp/rltp-named-object-property-policy-initialize.coffee'
+                    'lib/rltp-named-object-property-policy-update.js': 'src/core/rltp/rltp-named-object-property-policy-update.coffee'
 
 
                     # TEST ASSETS
@@ -100,7 +100,7 @@ module.exports = (grunt) ->
 
         jshint:
             options: {}
-            files: [ '*.js', './lib/*.js', './lib/**/*.js' ]
+            files: [ '*.js', './lib/*.js',  ]
 
 
         mochaTest:
@@ -111,7 +111,20 @@ module.exports = (grunt) ->
  
             src: [ './test/**/*.js' ]
 
-        clean: [ 'lib' ]
+        clean: [ 'lib', 'build' ]
+
+
+
+        browserify:
+            dist:
+                browserifyOptions:
+                    bundleExternal: false
+                    bundleBuildins: undefined
+                    standalone: 'onm'
+                files: [ 'build/browserify.js': 'index.js' ]
+                external: [ 'node-uuid' ]
+
+
 
     grunt.initConfig configObject
 
@@ -119,6 +132,9 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks "grunt-contrib-clean"
     grunt.loadNpmTasks "grunt-mocha-test"
     grunt.loadNpmTasks "grunt-contrib-jshint"
+    grunt.loadNpmTasks "grunt-browserify"
 
     grunt.registerTask "test", [ "mochaTest" ]
     grunt.registerTask "default", [ "clean", "coffee:compile", "test" ]
+
+    grunt.registerTask "release", [ "default", "browserify" ]

@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 # TODO: Rewrite this atrocity of a module using jsgraph.
 
-UTIL = require '../../common/onm-util-functions'
+UTIL = require './onm-util-functions'
 
 if not (UTIL? and UTIL)
    throw new Error "Failed to load helper functions"
@@ -47,12 +47,12 @@ if not (UTIL? and UTIL)
 if not (UTIL.clone? and UTIL.clone)
    throw new Error "Why are we missing the clone function?"
 
-intrinsicDataModels = require '../../common/onm-intrinsic-data-models'
+intrinsicDataModels = require './onm-intrinsic-data-models'
 
-Address = require '../../onm-address'
+Address = require './onm-address'
 AddressToken = require './onm-address-token'
 
-xRIP = require '../risp/risp'
+xRIP = require './risp'
 
 uuid = require 'node-uuid'
 LUID = 1

@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('../rasp/onm-address-token')
+AddressToken = require('./onm-address-token')
 namedObjectResolver = require('./rltp-named-object-resolver')
 componentContextHelpers = require('./rltp-component-context')
 

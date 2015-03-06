@@ -53,7 +53,7 @@ RISP = module.exports =
             result: onm-format path xRI string
         }
     ###
-    generate: require './generate/risp-generate'
+    generate: require './risp-generate'
 
 
     ###
@@ -67,6 +67,6 @@ RISP = module.exports =
             result: reference to onm.Address or null
         }
     ###
-    parse: require './parse/risp-parse'
+    parse: require './risp-parse'
 
 

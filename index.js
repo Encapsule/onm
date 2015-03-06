@@ -58,6 +58,12 @@ module.exports.Namespace = require('./lib/onm-namespace');
 /*
   Utility and test exports.
 */
-module.exports.intrinsics = require('./lib/common/onm-intrinsic-data-models');
-module.exports.util = require('./lib/common/onm-util-functions');
+module.exports.intrinsics = require('./lib/onm-intrinsic-data-models');
+module.exports.util = require('./lib/onm-util-functions');
 
+/*
+  'node-uuid' package convenience export for clients who need need access
+  to binary UUID, or standard hex string UUID representation vs. equivalent
+  compressed IRUT string format provided by onm RISP.
+*/
+module.exports.uuid = require('node-uuid');

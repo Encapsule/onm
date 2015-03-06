@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-cnameTable = require '../cids/cids-table'
+cnameTable = require './cids-table'
 
 
 operationMap = module.exports = {}

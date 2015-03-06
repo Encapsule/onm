@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-CIDS = require '../cids/cids'
+CIDS = require './cids'
 
 crp = {}
 
