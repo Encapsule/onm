@@ -115,13 +115,13 @@ module.exports = (grunt) ->
         uglify:
             all:
                 files: 
-                    'build/onm-min.js': [ 'build/onm-webpack.js' ]
+                    'build/onm-min.js': [ 'build/onm.js' ]
 
         copy:
             all:
                 files: [
-                    { extend: true, flatten: true, src: 'build/onm-webpack.js', dest: 'onm-debug.js' }
-                    { extend: true, flatten: true, src: 'build/onm-min.js', dest: 'onm-release.js' }
+                    { extend: true, flatten: true, src: 'build/onm.js', dest: './onm.js' }
+                    { extend: true, flatten: true, src: 'build/onm-min.js', dest: './onm-min.js' }
                 ]
 
 
