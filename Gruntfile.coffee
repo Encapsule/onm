@@ -105,7 +105,7 @@ module.exports = (grunt) ->
             options:
                 reporter: 'spec'
                 checkLeaks: true
-                captureFile: "./logs/mocha-spec-results.log" # git ignored
+                captureFile: "./build/logs/mocha-spec-results.log"
  
             src: [ './test/test-onm.js' ]
 
