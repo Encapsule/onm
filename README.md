@@ -16,24 +16,16 @@ If you're not already using onm, then odds are that even if you spend time here 
 
 jbus will provide suitable replacements for onm v0.2 onm.Model, onm.Address, onm.Store, and onm.Namespace API objects that are (a) simpler to use (b) much more powerful than v0.2/v0.3 onm.
 
-Please follow [EncapsuleTwitter]
-for [onm](https://www.npmjs.com/package/onm),
-[jbus](https://www.npmjs.com/package/jbus),
-and [jsgraph](https://www.npmjs.com/package/jsgraph)-related Node.js package announcements.
+Please follow [@Encapsule] for [onm](https://www.npmjs.com/package/onm), [jbus](https://www.npmjs.com/package/jbus), and [jsgraph](https://www.npmjs.com/package/jsgraph)-related Node.js package announcements.
 
-Please direct questions, feedback, etc. to [ChrisRus](https://www.github.com/ChrisRus)
-
+Questions, feedback, etc. -> [ChrisRus]
 
 #### Documentation
 
-_sorry_
+_sorry - jbus will be so much simpler to use_
 
 v0.2 onm release docs: [Encapsule/onm/wiki](https://github.com/Encapsule/onm/wiki)
 
-
-[EncapsuleProject]: http://www.encapsule.org "Encapsule Project Homepage"
-[EncapsuleTwitter]: https://twitter.com/Encapsule "@Encapsule on Twitter"
-[ChrisRus]: https://github.com/ChrisRus "ChrisRus"
-[license]: http://opensource.org/licenses/MIT "The MIT License (MIT)"
-[repository]: https://github.com/Encapsule/onm "Encapsule/onm Repo on GitHub"
+[EncapsuleTwitter]: https://twitter.com/Encapsule "Encapsule Project on Twitter"
+[ChrisRus]: https://github.com/ChrisRus "Chris Russell on GitHub"
 

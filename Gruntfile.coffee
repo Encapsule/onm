@@ -103,11 +103,9 @@ module.exports = (grunt) ->
                     # TEST ASSETS
                     'test/core/cids/test-use-case-cids-setCID-class.js' : 'test/core/cids/test-use-case-cids-setCID-class.coffee'
 
-
         jshint:
             options: {}
             files: [ '*.js', './lib/*.js'  ]
-
 
         mochaTest:
             options:
@@ -117,22 +115,10 @@ module.exports = (grunt) ->
  
             src: [ './test/test-onm.js' ]
 
+        webpack:
+            webpackOptions: require('./webpack.config')
+
         clean: [ 'lib', 'build' ]
-
-
-
-        browserify:
-            all:
-                src: [ 'index.js', 'lib/*.js' ]
-                # dest: 'build/<%= pkg.name %>-<%= pkg.version %>-debug-bundle.js'
-                dest: 'build/onm-bundle.js'
-                options:
-                    standalone: 'onm'
-                    excludeExternal: true
-                    noBuiltIns: true
-
-
-
 
     grunt.initConfig configObject
 
@@ -140,9 +126,9 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks "grunt-contrib-clean"
     grunt.loadNpmTasks "grunt-mocha-test"
     grunt.loadNpmTasks "grunt-contrib-jshint"
-    grunt.loadNpmTasks "grunt-browserify"
+    grunt.loadNpmTasks "grunt-webpack"
 
     grunt.registerTask "test", [ "mochaTest" ]
     grunt.registerTask "default", [ "clean", "coffee:compile", "test" ]
 
-    grunt.registerTask "release", [ "default", "browserify" ]
+    grunt.registerTask "release", [ "default", "webpack" ]
