@@ -3,7 +3,7 @@
   "version": "1.0.9",
   "description": "Object Namespace Mananager (onm) : jbus core JSON processor for Node.js.",
   "scripts": {
-    "test": "grunt release",
+    "test": "mocha -R spec --recursive",
     "webpack-server": "webpack-dev-server --devtool eval --progress --color"
   },
   "main": "index.js",
