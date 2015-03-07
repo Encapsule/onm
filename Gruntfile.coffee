@@ -4,12 +4,6 @@ module.exports = (grunt) ->
     configObject =
         pkg: grunt.file.readJSON("package.json")
 
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-            '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-            '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-            '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-            ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n'
-
         coffee:
             compile:
                 files:
@@ -118,6 +112,19 @@ module.exports = (grunt) ->
         webpack:
             webpackOptions: require('./webpack.config')
 
+        uglify:
+            all:
+                files: 
+                    'build/onm-min.js': [ 'build/onm-webpack.js' ]
+
+        copy:
+            all:
+                files: [
+                    { extend: true, flatten: true, src: 'build/onm-webpack.js', dest: 'onm-debug.js' }
+                    { extend: true, flatten: true, src: 'build/onm-min.js', dest: 'onm-release.js' }
+                ]
+
+
         clean: [ 'lib', 'build' ]
 
     grunt.initConfig configObject
@@ -127,8 +134,11 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks "grunt-mocha-test"
     grunt.loadNpmTasks "grunt-contrib-jshint"
     grunt.loadNpmTasks "grunt-webpack"
+    grunt.loadNpmTasks "grunt-contrib-uglify"
+    grunt.loadNpmTasks "grunt-contrib-copy"
 
     grunt.registerTask "test", [ "mochaTest" ]
-    grunt.registerTask "default", [ "clean", "coffee:compile", "test" ]
-
-    grunt.registerTask "release", [ "default", "webpack" ]
+    grunt.registerTask "debug", [ "clean", "coffee:compile", "test" ]
+    grunt.registerTask "release", [ "debug", "webpack", "uglify", "copy" ]
+    grunt.registerTask "default", [ "release" ]
+    

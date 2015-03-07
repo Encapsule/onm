@@ -4,9 +4,11 @@
 //
 // https://github.com/petehunt/webpack-howto
 // CRITICAL: https://github.com/webpack/webpack/issues/839
+// http://christianalfoni.github.io/javascript/2014/12/13/did-you-know-webpack-and-react-is-awesome.html
 
 var packageMeta = require('./package.json');
-var outputFilename = packageMeta.name + "-" + packageMeta.version + "-webpack.js"
+// var outputFilename = packageMeta.name + "-" + packageMeta.version + "-webpack.js"
+var outputFilename = 'onm-webpack.js'
 
 var fs = require('fs');
 var node_modules = fs.readdirSync('node_modules').filter(function(x) { return x !== '.bin' });
