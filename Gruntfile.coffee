@@ -138,7 +138,7 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks "grunt-contrib-copy"
 
     grunt.registerTask "test", [ "mochaTest" ]
-    grunt.registerTask "debug", [ "clean", "coffee:compile", "test" ]
-    grunt.registerTask "release", [ "debug", "webpack", "uglify", "copy" ]
-    grunt.registerTask "default", [ "release" ]
-    
+    grunt.registerTask "build", [ "clean", "coffee:compile", "test" ]
+    grunt.registerTask "release", [ "build", "webpack", "uglify", "copy" ]
+
+    grunt.registerTask "default", [ "build" ]    

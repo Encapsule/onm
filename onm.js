@@ -3833,9 +3833,9 @@ module.exports =
 	  var Generators, GeneratorsByFormat, RISP;
 
 	  Generators = {
-	    path: __webpack_require__(21),
-	    vector: __webpack_require__(22),
-	    irut: __webpack_require__(23)
+	    path: __webpack_require__(19),
+	    vector: __webpack_require__(20),
+	    irut: __webpack_require__(21)
 	  };
 
 	  GeneratorsByFormat = {
@@ -3961,9 +3961,9 @@ module.exports =
 
 	  Address = __webpack_require__(3);
 
-	  xRIP_parsePath = __webpack_require__(19);
+	  xRIP_parsePath = __webpack_require__(22);
 
-	  xRIP_parseVector = __webpack_require__(20);
+	  xRIP_parseVector = __webpack_require__(23);
 
 
 	  /*
@@ -4324,9 +4324,324 @@ module.exports =
 	 */
 
 	(function() {
+	  var CIDS, PathGenerators, RISP;
+
+	  CIDS = __webpack_require__(8);
+
+	  RISP = {};
+
+	  PathGenerators = {
+	    readable: __webpack_require__(26),
+	    hash: __webpack_require__(27)
+	  };
+
+
+	  /*
+	      request = {
+	          address: onm.Address reference
+	          format: string (one of "readable" or "hash")
+	      }
+	      response = {
+	          error: null or string explaining why result === null
+	          result: onm-format path xRI string
+	      }
+	   */
+
+	  RISP.generatePath = module.exports = function(request_) {
+	    var cidsResponse, errors, generatorResponse, inBreakScope, pathFormat, response, selectedPathGenerator;
+	    errors = [];
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    inBreakScope = false;
+	    while (!inBreakScope) {
+	      inBreakScope = true;
+	      if (!((request_.address != null) && request_.address)) {
+	        errors.unshift("Invalid request object missing required property 'address'.");
+	        break;
+	      }
+	      cidsResponse = CIDS.assertCNAME({
+	        ref: request_.address,
+	        'Address': 'Address'
+	      });
+	      if (cidsResponse.error) {
+	        errors.unshift(cidsResponse.error);
+	        break;
+	      }
+	      pathFormat = request_.format;
+	      selectedPathGenerator = PathGenerators[pathFormat];
+	      if (!((selectedPathGenerator != null) && selectedPathGenerator)) {
+	        errors.unshift("Internal error. No registered path generator for format '" + pathFormat + "'.");
+	        break;
+	      }
+	      generatorResponse = selectedPathGenerator(request_);
+	      if (!generatorResponse.error) {
+	        response.result = generatorResponse.result;
+	      } else {
+	        errors.unshift(generatorResponse.error);
+	      }
+	    }
+	    if (errors.length) {
+	      errors.unshift("Path generate failed:");
+	      response.error = errors.join(' ');
+	    }
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
+	  var CIDS, RISP, VectorGenerators;
+
+	  CIDS = __webpack_require__(8);
+
+	  RISP = {};
+
+	  VectorGenerators = {
+	    lri: __webpack_require__(28),
+	    uri: __webpack_require__(29)
+	  };
+
+
+	  /*
+	      request = {
+	          address: onm.Address reference
+	          format: string (one of "lri" or "uri")
+	      }
+	      response = {
+	          error: null or string explaining why result === null
+	          result: onm-format path xRI string
+	      }
+	   */
+
+	  RISP.generateVector = module.exports = function(request_) {
+	    var cidsResponse, errors, generatorResponse, inBreakScope, pathFormat, response, selectedVectorGenerator;
+	    errors = [];
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    inBreakScope = false;
+	    while (!inBreakScope) {
+	      inBreakScope = true;
+	      if (!((request_.address != null) && request_.address)) {
+	        errors.unshift("Invalid request object missing required property 'address'.");
+	        break;
+	      }
+	      cidsResponse = CIDS.assertCNAME({
+	        ref: request_.address,
+	        cname: 'Address'
+	      });
+	      if (cidsResponse.error) {
+	        errors.unshift(cidsResponse.error);
+	        break;
+	      }
+	      pathFormat = request_.format;
+	      selectedVectorGenerator = VectorGenerators[pathFormat];
+	      if (!((selectedVectorGenerator != null) && selectedVectorGenerator)) {
+	        errors.unshift("Internal error. No registered vector generator for format '" + pathFormat + "'.");
+	        break;
+	      }
+	      generatorResponse = selectedVectorGenerator(request_);
+	      if (!generatorResponse.error) {
+	        response.result = generatorResponse.result;
+	      } else {
+	        errors.unshift(generatorResponse.error);
+	      }
+	    }
+	    if (errors.length) {
+	      errors.unshift("Vector generate failed:");
+	      response.error = errors.join(' ');
+	    }
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+	Low-level library routines inspired by (and often copied) from http://coffeescriptcookbook.com
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
+	  var CIDS, RISP, uuid;
+
+	  CIDS = __webpack_require__(8);
+
+	  uuid = __webpack_require__(1);
+
+	  RISP = {};
+
+
+	  /*
+	      Generate an Internet-Routable Unique Token (IRUT)
+	  
+	      IRUT's are 22-character, ASCII-encoded, UUID v4, URI and RIS token-friendly string identifiers.
+	  
+	      Use cases:
+	      1. v4 UUID uniqueness semantics: addressed w/node-uuid package
+	      2. ASCII: addressed by using base64 encoding of the v4 UUID
+	      3. Short as possible: addressed by trimming superfluous '=' padding from base64
+	      4. URI token safe: addressed by replacing '/' characters with '_'
+	      5. RIS token safe: addressed by replacing '+' with '-'
+	  
+	      References:
+	      http://stackoverflow.com/questions/11431886/url-safe-uuids-in-the-smallest-number-of-characters
+	      http://stackoverflow.com/questions/6182315/how-to-do-base64-encoding-in-node-js
+	      http://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
+	   */
+
+	  RISP.generateIRUT = module.exports = function() {
+	    var pads, r1, r2, r3, r4, r5, response;
+	    r1 = uuid.v4(null, new Uint8Array(16, 0));
+	    r2 = (new Buffer(r1)).toString('base64');
+	    pads = 0;
+	    while (r2.charAt(r2.length - pads - 1) === '=') {
+	      pads++;
+	    }
+	    r3 = r2.slice(0, r2.length - pads);
+	    r4 = r3.replace(/\//g, "_");
+	    r5 = r4.replace(/\+/g, "-");
+	    return response = {
+	      error: null,
+	      result: CIDS.setCID({
+	        ref: {
+	          value: r5
+	        },
+	        cname: 'IRUT'
+	      }).result
+	    };
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
 	  var xRIP_PathParser, xRIP_ReadablePathParser;
 
-	  xRIP_ReadablePathParser = __webpack_require__(26);
+	  xRIP_ReadablePathParser = __webpack_require__(30);
 
 
 	  /*
@@ -4420,7 +4735,7 @@ module.exports =
 
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4465,8 +4780,8 @@ module.exports =
 	  var xRIP_VectorParser, xRIP_parseVariant;
 
 	  xRIP_parseVariant = {
-	    'onm-lri': __webpack_require__(27),
-	    'onm-uri': __webpack_require__(28)
+	    'onm-lri': __webpack_require__(31),
+	    'onm-uri': __webpack_require__(32)
 	  };
 
 
@@ -4518,321 +4833,6 @@ module.exports =
 	      response.error = errors.join(' ');
 	    }
 	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var CIDS, PathGenerators, RISP;
-
-	  CIDS = __webpack_require__(8);
-
-	  RISP = {};
-
-	  PathGenerators = {
-	    readable: __webpack_require__(29),
-	    hash: __webpack_require__(30)
-	  };
-
-
-	  /*
-	      request = {
-	          address: onm.Address reference
-	          format: string (one of "readable" or "hash")
-	      }
-	      response = {
-	          error: null or string explaining why result === null
-	          result: onm-format path xRI string
-	      }
-	   */
-
-	  RISP.generatePath = module.exports = function(request_) {
-	    var cidsResponse, errors, generatorResponse, inBreakScope, pathFormat, response, selectedPathGenerator;
-	    errors = [];
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    inBreakScope = false;
-	    while (!inBreakScope) {
-	      inBreakScope = true;
-	      if (!((request_.address != null) && request_.address)) {
-	        errors.unshift("Invalid request object missing required property 'address'.");
-	        break;
-	      }
-	      cidsResponse = CIDS.assertCNAME({
-	        ref: request_.address,
-	        'Address': 'Address'
-	      });
-	      if (cidsResponse.error) {
-	        errors.unshift(cidsResponse.error);
-	        break;
-	      }
-	      pathFormat = request_.format;
-	      selectedPathGenerator = PathGenerators[pathFormat];
-	      if (!((selectedPathGenerator != null) && selectedPathGenerator)) {
-	        errors.unshift("Internal error. No registered path generator for format '" + pathFormat + "'.");
-	        break;
-	      }
-	      generatorResponse = selectedPathGenerator(request_);
-	      if (!generatorResponse.error) {
-	        response.result = generatorResponse.result;
-	      } else {
-	        errors.unshift(generatorResponse.error);
-	      }
-	    }
-	    if (errors.length) {
-	      errors.unshift("Path generate failed:");
-	      response.error = errors.join(' ');
-	    }
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var CIDS, RISP, VectorGenerators;
-
-	  CIDS = __webpack_require__(8);
-
-	  RISP = {};
-
-	  VectorGenerators = {
-	    lri: __webpack_require__(31),
-	    uri: __webpack_require__(32)
-	  };
-
-
-	  /*
-	      request = {
-	          address: onm.Address reference
-	          format: string (one of "lri" or "uri")
-	      }
-	      response = {
-	          error: null or string explaining why result === null
-	          result: onm-format path xRI string
-	      }
-	   */
-
-	  RISP.generateVector = module.exports = function(request_) {
-	    var cidsResponse, errors, generatorResponse, inBreakScope, pathFormat, response, selectedVectorGenerator;
-	    errors = [];
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    inBreakScope = false;
-	    while (!inBreakScope) {
-	      inBreakScope = true;
-	      if (!((request_.address != null) && request_.address)) {
-	        errors.unshift("Invalid request object missing required property 'address'.");
-	        break;
-	      }
-	      cidsResponse = CIDS.assertCNAME({
-	        ref: request_.address,
-	        cname: 'Address'
-	      });
-	      if (cidsResponse.error) {
-	        errors.unshift(cidsResponse.error);
-	        break;
-	      }
-	      pathFormat = request_.format;
-	      selectedVectorGenerator = VectorGenerators[pathFormat];
-	      if (!((selectedVectorGenerator != null) && selectedVectorGenerator)) {
-	        errors.unshift("Internal error. No registered vector generator for format '" + pathFormat + "'.");
-	        break;
-	      }
-	      generatorResponse = selectedVectorGenerator(request_);
-	      if (!generatorResponse.error) {
-	        response.result = generatorResponse.result;
-	      } else {
-	        errors.unshift(generatorResponse.error);
-	      }
-	    }
-	    if (errors.length) {
-	      errors.unshift("Vector generate failed:");
-	      response.error = errors.join(' ');
-	    }
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-	Low-level library routines inspired by (and often copied) from http://coffeescriptcookbook.com
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var CIDS, RISP, uuid;
-
-	  CIDS = __webpack_require__(8);
-
-	  uuid = __webpack_require__(1);
-
-	  RISP = {};
-
-
-	  /*
-	      Generate an Internet-Routable Unique Token (IRUT)
-	  
-	      IRUT's are 22-character, ASCII-encoded, UUID v4, URI and RIS token-friendly string identifiers.
-	  
-	      Use cases:
-	      1. v4 UUID uniqueness semantics: addressed w/node-uuid package
-	      2. ASCII: addressed by using base64 encoding of the v4 UUID
-	      3. Short as possible: addressed by trimming superfluous '=' padding from base64
-	      4. URI token safe: addressed by replacing '/' characters with '_'
-	      5. RIS token safe: addressed by replacing '+' with '-'
-	  
-	      References:
-	      http://stackoverflow.com/questions/11431886/url-safe-uuids-in-the-smallest-number-of-characters
-	      http://stackoverflow.com/questions/6182315/how-to-do-base64-encoding-in-node-js
-	      http://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
-	   */
-
-	  RISP.generateIRUT = module.exports = function() {
-	    var pads, r1, r2, r3, r4, r5, response;
-	    r1 = uuid.v4(null, new Uint8Array(16, 0));
-	    r2 = (new Buffer(r1)).toString('base64');
-	    pads = 0;
-	    while (r2.charAt(r2.length - pads - 1) === '=') {
-	      pads++;
-	    }
-	    r3 = r2.slice(0, r2.length - pads);
-	    r4 = r3.replace(/\//g, "_");
-	    r5 = r4.replace(/\+/g, "-");
-	    return response = {
-	      error: null,
-	      result: CIDS.setCID({
-	        ref: {
-	          value: r5
-	        },
-	        cname: 'IRUT'
-	      }).result
-	    };
 	  };
 
 	}).call(this);
@@ -5160,6 +5160,393 @@ module.exports =
 	 */
 
 	(function() {
+	  var CIDS, xRIP_ReadablePathGenerator;
+
+	  CIDS = __webpack_require__(8);
+
+
+	  /*
+	      request = {
+	          address: onm.Address reference
+	          uriFormat: optional boolean flag (defaults to false)
+	      }
+	      response = {
+	          error: null or string explaining why result === null
+	          result: onm-format readable path string, undefined (if uriFormat), or null to indicate error
+	      }
+	      Note: If specified, request.uriFormat indicates that the routine should not include
+	      a token for the base namespace of the address (i.e. the root address). xRIP_URIVectorGenerator
+	      requires this functionality.
+	   */
+
+	  xRIP_ReadablePathGenerator = module.exports = function(request_) {
+	    var cidsResponse, errors, evaluateAddress, inBreakScope, index, pathTokens, response, uriFormat;
+	    errors = [];
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    inBreakScope = false;
+	    while (!inBreakScope) {
+	      inBreakScope = true;
+	      if (!((request_ != null) && request_)) {
+	        errors.unshift = "Missing requires request object in-parameter.";
+	        break;
+	      }
+	      if (!((request_.address != null) && request_.address)) {
+	        errors.unshift = "Invalid request object missing required property 'address'.";
+	        break;
+	      }
+	      cidsResponse = CIDS.assertCNAME({
+	        ref: request_.address,
+	        cname: 'Address'
+	      });
+	      if (cidsResponse.error) {
+	        errors.unshift(cidsResponse.error);
+	        break;
+	      }
+	      uriFormat = (request_.uriFormat != null) && request_.uriFormat || false;
+	      index = 0;
+	      pathTokens = [];
+	      evaluateAddress = function(parentAddress_) {
+	        var key, model;
+	        if (!(uriFormat && index++)) {
+	          return false;
+	        }
+	        model = parentAddress_.getModel();
+	        if (model.namespaceType !== 'component') {
+	          pathTokens.push(model.jsonTag);
+	          return true;
+	        }
+	        key = parentAddress_.implementation.getLastToken().key;
+	        return pathTokens.push((key != null) && key || model.jsonTag);
+	      };
+	      request_.address.visitParentAddressesAscending(evaluateAddress);
+	      evaluateAddress(request_.address);
+	      if (!pathTokens.length) {
+	        if (!uriFormat) {
+	          errors.unshfit("Internal error: pathTokens array is empty?");
+	        }
+	        break;
+	      }
+	      response.result = ((pathTokens.length > 1) && (pathTokens.join('.'))) || pathTokens[0];
+	    }
+	    if (errors.length) {
+	      errors.unshift("xRIP.generate.vector.uri failed:");
+	      response.error = errors.join(' ');
+	    }
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+
+	/*
+	    request = {
+	        address: onm.Address reference
+	    }
+	    response = {
+	        error: null or string explaining why result === null
+	        result: onm-format path hash string, undefined iff address is root, or null to indicate error
+	    }
+	 */
+
+	(function() {
+	  var xRIP_HashPathGenerator;
+
+	  xRIP_HashPathGenerator = module.exports = function(request_) {
+	    var addressToken, firstToken, hashTokens, response, _i, _len, _ref;
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    hashTokens = [];
+	    firstToken = true;
+	    _ref = request_.address.implementation.tokenVector;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      addressToken = _ref[_i];
+	      if (!firstToken) {
+	        hashTokens.push((addressToken.key != null) && addressToken.key || "+");
+	      }
+	      if (addressToken.idComponent !== addressToken.idNamespace) {
+	        hashTokens.push("" + addressToken.idNamespace);
+	      }
+	      firstToken = false;
+	    }
+	    response.result = hashTokens.length && (hashTokens.join('.')) || void 0;
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
+	  var xRIP_HashPathGenerator, xRIP_LRIVectorGenerator;
+
+	  xRIP_HashPathGenerator = __webpack_require__(27);
+
+
+	  /*
+	      request = {
+	          address: onm.Address reference
+	      }
+	      response = {
+	          error: null or string explaining why result === null
+	          result: onm-format URI string or null
+	      }
+	   */
+
+	  xRIP_LRIVectorGenerator = module.exports = function(request_) {
+	    var errors, inBreakScope, pathGenResponse, response;
+	    errors = [];
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    inBreakScope = false;
+	    while (!inBreakScope) {
+	      inBreakScope = true;
+	      pathGenResponse = xRIP_HashPathGenerator({
+	        address: request_.address
+	      });
+	      if (pathGenResponse.error) {
+	        errors.unshift(pathGenResponse.error);
+	        break;
+	      }
+	      response.result = "onm-lri:" + request_.address.model.uuidVersion;
+	      if (pathGenResponse.result) {
+	        response.result += ":" + pathGenResponse.result;
+	      }
+	    }
+	    if (errors.length) {
+	      errors.unshift("xRIP_LRIVectorGenerator failed:");
+	      response.error = errors.join(' ');
+	    }
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
+	  var xRIP_ReadablePathGenerator, xRIP_URIVectorGenerator;
+
+	  xRIP_ReadablePathGenerator = __webpack_require__(26);
+
+
+	  /*
+	      request = {
+	          address: onm.Address reference
+	      }
+	      response = {
+	          error: null or string explaining why result === null
+	          result: onm-format URI string or null
+	      }
+	   */
+
+	  xRIP_URIVectorGenerator = module.exports = function(request_) {
+	    var errors, inBreakScope, pathGenResponse, response;
+	    errors = [];
+	    response = {
+	      error: null,
+	      result: null
+	    };
+	    inBreakScope = false;
+	    while (!inBreakScope) {
+	      inBreakScope = true;
+	      pathGenResponse = xRIP_ReadablePathGenerator({
+	        address: request_.address,
+	        uriFormat: true
+	      });
+	      if (pathGenResponse.error) {
+	        errors.unshift(pathGenResponse.error);
+	        break;
+	      }
+	      response.result = "onm-uri:" + request_.address.model.uuid;
+	      if (pathGenResponse.result) {
+	        response.result += ":" + pathGenResponse.result;
+	      }
+	    }
+	    if (errors.length) {
+	      errors.unshift("xRIP_URIVectorGenerator failed:");
+	      response.error = errors.join(' ');
+	    }
+	    return response;
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	------------------------------------------------------------------------------
+
+	The MIT License (MIT)
+
+	Copyright (c) 2015 Encapsule Project
+	  
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+
+	**** Encapsule Project :: Build better software with circuit models ****
+
+	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
+	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
+
+	------------------------------------------------------------------------------
+
+
+
+	------------------------------------------------------------------------------
+	 */
+
+	(function() {
 	  var Address, AddressToken, xriReadablePathParser;
 
 	  Address = __webpack_require__(3);
@@ -5307,7 +5694,7 @@ module.exports =
 
 
 /***/ },
-/* 27 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5448,7 +5835,7 @@ module.exports =
 
 
 /***/ },
-/* 28 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5492,7 +5879,7 @@ module.exports =
 	(function() {
 	  var xRIP_ReadablePathParser, xRIP_URIVectorParser;
 
-	  xRIP_ReadablePathParser = __webpack_require__(26);
+	  xRIP_ReadablePathParser = __webpack_require__(30);
 
 
 	  /*
@@ -5539,393 +5926,6 @@ module.exports =
 	      }
 	    }
 	    if (errors.length) {
-	      response.error = errors.join(' ');
-	    }
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var CIDS, xRIP_ReadablePathGenerator;
-
-	  CIDS = __webpack_require__(8);
-
-
-	  /*
-	      request = {
-	          address: onm.Address reference
-	          uriFormat: optional boolean flag (defaults to false)
-	      }
-	      response = {
-	          error: null or string explaining why result === null
-	          result: onm-format readable path string, undefined (if uriFormat), or null to indicate error
-	      }
-	      Note: If specified, request.uriFormat indicates that the routine should not include
-	      a token for the base namespace of the address (i.e. the root address). xRIP_URIVectorGenerator
-	      requires this functionality.
-	   */
-
-	  xRIP_ReadablePathGenerator = module.exports = function(request_) {
-	    var cidsResponse, errors, evaluateAddress, inBreakScope, index, pathTokens, response, uriFormat;
-	    errors = [];
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    inBreakScope = false;
-	    while (!inBreakScope) {
-	      inBreakScope = true;
-	      if (!((request_ != null) && request_)) {
-	        errors.unshift = "Missing requires request object in-parameter.";
-	        break;
-	      }
-	      if (!((request_.address != null) && request_.address)) {
-	        errors.unshift = "Invalid request object missing required property 'address'.";
-	        break;
-	      }
-	      cidsResponse = CIDS.assertCNAME({
-	        ref: request_.address,
-	        cname: 'Address'
-	      });
-	      if (cidsResponse.error) {
-	        errors.unshift(cidsResponse.error);
-	        break;
-	      }
-	      uriFormat = (request_.uriFormat != null) && request_.uriFormat || false;
-	      index = 0;
-	      pathTokens = [];
-	      evaluateAddress = function(parentAddress_) {
-	        var key, model;
-	        if (!(uriFormat && index++)) {
-	          return false;
-	        }
-	        model = parentAddress_.getModel();
-	        if (model.namespaceType !== 'component') {
-	          pathTokens.push(model.jsonTag);
-	          return true;
-	        }
-	        key = parentAddress_.implementation.getLastToken().key;
-	        return pathTokens.push((key != null) && key || model.jsonTag);
-	      };
-	      request_.address.visitParentAddressesAscending(evaluateAddress);
-	      evaluateAddress(request_.address);
-	      if (!pathTokens.length) {
-	        if (!uriFormat) {
-	          errors.unshfit("Internal error: pathTokens array is empty?");
-	        }
-	        break;
-	      }
-	      response.result = ((pathTokens.length > 1) && (pathTokens.join('.'))) || pathTokens[0];
-	    }
-	    if (errors.length) {
-	      errors.unshift("xRIP.generate.vector.uri failed:");
-	      response.error = errors.join(' ');
-	    }
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-
-	/*
-	    request = {
-	        address: onm.Address reference
-	    }
-	    response = {
-	        error: null or string explaining why result === null
-	        result: onm-format path hash string, undefined iff address is root, or null to indicate error
-	    }
-	 */
-
-	(function() {
-	  var xRIP_HashPathGenerator;
-
-	  xRIP_HashPathGenerator = module.exports = function(request_) {
-	    var addressToken, firstToken, hashTokens, response, _i, _len, _ref;
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    hashTokens = [];
-	    firstToken = true;
-	    _ref = request_.address.implementation.tokenVector;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      addressToken = _ref[_i];
-	      if (!firstToken) {
-	        hashTokens.push((addressToken.key != null) && addressToken.key || "+");
-	      }
-	      if (addressToken.idComponent !== addressToken.idNamespace) {
-	        hashTokens.push("" + addressToken.idNamespace);
-	      }
-	      firstToken = false;
-	    }
-	    response.result = hashTokens.length && (hashTokens.join('.')) || void 0;
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var xRIP_HashPathGenerator, xRIP_LRIVectorGenerator;
-
-	  xRIP_HashPathGenerator = __webpack_require__(30);
-
-
-	  /*
-	      request = {
-	          address: onm.Address reference
-	      }
-	      response = {
-	          error: null or string explaining why result === null
-	          result: onm-format URI string or null
-	      }
-	   */
-
-	  xRIP_LRIVectorGenerator = module.exports = function(request_) {
-	    var errors, inBreakScope, pathGenResponse, response;
-	    errors = [];
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    inBreakScope = false;
-	    while (!inBreakScope) {
-	      inBreakScope = true;
-	      pathGenResponse = xRIP_HashPathGenerator({
-	        address: request_.address
-	      });
-	      if (pathGenResponse.error) {
-	        errors.unshift(pathGenResponse.error);
-	        break;
-	      }
-	      response.result = "onm-lri:" + request_.address.model.uuidVersion;
-	      if (pathGenResponse.result) {
-	        response.result += ":" + pathGenResponse.result;
-	      }
-	    }
-	    if (errors.length) {
-	      errors.unshift("xRIP_LRIVectorGenerator failed:");
-	      response.error = errors.join(' ');
-	    }
-	    return response;
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	------------------------------------------------------------------------------
-
-	The MIT License (MIT)
-
-	Copyright (c) 2015 Encapsule Project
-	  
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-
-	**** Encapsule Project :: Build better software with circuit models ****
-
-	OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
-	BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
-
-	------------------------------------------------------------------------------
-
-
-
-	------------------------------------------------------------------------------
-	 */
-
-	(function() {
-	  var xRIP_ReadablePathGenerator, xRIP_URIVectorGenerator;
-
-	  xRIP_ReadablePathGenerator = __webpack_require__(29);
-
-
-	  /*
-	      request = {
-	          address: onm.Address reference
-	      }
-	      response = {
-	          error: null or string explaining why result === null
-	          result: onm-format URI string or null
-	      }
-	   */
-
-	  xRIP_URIVectorGenerator = module.exports = function(request_) {
-	    var errors, inBreakScope, pathGenResponse, response;
-	    errors = [];
-	    response = {
-	      error: null,
-	      result: null
-	    };
-	    inBreakScope = false;
-	    while (!inBreakScope) {
-	      inBreakScope = true;
-	      pathGenResponse = xRIP_ReadablePathGenerator({
-	        address: request_.address,
-	        uriFormat: true
-	      });
-	      if (pathGenResponse.error) {
-	        errors.unshift(pathGenResponse.error);
-	        break;
-	      }
-	      response.result = "onm-uri:" + request_.address.model.uuid;
-	      if (pathGenResponse.result) {
-	        response.result += ":" + pathGenResponse.result;
-	      }
-	    }
-	    if (errors.length) {
-	      errors.unshift("xRIP_URIVectorGenerator failed:");
 	      response.error = errors.join(' ');
 	    }
 	    return response;
